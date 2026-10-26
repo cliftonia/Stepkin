@@ -1,7 +1,7 @@
-# imon
+# Stepkin
 
-A faithful recreation of the classic late-'90s pocket virtual pet, built
-natively for Apple Watch. A creature lives on a 32×20 pixel LCD on your
+A virtual pet for Apple Watch, inspired by late-'90s LCD pets and built
+natively for watchOS. A creature lives on a 32×20 pixel LCD on your
 wrist: it hatches, begs for food, poops, sleeps when the lights go out,
 battles, evolves — and dies if you neglect it. Real-world signals feed the
 simulation: your **step count** drives evolution and **live weather** drives
