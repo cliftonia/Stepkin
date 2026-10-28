@@ -10,8 +10,7 @@ struct ComplicationStoreTests {
         let defaults = try makeIsolatedDefaults("ComplicationStoreTests")
         let now = Date(timeIntervalSince1970: 1_700_000_000)
         let entries = ComplicationTimeline.entries(
-            for: makeTestState(species: .emberkin, at: now), from: now, count: 4, stride: 1_800,
-            spriteRows: ComplicationEntry.spriteRows(for:)
+            for: makeTestState(species: .emberkin, at: now), from: now, count: 4, stride: 1_800
         )
 
         ComplicationStore.save(entries, to: defaults)

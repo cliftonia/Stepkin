@@ -13,6 +13,7 @@
 		1CACAD312F4889AD00C99F7E /* imon Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A022FF1A00000000001 /* StepkinCore */; };
 		7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A042FF1A00000000001 /* StepkinEngine */; };
+		7E5C0A0D2FF1A00000000001 /* StepkinSprites in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A0C2FF1A00000000001 /* StepkinSprites */; };
 		7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A062FF1A00000000001 /* StepkinTestSupport */; };
 		7E5C0A092FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A082FF1A00000000001 /* StepkinCore */; };
 		7E5C0A0B2FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A0A2FF1A00000000001 /* StepkinEngine */; };
@@ -137,6 +138,7 @@
 			files = (
 				7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */,
 				7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */,
+				7E5C0A0D2FF1A00000000001 /* StepkinSprites in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +261,7 @@
 			packageProductDependencies = (
 				7E5C0A022FF1A00000000001 /* StepkinCore */,
 				7E5C0A042FF1A00000000001 /* StepkinEngine */,
+				7E5C0A0C2FF1A00000000001 /* StepkinSprites */,
 			);
 			productName = "imon Watch App";
 			productReference = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */;
@@ -946,6 +949,10 @@
 		7E5C0A0A2FF1A00000000001 /* StepkinEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StepkinEngine;
+		};
+		7E5C0A0C2FF1A00000000001 /* StepkinSprites */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinSprites;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

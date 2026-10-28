@@ -2,3 +2,4 @@
 /// test bundle see the package's public types without importing it themselves.
 @_exported import StepkinCore
 @_exported import StepkinEngine
+@_exported import StepkinSprites

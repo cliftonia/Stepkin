@@ -19,6 +19,11 @@ let package = Package(
         .target(name: "StepkinTestSupport", dependencies: ["StepkinCore", "StepkinEngine"], swiftSettings: settings),
         .testTarget(name: "StepkinCoreTests", dependencies: ["StepkinCore", "StepkinTestSupport"], swiftSettings: settings),
         .testTarget(name: "StepkinEngineTests", dependencies: ["StepkinCore", "StepkinEngine", "StepkinTestSupport"], swiftSettings: settings),
+        .testTarget(
+            name: "StepkinSpritesTests",
+            dependencies: ["StepkinSprites", "StepkinEngine", "StepkinCore", "StepkinTestSupport"],
+            swiftSettings: settings
+        ),
     ],
     swiftLanguageModes: [.v6]
 )

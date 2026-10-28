@@ -8,8 +8,8 @@ excluded:
   - imon Watch AppUITests
   - Packages/StepkinKit/.build
   # Per-species bitmap data + 14-way dispatch — data, not logic.
-  - imon Watch App/Sprites/Pets
-  - imon Watch App/Sprites/Catalog
+  - Packages/StepkinKit/Sources/StepkinSprites/Pets
+  - Packages/StepkinKit/Sources/StepkinSprites/Catalog
 
 line_length:
   warning: 160

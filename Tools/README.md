@@ -3,7 +3,7 @@
 Pipeline for authoring the game's 16×16 1-bit sprites with real pixel-art
 tools instead of hand-typing hex. Sprites are stored as `[UInt16]` rows in
 `SpriteFrame` (MSB = leftmost pixel) — see
-`imon Watch App/Sprites/Rendering/SpriteFrame.swift`.
+`Packages/StepkinKit/Sources/StepkinSprites/Rendering/SpriteFrame.swift`.
 
 ## sprite2swift.py — PNG → SpriteFrame
 
@@ -35,11 +35,11 @@ over the current one, completing the round-trip.
 
 ```bash
 # One named constant
-python3 Tools/swift2png.py "imon Watch App/Sprites/Pets/SpriteCatalog+Hopkin.swift" \
+python3 Tools/swift2png.py "Packages/StepkinKit/Sources/StepkinSprites/Pets/SpriteCatalog+Hopkin.swift" \
     --const sideWalk1 --out /tmp/sprites
 
 # Every SpriteFrame in a file (e.g. all projectiles)
-python3 Tools/swift2png.py "imon Watch App/Sprites/Catalog/SpriteCatalog+Projectiles.swift" \
+python3 Tools/swift2png.py "Packages/StepkinKit/Sources/StepkinSprites/Catalog/SpriteCatalog+Projectiles.swift" \
     --all --out /tmp/sprites
 ```
 
@@ -58,8 +58,8 @@ ready to edit — regenerate any time with `swift2png.py`.
    free web tool Piskel. Pure black-on-white gives the cleanest result.
 3. **Export** as PNG (or a horizontal strip for multi-frame animations).
 4. **Convert** with `sprite2swift.py` and paste into the species file under
-   `imon Watch App/Sprites/Pets/SpriteCatalog+<Species>.swift` (side profiles)
-   or `imon Watch App/Sprites/Catalog/SpriteCatalog+Projectiles.swift`.
+   `Packages/StepkinKit/Sources/StepkinSprites/Pets/SpriteCatalog+<Species>.swift` (side profiles)
+   or `Packages/StepkinKit/Sources/StepkinSprites/Catalog/SpriteCatalog+Projectiles.swift`.
 5. **Build & run** on the Apple Watch Ultra 3 sim and eyeball it.
 
 ## Source quality matters

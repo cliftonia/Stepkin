@@ -127,11 +127,12 @@ imon Watch App/
 
 ## Sprites
 
-Every species has a file in `Sprites/Pets/` with its full animation set
-(idle, walk, side-walk, happy, eat, sleep, attack, refuse) as hex rows with
-ASCII-art comments. Shared battle poses live in `Sprites/Catalog/`. The
-renderer fills each sprite's enclosed holes (eyes, mouths) with
-scene-matched shading so backdrops never bleed through.
+Every species has a file in `Packages/StepkinKit/Sources/StepkinSprites/Pets/`
+with its full animation set (idle, walk, side-walk, happy, eat, sleep, attack,
+refuse) as hex rows with ASCII-art comments. Shared battle poses live in
+`Packages/StepkinKit/Sources/StepkinSprites/Catalog/`. The renderer fills each
+sprite's enclosed holes (eyes, mouths) with scene-matched shading so backdrops
+never bleed through.
 
 Author sprites with the round-trip pipeline in [`Tools/`](Tools/README.md):
 `swift2png.py` exports frames to PNGs for a pixel editor, `sprite2swift.py`

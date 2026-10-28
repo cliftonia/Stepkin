@@ -6,11 +6,11 @@ existing sprite in a pixel editor (Aseprite/Piskel), refine a clean 1-bit
 version over it, then convert back with sprite2swift.py.
 
 Export one named constant:
-    python3 Tools/swift2png.py "imon Watch App/Sprites/Pets/SpriteCatalog+Hopkin.swift" \\
+    python3 Tools/swift2png.py "Packages/StepkinKit/Sources/StepkinSprites/Pets/SpriteCatalog+Hopkin.swift" \\
         --const sideWalk1 --out /tmp/sprites
 
 Export every SpriteFrame constant in a file (e.g. all projectiles):
-    python3 Tools/swift2png.py "imon Watch App/Sprites/Catalog/SpriteCatalog+Projectiles.swift" \\
+    python3 Tools/swift2png.py "Packages/StepkinKit/Sources/StepkinSprites/Catalog/SpriteCatalog+Projectiles.swift" \\
         --all --out /tmp/sprites
 
 Rendered black-on-white and scaled up (--scale, default 16) for easy editing.
