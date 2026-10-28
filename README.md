@@ -27,8 +27,13 @@ xcodebuild build -project imon.xcodeproj -scheme "imon Watch App" \
 xcodebuild test -project imon.xcodeproj -scheme "imon Watch App" \
   -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)" \
   -only-testing "imon Watch AppTests"
+
+# Package tests (fast path, no simulator)
+swift test --package-path Packages/StepkinKit
 ```
 
+`swift test` runs the Core, Engine and Sprites suites on the host in seconds;
+the watch scheme's `xcodebuild test` runs the app suites.
 The simulator builds and runs everything, but two integrations only produce
 real data on a physical watch: HealthKit step counts and WeatherKit (which
 also needs the WeatherKit capability provisioned; in DEBUG a sample snapshot
@@ -79,10 +84,14 @@ View (SwiftUI)  →  Presenter (@MainActor, owns ViewModel)  →  Engine (pure, 
 
 **Layer rules**
 
-- `Engine/**` is pure and `nonisolated`: value types, no clocks, no I/O.
-  Simulators are functions `(PetState, Date) → PetState`. With MainActor
-  default isolation, every engine type is explicitly marked `nonisolated`
-  (extensions too — isolation does not inherit).
+- The engine is pure: value types, no clocks, no I/O. Simulators are
+  functions `(PetState, Date) → PetState`. The package has no default
+  isolation, so its types need no marking; app-side engine-adjacent types
+  still carry `nonisolated` (extensions too — isolation does not inherit).
+- The pure layers (Core, Engine, Sprites) live in the `StepkinKit` package,
+  so the boundary is enforced by the compiler: the package cannot import the
+  app, WatchKit or SwiftUI, and the app re-exports it from one file
+  (`KitImports.swift`).
 - Presenters are plain `@Observable`-adjacent classes on the main actor.
   They own their ViewModel, catch errors, and talk to the engine.
 - Stores (`WeatherStore`, `StepActivityStore`, `SettingsStore`) hold shared,
@@ -97,23 +106,27 @@ View (SwiftUI)  →  Presenter (@MainActor, owns ViewModel)  →  Engine (pure, 
 **Folder map**
 
 ```
+Packages/StepkinKit/
+├── Sources/
+│   ├── StepkinCore/          TimeConstants, Tagged IDs, logging, the main-actor
+│   │                         timer and delayed task, throttling
+│   ├── StepkinEngine/        Models, Simulation, Actions, Evolution, Battle,
+│   │                         Persistence, care-notification planning, the
+│   │                         complication entry and timeline
+│   ├── StepkinSprites/       Rendering types, the catalog, shared art, per-species
+│   │                         frame files, complication sprite baking
+│   └── StepkinTestSupport/   Shared test fixtures and the polling wait
+└── Tests/                    StepkinCoreTests, StepkinEngineTests, StepkinSpritesTests
+
 imon Watch App/
 ├── App/            imonApp, ContentView, AppPresenter (phase machine), Navigation
-├── Core/           TimeConstants, Tagged IDs, logging, the main-actor timer and
-│                   delayed task, small extensions
-├── Engine/
-│   ├── Models/     PetState, PetSpecies, EvolutionStage, StatHearts, …
-│   ├── Simulation/ GameEngine + one simulator per rule (hunger, sleep, …)
-│   ├── Actions/    Feed / Train / Clean / Heal / Lights — pure state edits
-│   ├── Evolution/  Requirements and the species evolution chart
-│   ├── Battle/     Attack heights, HP, opponents, round resolution
-│   └── Persistence/ PetStateStore witness + JSON implementation
+├── Core/           Extensions/ holds the WatchKit haptics wrapper
 ├── Presentation/   One folder per screen: Presenter + ViewModel; Scene/ holds
-│                   the LCD scene resolver shared by the home and arena views
+│                   the LCD scene resolver shared by the home and arena views;
+│                   Shared/ holds the SpriteAnimator
 ├── Views/
 │   ├── Screens/    SwiftUI screens (thin — delegate to presenters)
 │   └── Components/ LCD display (Canvas), bezel, menu rows, meters
-├── Sprites/        SpriteFrame/Animator/Catalog + per-species frame files
 ├── Health/         HealthKit step provider + store
 ├── Weather/        WeatherKit provider + store, scene mapping, moon phase
 ├── Settings/       SettingsStore — the feature toggles behind the Settings page
@@ -121,8 +134,9 @@ imon Watch App/
 ├── Notifications/  Care-call and exercise-nudge scheduling; CareHandoff plans or
 │                   clears the reminders and refreshes the complication on background
 ├── Background/     Background refresh so the pet advances while closed
-└── Complication/   App-side timeline baking for the watch-face complication;
-                    the widget itself is the SkykinComplication extension target
+└── Complication/   App-side timeline store and reloader for the watch-face
+                    complication; the widget itself is the SkykinComplication
+                    extension target
 ```
 
 ## Sprites
@@ -148,4 +162,4 @@ codified in [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md).
 Swift Testing (`@Test`, `#expect`) for engine and store logic — simulators,
 evolution, battle math, persistence migration, weather/step caching, and
 sprite-anatomy checks. Tests favour a few high-value assertions over
-coverage; run them with the `xcodebuild test` line above.
+coverage; run them with the `swift test` and `xcodebuild test` lines above.

@@ -53,29 +53,29 @@ the steps are counted and the wrist is raised.
 
 ## Target architecture
 
+Decided 2026-10-28: one local package beside the app, done in place.
+
 ```
-<Name>/
-├── <Name>.xcworkspace
-├── Apps/
-│   ├── WatchApp/          thin shell: entry, DI wiring, platform shims
-│   ├── WatchWidgets/      complication extension
-│   ├── iOSApp/            (Epic 6) iPhone + iPad shell
-│   └── iOSWidgets/        (Epic 6) home-screen widget, same timeline code
-├── Packages/
-│   ├── <Name>Core/        Tagged, TickMath, TimeConstants, logging → deps: none
-│   ├── <Name>Engine/      models, simulation, actions, evolution,
+imon.xcodeproj
+├── imon Watch App/        presentation, stores, providers, the sprite
+│                          animator, CareHandoff, complication store, tick
+├── SkykinComplication/    complication extension
+├── Packages/StepkinKit/
+│   ├── StepkinCore        Tagged, TickMath, TimeConstants, logging → deps: none
+│   ├── StepkinEngine      models, simulation, actions, evolution,
 │   │                      battle, persistence DTO                  → deps: Core
-│   ├── <Name>Sprites/     frames, animator, catalog, shared art    → deps: Core, Engine
-│   └── <Name>UI/          presenters, view models, LCD canvas,
-│                          screens, components                      → deps: all above
-├── Tools/                 sprite round-trip pipeline (carried over)
-└── docs/                  this file, DOCUMENTATION.md (carried over)
+│   ├── StepkinSprites     frames, catalog, shared art              → deps: Core, Engine
+│   └── StepkinTestSupport shared test fixtures
+├── Tools/                 sprite round-trip pipeline
+└── docs/                  this file, DOCUMENTATION.md
 ```
 
-Why: the Engine package cannot import WatchKit (layer purity by linker);
-engine tests run via bare `swift test` with no simulator; the Engine package
-skips MainActor default isolation so the explicit `nonisolated` markings
-disappear; each new platform is one more thin shell over the same packages.
+Why: the package cannot import WatchKit or SwiftUI (layer purity by the
+compiler); package tests run via bare `swift test` with no simulator; the
+package skips MainActor default isolation so the explicit `nonisolated`
+markings disappear. The UI package was dropped: a package's platforms are
+declared once and the UI imports WatchKit, so the presentation layer stays
+in the app until a second platform needs it (Epic 6).
 
 ## Sync model (Epic 6 groundwork)
 
@@ -93,7 +93,7 @@ data arrives via iCloud Health sync, so the loop works there too.
 |---|------|-------|-------------------|
 | 0 | ✅ **Done 2026-07-19** — name locked, USPTO clear, ids + App Group registered, ASC record created (iOS record, *Prepare for Submission*, no build) | — | Blocks package naming; the name can be taken while we wait |
 | 1 | ✅ **Done 2026-07-19** — rollover tail recovered, collapse countdown dated from the true emptying (schema v3), v2-save migration proved, night reminders deferred not dropped, STEPS row relabelled TODAY. The "5k vs 75" report resolved as a label misreading: the app's own arithmetic checks out (today 4,015 − lifetime 2,537 = the 1,478 baseline at first credit); pending a Health-app cross-check | old repo | These change the persisted schema — settle it **before** the migration so the save format moves once |
-| 2 | The founding: fresh repo, workspace + packages, watch shell, hand-off if granted | new repo | Everything after lands in the new home |
+| 2 | ✅ **Done 2026-10-28** — in place, no fresh repository; `StepkinKit` with Core, Engine, Sprites and a test-support target; presentation stays in the app | this repo | Everything after lands in the new home |
 | 3 | Deferred polish: defer-night-notifications, lifecycle items, debug-only items | new repo | No schema impact; benefits from the fast package test loop |
 | 4 | Sprite treatment for Hopkin, Dotkin, Orbkin, Marshkin | new repo | Zero dependencies — runs parallel to Epic 3 |
 | 5 | Watch submission: WeatherKit provisioning on the new App ID, privacy strings, icon, screenshots, TestFlight, App Review. **Code side done 2026-09-08** (privacy manifests, attribution, permission timing, sleep-pause and save-backup fixes — see `release-checklist.md`); the identifier swap and the App Store Connect work remain | new repo | Last, because every prior epic changes what the reviewer sees |

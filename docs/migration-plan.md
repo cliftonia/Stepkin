@@ -1,5 +1,9 @@
 # Epic 2 — the founding
 
+> Steps 4–6 are superseded by `docs/packages-and-polish-plan.md`: the package
+> split was done in place on 2026-10-28 with no fresh history. The providers
+> stayed in the app, as this plan said.
+
 The one-time move from this repository to **Stepkin**: renamed, restructured
 into packages, and re-homed in a fresh history. Written before the work so the
 order is decided calmly rather than mid-flight.
