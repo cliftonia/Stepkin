@@ -53,6 +53,16 @@
                ReferencedContainer = "container:imon.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7E5C0B012FF1A00000000001"
+               BuildableName = "SkykinComplicationTests.xctest"
+               BlueprintName = "SkykinComplicationTests"
+               ReferencedContainer = "container:imon.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

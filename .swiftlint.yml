@@ -1,6 +1,8 @@
 included:
   - imon Watch App
   - imon Watch AppTests
+  - SkykinComplication
+  - SkykinComplicationTests
   - Packages/StepkinKit/Sources
   - Packages/StepkinKit/Tests
 

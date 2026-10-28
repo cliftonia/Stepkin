@@ -84,6 +84,7 @@
 		1CACAD302F4889AD00C99F7E /* imon Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "imon Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CACAD3F2F4889AE00C99F7E /* imon Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "imon Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CACAD492F4889AE00C99F7E /* imon Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "imon Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E5C0B022FF1A00000000001 /* SkykinComplicationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SkykinComplicationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -94,6 +95,14 @@
 			);
 			target = 1CAA702F2FE9429000377A61 /* SkykinComplicationExtension */;
 		};
+		7E5C0B0A2FF1A00000000001 /* Exceptions for "SkykinComplication" folder in "SkykinComplicationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RelevanceWindows.swift,
+				WidgetEntry.swift,
+			);
+			target = 7E5C0B012FF1A00000000001 /* SkykinComplicationTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -101,6 +110,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				1CAA70432FE9429100377A61 /* Exceptions for "SkykinComplication" folder in "SkykinComplicationExtension" target */,
+				7E5C0B0A2FF1A00000000001 /* Exceptions for "SkykinComplication" folder in "SkykinComplicationTests" target */,
 			);
 			path = SkykinComplication;
 			sourceTree = "<group>";
@@ -118,6 +128,11 @@
 		1CACAD4C2F4889AE00C99F7E /* imon Watch AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "imon Watch AppUITests";
+			sourceTree = "<group>";
+		};
+		7E5C0B092FF1A00000000001 /* SkykinComplicationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SkykinComplicationTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -159,6 +174,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7E5C0B042FF1A00000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -179,6 +201,7 @@
 				1CACAD422F4889AE00C99F7E /* imon Watch AppTests */,
 				1CACAD4C2F4889AE00C99F7E /* imon Watch AppUITests */,
 				1CAA70362FE9429000377A61 /* SkykinComplication */,
+				7E5C0B092FF1A00000000001 /* SkykinComplicationTests */,
 				1CAA70312FE9429000377A61 /* Frameworks */,
 				1CACAD2B2F4889AD00C99F7E /* Products */,
 			);
@@ -192,6 +215,7 @@
 				1CACAD3F2F4889AE00C99F7E /* imon Watch AppTests.xctest */,
 				1CACAD492F4889AE00C99F7E /* imon Watch AppUITests.xctest */,
 				1CAA70302FE9429000377A61 /* SkykinComplicationExtension.appex */,
+				7E5C0B022FF1A00000000001 /* SkykinComplicationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -316,6 +340,28 @@
 			productReference = 1CACAD492F4889AE00C99F7E /* imon Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		7E5C0B012FF1A00000000001 /* SkykinComplicationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E5C0B062FF1A00000000001 /* Build configuration list for PBXNativeTarget "SkykinComplicationTests" */;
+			buildPhases = (
+				7E5C0B032FF1A00000000001 /* Sources */,
+				7E5C0B042FF1A00000000001 /* Frameworks */,
+				7E5C0B052FF1A00000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7E5C0B092FF1A00000000001 /* SkykinComplicationTests */,
+			);
+			name = SkykinComplicationTests;
+			packageProductDependencies = (
+			);
+			productName = SkykinComplicationTests;
+			productReference = 7E5C0B022FF1A00000000001 /* SkykinComplicationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -338,6 +384,9 @@
 					1CACAD3E2F4889AE00C99F7E = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = 1CACAD2F2F4889AD00C99F7E;
+					};
+					7E5C0B012FF1A00000000001 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 					1CACAD482F4889AE00C99F7E = {
 						CreatedOnToolsVersion = 26.2;
@@ -367,6 +416,7 @@
 				1CACAD3E2F4889AE00C99F7E /* imon Watch AppTests */,
 				1CACAD482F4889AE00C99F7E /* imon Watch AppUITests */,
 				1CAA702F2FE9429000377A61 /* SkykinComplicationExtension */,
+				7E5C0B012FF1A00000000001 /* SkykinComplicationTests */,
 			);
 		};
 /* End PBXProject section */
@@ -407,6 +457,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7E5C0B052FF1A00000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -432,6 +489,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1CACAD452F4889AE00C99F7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E5C0B032FF1A00000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -863,6 +927,51 @@
 			};
 			name = Release;
 		};
+		7E5C0B072FF1A00000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.SkykinComplicationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		7E5C0B082FF1A00000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.SkykinComplicationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -916,6 +1025,15 @@
 			buildConfigurations = (
 				1CACAD5E2F4889AE00C99F7E /* Debug */,
 				1CACAD5F2F4889AE00C99F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E5C0B062FF1A00000000001 /* Build configuration list for PBXNativeTarget "SkykinComplicationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E5C0B072FF1A00000000001 /* Debug */,
+				7E5C0B082FF1A00000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
