@@ -11,6 +11,7 @@
 		1CAA70352FE9429000377A61 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAA70342FE9429000377A61 /* SwiftUI.framework */; };
 		1CAA70422FE9429100377A61 /* SkykinComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1CAA70302FE9429000377A61 /* SkykinComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1CACAD312F4889AD00C99F7E /* imon Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A022FF1A00000000001 /* StepkinCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +249,7 @@
 			);
 			name = "imon Watch App";
 			packageProductDependencies = (
+				7E5C0A022FF1A00000000001 /* StepkinCore */,
 			);
 			productName = "imon Watch App";
 			productReference = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */;
@@ -336,6 +339,9 @@
 			);
 			mainGroup = 1CACAD232F4889AD00C99F7E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7E5C0A012FF1A00000000001 /* XCLocalSwiftPackageReference "Packages/StepkinKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1CACAD2B2F4889AD00C99F7E /* Products */;
 			projectDirPath = "";
@@ -900,6 +906,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7E5C0A012FF1A00000000001 /* XCLocalSwiftPackageReference "Packages/StepkinKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/StepkinKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7E5C0A022FF1A00000000001 /* StepkinCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1CACAD242F4889AD00C99F7E /* Project object */;
 }

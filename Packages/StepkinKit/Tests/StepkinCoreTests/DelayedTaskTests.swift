@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import imon_Watch_App
+@testable import StepkinCore
 
 @Suite("DelayedTask") @MainActor struct DelayedTaskTests {
     @Test func `cancel before the delay never runs`() async throws {

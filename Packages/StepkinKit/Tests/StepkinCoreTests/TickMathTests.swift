@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import imon_Watch_App
+@testable import StepkinCore
 
 @Suite("TickMath")
 struct TickMathTests {

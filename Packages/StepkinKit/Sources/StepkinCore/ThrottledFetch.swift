@@ -4,20 +4,24 @@ import Foundation
 /// stores (weather, steps). Tracks attempts (`lastFetch`, which throttles
 /// retries) separately from successes (`lastSuccess`, which dates the
 /// reading) so a failed fetch never refreshes a reading's age.
-final class ThrottledFetch {
+@MainActor
+public final class ThrottledFetch {
 
     /// The last attempt's time, consulted by `isFresh` to throttle retries; nil until the first
     /// attempt.
-    private(set) var lastFetch: Date?
+    public private(set) var lastFetch: Date?
     /// The last success's time, dating the reading's age; nil until the first success.
-    private(set) var lastSuccess: Date?
+    public private(set) var lastSuccess: Date?
     private var task: Task<Void, Never>?
+
+    /// Creates bookkeeping with no attempt recorded.
+    public init() {}
 
     /// Spawns `run` unless one is already in flight or the last attempt is
     /// still fresh by `isFresh`; `run` is expected to `record` its outcome.
     /// Returns the spawned task (nil if skipped).
     @discardableResult
-    func startIfStale(
+    public func startIfStale(
         now: Date,
         isFresh: (Date) -> Bool,
         run: @escaping () async -> Void
@@ -35,7 +39,7 @@ final class ThrottledFetch {
     /// Runs `fetch` and records the outcome at `now`: a success refreshes the
     /// reading's age; a throw is passed to `onFailure` and still counts as an
     /// attempt, without refreshing the age.
-    func perform(
+    public func perform(
         now: Date,
         _ fetch: () async throws -> Void,
         onFailure: (any Error) -> Void
@@ -50,7 +54,7 @@ final class ThrottledFetch {
     }
 
     /// Notes an attempt at `now`; successes also refresh the reading's age.
-    func record(now: Date, success: Bool) {
+    public func record(now: Date, success: Bool) {
         lastFetch = now
         if success { lastSuccess = now }
     }

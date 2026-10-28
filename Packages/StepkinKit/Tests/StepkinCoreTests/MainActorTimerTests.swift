@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import imon_Watch_App
+@testable import StepkinCore
 
 @Suite("MainActorTimer") @MainActor struct MainActorTimerTests {
     @Test func `start marks running and stop clears it`() {

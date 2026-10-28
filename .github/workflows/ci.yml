@@ -83,3 +83,13 @@ jobs:
       - name: List simulators on failure
         if: failure()
         run: xcrun simctl list devices available
+
+  package-tests:
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Select Xcode 27.1
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app && xcodebuild -version
+      - name: Package tests
+        run: swift test --package-path Packages/StepkinKit

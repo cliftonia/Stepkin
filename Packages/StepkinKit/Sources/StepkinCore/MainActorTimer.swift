@@ -5,16 +5,19 @@ import Foundation
 /// the run loop retains a scheduled timer, so deinit stops it rather than
 /// leave a discarded owner's timer firing forever.
 @MainActor
-final class MainActorTimer {
+public final class MainActorTimer {
 
     /// Whether a timer is pending; a one-shot clears it when it fires, before the callback runs.
-    private(set) var isRunning = false
+    public private(set) var isRunning = false
 
     private var timer: Timer?
 
+    /// Creates an idle timer with nothing scheduled.
+    public init() {}
+
     /// Schedules `fire` after `interval` seconds, once or repeatedly,
     /// replacing any timer already running.
-    func start(interval: TimeInterval, repeats: Bool, _ fire: @escaping @MainActor () -> Void) {
+    public func start(interval: TimeInterval, repeats: Bool, _ fire: @escaping @MainActor () -> Void) {
         stop()
         isRunning = true
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: repeats) { [weak self] _ in
@@ -29,7 +32,7 @@ final class MainActorTimer {
     }
 
     /// Cancels the pending timer, if any.
-    func stop() {
+    public func stop() {
         timer?.invalidate()
         timer = nil
         isRunning = false
