@@ -71,6 +71,7 @@ jobs:
           -resultBundlePath "$RUNNER_TEMP/tests.xcresult"
           -test-timeouts-enabled YES -default-test-execution-time-allowance 60
           -maximum-test-execution-time-allowance 120
+          -collect-test-diagnostics never
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4
