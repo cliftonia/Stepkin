@@ -22,7 +22,7 @@ final class TrainingPresenter {
 
     /// The single pending phase advance, so it can be cancelled on
     /// dismiss instead of firing into a torn-down presenter.
-    private let phase = DelayedTask()
+    private let phaseAdvance = DelayedTask()
 
     // MARK: - Computed
 
@@ -44,7 +44,7 @@ final class TrainingPresenter {
 
     /// Cancels any pending phase advance — called when training is dismissed.
     func cancel() {
-        phase.cancel()
+        phaseAdvance.cancel()
     }
 
     // MARK: - Actions
@@ -81,7 +81,7 @@ final class TrainingPresenter {
         spriteAnimator.play(.idle, for: species)
         targetAnimator.stop()
 
-        phase.schedule(after: .milliseconds(600)) { [weak self] in
+        phaseAdvance.schedule(after: .milliseconds(600)) { [weak self] in
             guard let self, self.viewModel.phase == .ready else { return }
             self.enterChallenge()
         }
@@ -100,7 +100,7 @@ final class TrainingPresenter {
         )
         WKInterfaceDevice.battleHaptic()
 
-        phase.schedule(after: .milliseconds(500)) { [weak self] in
+        phaseAdvance.schedule(after: .milliseconds(500)) { [weak self] in
             guard let self, self.viewModel.phase == .attacking else { return }
             self.enterProjectile(won: won)
         }
@@ -116,7 +116,7 @@ final class TrainingPresenter {
         )
         spriteAnimator.play(animation)
 
-        phase.schedule(after: .milliseconds(700)) { [weak self] in
+        phaseAdvance.schedule(after: .milliseconds(700)) { [weak self] in
             guard let self, self.viewModel.phase == .projectile else { return }
             if won {
                 self.enterHit()
@@ -134,7 +134,7 @@ final class TrainingPresenter {
         targetAnimator.play(SharedSprites.trainingHitSequence)
         WKInterfaceDevice.trainingHitHaptic()
 
-        phase.schedule(after: .milliseconds(800)) { [weak self] in
+        phaseAdvance.schedule(after: .milliseconds(800)) { [weak self] in
             guard let self, self.viewModel.phase == .hit else { return }
             self.advanceOrComplete()
         }
@@ -148,7 +148,7 @@ final class TrainingPresenter {
         targetAnimator.play(SharedSprites.missStreaks)
         WKInterfaceDevice.trainingMissHaptic()
 
-        phase.schedule(after: .milliseconds(800)) { [weak self] in
+        phaseAdvance.schedule(after: .milliseconds(800)) { [weak self] in
             guard let self, self.viewModel.phase == .miss else { return }
             self.advanceOrComplete()
         }
