@@ -56,17 +56,10 @@ nonisolated enum BackgroundTick {
         // Re-arm before the task completes — the chain survives if work below is cut short.
         refresh.scheduleNext(from: now)
 
-        // Toggle off: a wake-up must not re-arm reminders — clear any left pending instead.
         // Toggle handling matches the foreground contract in `PetPresenter.handleScenePhase`.
-        if notificationsEnabled {
-            let plan = CareNotificationPlanner.plan(for: advanced, now: now, steps: steps)
-            notifications.schedule(plan)
-        } else {
-            notifications.cancelAll()
-        }
-
-        // Rebuild against the same advanced state — background and foreground must match.
-        ComplicationStore.save(ComplicationTimeline.entries(for: advanced, from: now))
-        complications.reload()
+        CareHandoff.perform(
+            state: advanced, now: now, steps: steps, notificationsEnabled: notificationsEnabled,
+            witnesses: CareHandoff.Witnesses(notifications: notifications, complications: complications)
+        )
     }
 }

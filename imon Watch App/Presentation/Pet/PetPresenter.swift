@@ -179,26 +179,6 @@ final class PetPresenter {
         save()
     }
 
-    // MARK: - Care Notifications
-
-    /// Schedules the care reminders for the current state — called when the app
-    /// backgrounds, since notifications only matter while the owner is away.
-    func scheduleCareNotifications(now: Date = .now) {
-        let plan = CareNotificationPlanner.plan(
-            for: state, now: now, steps: currentSteps()
-        )
-        notificationScheduler.schedule(plan)
-        // Bake a fresh complication timeline — backgrounding is its last chance.
-        ComplicationStore.save(ComplicationTimeline.entries(for: state, from: now))
-        complicationReloader.reload()
-    }
-
-    /// Clears any pending reminders — used when the player switches notifications
-    /// off, so stale ones don't keep firing.
-    func cancelCareNotifications() {
-        notificationScheduler.cancelAll()
-    }
-
     /// The resolved night signal — the weather's daylight flag, else the fixed
     /// clock window.
     var currentlyNight: Bool {
@@ -281,10 +261,11 @@ final class PetPresenter {
         if isActive {
             startGameLoop()
             environmentDidChange()
-        } else if notificationsEnabled {
-            scheduleCareNotifications()
         } else {
-            cancelCareNotifications()
+            CareHandoff.perform(
+                state: state, now: .now, steps: currentSteps(), notificationsEnabled: notificationsEnabled,
+                witnesses: CareHandoff.Witnesses(notifications: notificationScheduler, complications: complicationReloader)
+            )
         }
     }
 
