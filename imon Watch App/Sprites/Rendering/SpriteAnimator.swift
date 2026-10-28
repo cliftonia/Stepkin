@@ -15,15 +15,9 @@ final class SpriteAnimator {
     private(set) var currentFrameIndex: Int = 0
 
     private var animation: SpriteAnimation?
-    // The run loop retains a repeating timer, so it must be invalidated in
-    // deinit or every discarded animator leaves a timer firing forever.
     // Not observed — a timer swap is never something a view redraws for.
-    @ObservationIgnored private var timer: Timer?
-
-    // Runs on the main actor, so the timer can be reached without an unsafe escape.
-    isolated deinit {
-        timer?.invalidate()
-    }
+    // Its own deinit stops it, so a discarded animator leaves nothing firing.
+    @ObservationIgnored private let timer = MainActorTimer()
 
     /// Plays a catalog animation; shared by every presenter so the
     /// `SpriteCatalog.animation(for:kind:)` lookup lives in one place.
@@ -41,13 +35,8 @@ final class SpriteAnimator {
 
         guard animation.frameCount > 1 else { return }
 
-        timer = Timer.scheduledTimer(
-            withTimeInterval: animation.frameDuration,
-            repeats: true
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.advanceFrame()
-            }
+        timer.start(interval: animation.frameDuration, repeats: true) { [weak self] in
+            self?.advanceFrame()
         }
     }
 
@@ -55,8 +44,7 @@ final class SpriteAnimator {
     /// frame, so a finished non-looping animation holds its final pose instead
     /// of blinking to empty.
     func stop() {
-        timer?.invalidate()
-        timer = nil
+        timer.stop()
         animation = nil
         currentFrameIndex = 0
     }

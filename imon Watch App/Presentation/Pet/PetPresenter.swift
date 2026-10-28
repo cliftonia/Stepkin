@@ -46,9 +46,9 @@ final class PetPresenter {
     /// Called when the pet dies during play, so the app can show the grave.
     private let onDeath: () -> Void
 
-    private var gameTimer: Timer?
+    private let gameTimer = MainActorTimer()
     /// The timer stepping the wander; the `+Wander` extension owns the movement.
-    var wanderTimer: Timer?
+    let wanderTimer = MainActorTimer()
     /// The single in-flight activity ceremony (feed / clean / heal / refuse).
     var activityTask: Task<Void, Never>?
     /// The in-flight sleep toggle; cancelled and cleared when the game loop stops.
@@ -108,15 +108,10 @@ final class PetPresenter {
     /// Repeat calls while running are ignored.
     func startGameLoop() {
         // Idempotent — a re-fired `.task` would otherwise double-tick and double-save.
-        guard gameTimer == nil else { return }
+        guard !gameTimer.isRunning else { return }
         advanceState()
-        gameTimer = Timer.scheduledTimer(
-            withTimeInterval: TimeConstants.gameTickInterval,
-            repeats: true
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.tick()
-            }
+        gameTimer.start(interval: TimeConstants.gameTickInterval, repeats: true) { [weak self] in
+            self?.tick()
         }
         startWandering()
     }
@@ -125,8 +120,7 @@ final class PetPresenter {
     /// sleep-toggle tasks, the pending rollover, the training and battle modes,
     /// wandering, and both sprite animators.
     func stopGameLoop() {
-        gameTimer?.invalidate()
-        gameTimer = nil
+        gameTimer.stop()
         cancelActivity()
         sleepToggleTask?.cancel()
         sleepToggleTask = nil

@@ -51,7 +51,7 @@ struct PetPresenterTests {
 
         presenter.stopGameLoop()
 
-        #expect(presenter.wanderTimer == nil)
+        #expect(!presenter.wanderTimer.isRunning)
         #expect(presenter.spriteAnimator.isPlaying == false)
     }
 

@@ -17,8 +17,7 @@ extension PetPresenter {
 
     /// Stops the wander loop and resets `petOffsetX` to 8.
     func stopWandering() {
-        wanderTimer?.invalidate()
-        wanderTimer = nil
+        wanderTimer.stop()
         wanderState = .idle
         viewModel.petOffsetX = 8
     }
@@ -34,15 +33,9 @@ extension PetPresenter {
     /// Schedules the next walk attempt after a random 3–8 second delay,
     /// replacing any pending timer.
     private func scheduleNextWander() {
-        wanderTimer?.invalidate()
         let delay = Double.random(in: 3...8)
-        wanderTimer = Timer.scheduledTimer(
-            withTimeInterval: delay,
-            repeats: false
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.tryStartWalking()
-            }
+        wanderTimer.start(interval: delay, repeats: false) { [weak self] in
+            self?.tryStartWalking()
         }
     }
 
@@ -84,13 +77,8 @@ extension PetPresenter {
             walk.facing(direction > 0 ? .right : .left)
         )
 
-        wanderTimer = Timer.scheduledTimer(
-            withTimeInterval: 0.35,
-            repeats: true
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.wanderStep()
-            }
+        wanderTimer.start(interval: 0.35, repeats: true) { [weak self] in
+            self?.wanderStep()
         }
     }
 
@@ -128,8 +116,7 @@ extension PetPresenter {
     }
 
     private func returnToIdle() {
-        wanderTimer?.invalidate()
-        wanderTimer = nil
+        wanderTimer.stop()
         wanderState = .idle
         updateAnimation()
         scheduleNextWander()
