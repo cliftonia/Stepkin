@@ -52,8 +52,11 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl runtime list
           for attempt in $(seq 1 36); do
-            xcrun simctl bootstatus "$SIM_DEVICE" -b && break
-            [ "$attempt" = 36 ] && exit 1
+            xcrun simctl boot "$SIM_DEVICE" && xcrun simctl bootstatus "$SIM_DEVICE" -b && break
+            if [ "$attempt" = 36 ]; then
+              xcrun simctl runtime list
+              exit 1
+            fi
             echo "runtime not ready (attempt $attempt); waiting"
             xcrun simctl shutdown "$SIM_DEVICE" || true
             sleep 10
