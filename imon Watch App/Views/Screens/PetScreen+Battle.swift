@@ -114,15 +114,18 @@ extension PetScreen {
         let oppName = battle.viewModel.opponentSpecies
             .displayName
         return HStack(spacing: 2) {
-            Text("\(petName) \(petHearts)")
-            Text("|")
-            Text("\(oppName) \(oppHearts)")
+            Text("\(petName) \(petHearts)", comment: "Battle LCD header half: species name then hearts.")
+            Text(verbatim: "|")
+            Text("\(oppName) \(oppHearts)", comment: "Battle LCD header half: species name then hearts.")
         }
         .font(.lcd(9, weight: .medium))
         .minimumScaleFactor(0.7)
         .lineLimit(1)
         .accessibilityLabel(
-            "\(petName) \(battle.viewModel.petHP) HP, \(oppName) \(battle.viewModel.opponentHP) HP"
+            Text(
+                "\(petName) \(battle.viewModel.petHP) HP, \(oppName) \(battle.viewModel.opponentHP) HP",
+                comment: "VoiceOver for the battle header: each species name followed by its hit points."
+            )
         )
     }
 

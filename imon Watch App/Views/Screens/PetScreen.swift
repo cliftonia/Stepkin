@@ -101,7 +101,7 @@ struct PetScreen: View {
                         pixelSize: 0.75,
                         pixelColor: .white
                     )
-                    Text("|")
+                    Text(verbatim: "|")
                         .font(.lcd(9, weight: .bold))
                         .foregroundStyle(.yellow.opacity(0.4))
                 }

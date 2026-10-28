@@ -50,7 +50,7 @@ struct WeatherOverlay: View {
     }
 
     private var separator: some View {
-        Text("|")
+        Text(verbatim: "|")
             .font(.lcd(11, weight: .bold))
             .foregroundStyle(theme.chromeTint.opacity(0.35))
     }

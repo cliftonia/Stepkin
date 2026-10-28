@@ -102,8 +102,9 @@ extension PetScreen {
     private func trainingRoundText(
         _ training: TrainingPresenter
     ) -> String {
-        "R\(training.viewModel.currentRound + 1)"
-            + "/\(TimeConstants.trainRounds)"
+        let round = training.viewModel.currentRound + 1
+        let total = TimeConstants.trainRounds
+        return String(localized: "R\(round)/\(total)", comment: "Training round indicator on the LCD; R abbreviates Round.")
     }
 
     private func trainingNumberBadge(

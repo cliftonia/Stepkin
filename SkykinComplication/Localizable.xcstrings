@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "%@, %@" : {
+      "comment" : "VoiceOver for the rectangular complication: species name, then the mood word.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15,10 +16,10 @@
 
     },
     "Stepkin · %@" : {
-
+      "comment" : "Inline complication: app name, a middle dot, then the mood word."
     },
     "Stepkin, %@" : {
-
+      "comment" : "VoiceOver for a complication: app name, then the mood word."
     },
     "Your pet at a glance." : {
 

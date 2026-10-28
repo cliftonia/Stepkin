@@ -56,9 +56,9 @@ extension WidgetEntry {
 }
 
 extension WidgetEntry {
-    // The widget cannot import the engine: these keys must match `Mood` by hand.
     /// The mood word in the viewer's language. A known `moodKey` resolves through
     /// the catalog; a missing or unknown key falls back to the baked `statusText`.
+    /// The widget cannot import the engine, so these keys must match `Mood` by hand.
     var moodText: String {
         switch moodKey {
         case "gone": String(localized: "gone", comment: "Complication mood: the pet has died.")

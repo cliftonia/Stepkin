@@ -43,7 +43,7 @@ nonisolated extension NotificationScheduler {
                 for notification in notifications {
                     let name = notification.species.displayName
                     let content = makeContent(
-                        title: CareNotificationText.title(for: notification.kind, speciesName: name),
+                        title: CareNotificationText.title(speciesName: name),
                         body: CareNotificationText.body(for: notification.kind, speciesName: name),
                         species: notification.species, fireDate: notification.fireDate
                     )

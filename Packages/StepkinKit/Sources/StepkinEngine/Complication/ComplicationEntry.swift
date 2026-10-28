@@ -80,9 +80,9 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
         )
     }
 
-    // The widget cannot import the engine: its `moodText` keys must match these by hand.
     /// The pet's mood for the complication face; the raw value is the identifier
-    /// baked as `moodKey`, which the widget turns into a localized word.
+    /// baked as `moodKey`, which the widget turns into a localized word. The widget
+    /// cannot import the engine, so its `moodText` keys must match these by hand.
     public enum Mood: String, Sendable, CaseIterable {
         case gone, egg, hurt, hungry, weak, messy, asleep, happy
 

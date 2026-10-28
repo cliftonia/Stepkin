@@ -35,7 +35,10 @@ struct HeartMeter: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(
-            "\(label): \(filledCount) of \(maxCount) hearts"
+            Text(
+                "\(label): \(filledCount) of \(maxCount) hearts",
+                comment: "VoiceOver for a heart meter: the stat name, then filled and total hearts."
+            )
         )
     }
 }

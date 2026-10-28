@@ -7,7 +7,7 @@ import Foundation
 nonisolated enum CareNotificationText {
 
     /// The title of a care reminder: the pet's species name.
-    static func title(for kind: CareNotification.Kind, speciesName: String) -> String {
+    static func title(speciesName: String) -> String {
         speciesName
     }
 

@@ -41,11 +41,11 @@ struct WidgetEntryDecodingTests {
         #expect(entry.moodText == entry.statusText)
     }
 
-    @Test
-    func `a current entry localizes its mood key`() throws {
-        let entry = try decode(statusText: "hungry", moodKey: "hungry")
+    @Test(arguments: ["gone", "egg", "hurt", "hungry", "weak", "messy", "asleep", "happy"])
+    func `a current entry localizes its mood key`(key: String) throws {
+        let entry = try decode(statusText: "stale", moodKey: key)
 
-        #expect(entry.moodText == "hungry")
+        #expect(entry.moodText == key)
     }
 
     @Test

@@ -75,14 +75,4 @@ struct ComplicationEntryTests {
         #expect(entry.moodKey == row.mood.rawValue)
         #expect(entry.statusText == row.mood.rawValue)
     }
-
-    @Test
-    func `a dead pet reads as gone and an egg as egg`() {
-        var dead = makeTestState(species: .emberkin)
-        dead.isDead = true
-        #expect(ComplicationEntry(date: date, state: dead).moodKey == "gone")
-        var egg = makeTestState(species: .emberkin)
-        egg.isEgg = true
-        #expect(ComplicationEntry(date: date, state: egg).moodKey == "egg")
-    }
 }

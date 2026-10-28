@@ -74,7 +74,7 @@ struct CircularView: View {
             AccessoryWidgetBackground()
             SpriteCanvas(rows: entry.spriteRows).padding(5)
         }
-        .accessibilityLabel("Stepkin, \(entry.moodText)")
+        .accessibilityLabel(Text("Stepkin, \(entry.moodText)", comment: "VoiceOver for a complication: app name, then the mood word."))
     }
 }
 
@@ -101,7 +101,9 @@ struct RectangularView: View {
             }
             Spacer(minLength: 0)
         }
-        .accessibilityLabel("\(entry.speciesName), \(entry.moodText)")
+        .accessibilityLabel(
+            Text("\(entry.speciesName), \(entry.moodText)", comment: "VoiceOver for the rectangular complication: species name, then the mood word.")
+        )
     }
 }
 
@@ -112,10 +114,11 @@ struct InlineView: View {
     let entry: WidgetEntry
 
     var body: some View {
-        Label(
-            "Stepkin \u{00b7} \(entry.moodText)",
-            systemImage: entry.needsAttention ? "exclamationmark.circle" : "pawprint"
-        )
+        Label {
+            Text("Stepkin \u{00b7} \(entry.moodText)", comment: "Inline complication: app name, a middle dot, then the mood word.")
+        } icon: {
+            Image(systemName: entry.needsAttention ? "exclamationmark.circle" : "pawprint")
+        }
     }
 }
 
@@ -132,6 +135,6 @@ struct CornerView: View {
                     Text(entry.moodText)
                 }
             }
-            .accessibilityLabel("Stepkin, \(entry.moodText)")
+            .accessibilityLabel(Text("Stepkin, \(entry.moodText)", comment: "VoiceOver for a complication: app name, then the mood word."))
     }
 }

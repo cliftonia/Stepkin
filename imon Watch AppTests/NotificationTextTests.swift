@@ -17,9 +17,9 @@ struct NotificationTextTests {
         #expect(CareNotificationText.body(for: kind, speciesName: "Emberkin") == expected)
     }
 
-    @Test(arguments: [CareNotification.Kind.hunger, .strength, .mess, .injury, .exercise, .fading])
-    func `a care reminder is titled with the species name`(kind: CareNotification.Kind) {
-        #expect(CareNotificationText.title(for: kind, speciesName: "Emberkin") == "Emberkin")
+    @Test
+    func `a care reminder is titled with the species name`() {
+        #expect(CareNotificationText.title(speciesName: "Emberkin") == "Emberkin")
     }
 
     @Test
