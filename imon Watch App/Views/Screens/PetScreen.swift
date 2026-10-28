@@ -174,48 +174,40 @@ struct PetScreen: View {
     // MARK: - Normal Layout
 
     private var normalLayout: some View {
-        VStack(spacing: 4) {
-            weatherHeader
-
-            LCDBezel(
-                evolutionProgress: presenter.viewModel.evolutionProgress,
-                dayPhase: presenter.viewModel.dayPhase
-            ) {
-                LCDDisplay(configuration: LCDDisplayConfiguration(
-                    leftSprite: presenter.spriteAnimator.currentFrame,
-                    rightSprite: effectRightSprite,
-                    poopCount: presenter.viewModel.isInActionScene
-                        ? 0
-                        : presenter.viewModel.status?.poopCount ?? 0,
-                    stinkPhase: presenter.spriteAnimator.currentFrameIndex,
-                    lightsOn: homeScene.lightsOn,
-                    leftSpriteOffsetX: presenter.wander.offsetX,
-                    weatherCondition: homeScene.weather,
-                    moonPhase: MoonPhase.current(date: .now),
-                    dayPhase: homeScene.dayPhase,
-                    evolveFlash: presenter.viewModel.isEvolving,
-                    showCallSign: !presenter.viewModel.isInActionScene
-                        && presenter.viewModel.status?.isLanguishing == true
-                        && presenter.viewModel.status?.isSleeping == false
-                ))
-            }
-            .fixedSize(horizontal: false, vertical: true)
-
+        GameModeLayout(
+            header: weatherHeader,
+            evolutionProgress: presenter.viewModel.evolutionProgress,
+            dayPhase: presenter.viewModel.dayPhase
+        ) {
+            LCDDisplay(configuration: LCDDisplayConfiguration(
+                leftSprite: presenter.spriteAnimator.currentFrame,
+                rightSprite: effectRightSprite,
+                poopCount: presenter.viewModel.isInActionScene
+                    ? 0
+                    : presenter.viewModel.status?.poopCount ?? 0,
+                stinkPhase: presenter.spriteAnimator.currentFrameIndex,
+                lightsOn: homeScene.lightsOn,
+                leftSpriteOffsetX: presenter.wander.offsetX,
+                weatherCondition: homeScene.weather,
+                moonPhase: MoonPhase.current(date: .now),
+                dayPhase: homeScene.dayPhase,
+                evolveFlash: presenter.viewModel.isEvolving,
+                showCallSign: !presenter.viewModel.isInActionScene
+                    && presenter.viewModel.status?.isLanguishing == true
+                    && presenter.viewModel.status?.isSleeping == false
+            ))
+        } info: {
             MenuIconRow(
                 selectedIndex: presenter.viewModel
                     .menuSelection.rawValue
             )
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
-
+        } buttons: {
             VStack(spacing: 2) {
                 normalButtons
                 debugNameOverlay
             }
-            .frame(
-                maxHeight: .infinity,
-                alignment: .bottom
-            )
+            // The shared layout insets the buttons by 4 points; home keeps full width.
+            .padding(.horizontal, -4)
         }
     }
 
