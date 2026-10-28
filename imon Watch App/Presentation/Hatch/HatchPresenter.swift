@@ -13,7 +13,7 @@ final class HatchPresenter {
     /// Plays the sprite loops for each phase; stopped when the ceremony ends.
     let spriteAnimator = SpriteAnimator()
 
-    /// The running ceremony; non-nil from `startHatching` until it ends or is cancelled.
+    /// The running ceremony; non-nil from `startHatching` until it ends or `cancel` is called.
     private(set) var ceremonyTask: Task<Void, Never>?
 
     private let onHatched: () -> Void
@@ -37,13 +37,14 @@ final class HatchPresenter {
     /// Runs the ceremony's egg → crack → newborn timeline, then stops the
     /// sprite animator and calls `onHatched` — asynchronously, roughly five
     /// and a half seconds after this returns. A second call while the
-    /// ceremony runs does nothing.
+    /// ceremony is still running is ignored; once it ends or is cancelled, a new one may start.
     func startHatching() {
         guard ceremonyTask == nil else { return }
         viewModel.phase = .egg
         spriteAnimator.play(SharedSprites.egg)
 
         ceremonyTask = Task {
+            defer { ceremonyTask = nil }
             guard await beat(2_000) else { return }
 
             viewModel.phase = .cracking
