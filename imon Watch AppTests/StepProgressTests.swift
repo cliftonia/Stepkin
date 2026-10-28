@@ -5,8 +5,15 @@ import Testing
 @Suite("StepProgress")
 struct StepProgressTests {
 
-    private static let calendar = Calendar(identifier: .gregorian)
-    private static let day1 = Date(timeIntervalSince1970: 1_700_000_000) // a fixed day
+    /// A gregorian calendar pinned to UTC so day boundaries do not depend on the host time zone.
+    private static let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC") ?? .gmt
+        return calendar
+    }()
+
+    /// Noon UTC on a fixed day, so the six-hour same-day offset stays inside that day.
+    private static let day1 = Date(timeIntervalSince1970: 1_699_963_200)
     private static var day2: Date { day1.addingTimeInterval(24 * 60 * 60) }
     private static var day3: Date { day1.addingTimeInterval(2 * 24 * 60 * 60) }
     private static var day4: Date { day1.addingTimeInterval(3 * 24 * 60 * 60) }
