@@ -35,7 +35,7 @@ jobs:
       - name: Select Xcode 27.1
         run: sudo xcode-select -s /Applications/Xcode_27.1.app && xcodebuild -version
       - name: Cache DerivedData
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: dd-${{ runner.os }}-xcode27.1-${{ hashFiles('imon.xcodeproj/project.pbxproj') }}
@@ -43,6 +43,11 @@ jobs:
         run: >
           xcodebuild build -project imon.xcodeproj -scheme "imon Watch App"
           -destination "generic/platform=watchOS Simulator" -quiet
+      - name: Boot simulator
+        run: |
+          xcrun simctl list runtimes
+          xcrun simctl boot "Apple Watch Ultra 4 (49mm)"
+          xcrun simctl bootstatus "Apple Watch Ultra 4 (49mm)" -b
       - name: Test
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
