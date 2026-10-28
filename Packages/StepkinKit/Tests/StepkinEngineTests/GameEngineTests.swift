@@ -82,6 +82,36 @@ struct GameEngineTests {
         #expect(state.lightsOn == true)
     }
 
+    /// A pet saved asleep must not be credited for the night it slept: waking
+    /// re-anchors the time credit, so only the awake span 06:00–09:00 counts.
+    @Test
+    func `with Steps off a night slept through credits only the morning after dawn`() {
+        var state = makeTestState(at: clock(hour: 22))
+        state.isSleeping = true
+        state.lightsOn = false
+        state.wasNight = true
+
+        state = GameEngine.advance(state, to: clock(hour: 9, daysFromNow: 1), isNight: nil, steps: .off, calendar: .current)
+
+        #expect(state.isSleeping == false)
+        #expect(state.lifetimeActiveSteps == 3 * TimeConstants.fallbackStepsPerWakingHour)
+    }
+
+    /// From 20:00 the pet is awake until bedtime and settles at 21:02; it
+    /// wakes at dawn. Only 20:00–21:00 and 06:00–07:00 are credited (the
+    /// two-minute settle ends asleep, so it earns nothing).
+    @Test
+    func `with Steps off a night crossed in a catch-up credits only the waking hours`() {
+        var state = makeTestState(at: clock(hour: 20))
+        state.lightsOn = false
+        state.wasNight = true
+
+        state = GameEngine.advance(state, to: clock(hour: 7, daysFromNow: 1), isNight: nil, steps: .off, calendar: .current)
+
+        #expect(state.isSleeping == false)
+        #expect(state.lifetimeActiveSteps == 2 * TimeConstants.fallbackStepsPerWakingHour)
+    }
+
     @Test
     func `a pet left for days still collapses during the replay`() {
         var state = makeTestState(hunger: 1, strength: 1, at: clock(hour: 10))

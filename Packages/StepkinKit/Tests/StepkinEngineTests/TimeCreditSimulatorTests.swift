@@ -107,4 +107,37 @@ struct TimeCreditSimulatorTests {
 
         #expect(state.lifetimeActiveSteps == TimeConstants.fallbackStepsPerWakingHour)
     }
+
+    @Test
+    func `Steps off parks the step accumulator so a returning count only baselines`() {
+        var state = makeTestState(at: start)
+        state.stepTrackedDay = start
+        state.stepsCreditedToday = 3_000
+        let dayLater = start.addingTimeInterval(24 * hour)
+
+        let parked = TimeCreditSimulator.apply(to: state, at: dayLater, steps: .off)
+        #expect(parked.stepTrackedDay == nil)
+        #expect(parked.stepsCreditedToday == 0)
+
+        // The off day was already paid in time credit, so the returning count is a baseline.
+        let baselined = StepCrediting.creditLive(parked, todaySteps: 5_000, now: dayLater, calendar: .current)
+        #expect(baselined.lifetimeActiveSteps == parked.lifetimeActiveSteps)
+        #expect(baselined.stepsCreditedToday == 5_000)
+
+        let later = StepCrediting.creditLive(baselined, todaySteps: 5_600, now: dayLater.addingTimeInterval(60), calendar: .current)
+        #expect(later.lifetimeActiveSteps == parked.lifetimeActiveSteps + 600)
+    }
+
+    @Test
+    func `Steps off parks the accumulator even while the pet sleeps`() {
+        var state = makeTestState(at: start)
+        state.isSleeping = true
+        state.stepTrackedDay = start
+        state.stepsCreditedToday = 800
+
+        let parked = TimeCreditSimulator.apply(to: state, at: start.addingTimeInterval(hour), steps: .off)
+
+        #expect(parked.stepTrackedDay == nil)
+        #expect(parked.stepsCreditedToday == 0)
+    }
 }

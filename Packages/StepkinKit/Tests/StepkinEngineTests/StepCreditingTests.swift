@@ -157,4 +157,20 @@ struct StepCreditingTests {
         #expect(settled.hungerHearts == state.hungerHearts)
         #expect(settled.timestamps.lastAdvancedAt == state.timestamps.lastAdvancedAt)
     }
+
+    /// After a stretch with Steps off the accumulator is parked, so a settle
+    /// takes the baseline path: no missed day is fetched or replayed.
+    @Test func `a settle after a Steps-off stretch baselines without replaying missed days`() async {
+        let log = FetchLog()
+        let tracked = Self.now.addingTimeInterval(-3 * 24 * 60 * 60)
+        let state = makeState(trackedDay: tracked, credited: 1_000, lifetime: 1_000)
+        let parked = TimeCreditSimulator.apply(to: state, at: Self.now, steps: .off)
+
+        let settled = await settle(parked, todaySteps: 4_000, log: log) { _ in 9_000 }
+
+        #expect(log.days.isEmpty)
+        #expect(settled.lifetimeActiveSteps == parked.lifetimeActiveSteps)
+        #expect(settled.stepsCreditedToday == 4_000)
+        #expect(settled.evolutionGoalPenalty == 0)
+    }
 }

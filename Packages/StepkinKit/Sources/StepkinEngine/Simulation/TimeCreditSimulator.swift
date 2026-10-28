@@ -3,6 +3,10 @@ import StepkinCore
 
 /// Credits step-equivalents for waking, living time while the Steps switch is off, so a pet without
 /// HealthKit still grows. Whole credits only; the anchor advances by the time they cost.
+///
+/// `.off` also parks the step accumulator (`stepTrackedDay` cleared, `stepsCreditedToday` zeroed),
+/// so when a count returns `StepProgress.advance` takes its baseline path and credits nothing: the
+/// off period was already paid in time credit and is never replayed as missed days.
 enum TimeCreditSimulator {
 
     /// The most credits one call may award, keeping the conversion to `Int` safe on a 32-bit watch.
@@ -14,6 +18,11 @@ enum TimeCreditSimulator {
         var state = state
         let rate = Double(TimeConstants.fallbackStepsPerWakingHour)
         let elapsed = now.timeIntervalSince(state.timestamps.lastTimeCreditAt)
+
+        if steps == .off {
+            state.stepTrackedDay = nil
+            state.stepsCreditedToday = 0
+        }
 
         guard steps == .off, state.isAwakeAndAlive, elapsed >= 0 else {
             state.timestamps.lastTimeCreditAt = now
