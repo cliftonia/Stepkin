@@ -8,7 +8,7 @@ extension PetPresenter {
 
     /// Performs an action routed by `PetActionRouter` while this presenter is
     /// the save's writer. A tick runs one game-loop tick; a feed refuses with
-    /// the shared `FeedRefusal` reason when the pet cannot eat or is sated,
+    /// the shared `FeedRefusal` reason when the pet is busy, cannot eat or is sated,
     /// else starts the same feeding ceremony the home screen's menu does.
     func perform(_ action: PetAction) -> PetActionOutcome {
         switch action {
@@ -16,6 +16,8 @@ extension PetPresenter {
             tick()
             return .done
         case .feed(let food):
+            // A running ceremony is never cancelled by a routed feed.
+            if viewModel.isBusy { return .refused(reason: FeedRefusal.busy) }
             if let reason = FeedRefusal.reason(for: state, food: food) {
                 return .refused(reason: reason)
             }

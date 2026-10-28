@@ -41,6 +41,16 @@ struct PetPresenterTests {
     }
 
     @Test
+    func `a routed feed while busy is refused and leaves the running activity alone`() {
+        let presenter = makePresenter(makeTestState(hunger: 1), SaveBox())
+        presenter.viewModel.screenMode = .training
+
+        let outcome = presenter.perform(.feed(.meat))
+
+        #expect(outcome == .refused(reason: FeedRefusal.busy))
+    }
+
+    @Test
     func `stopping the game loop mid-walk leaves no wander timer armed and resets the offset`() {
         let presenter = makePresenter(makeTestState(), SaveBox())
         presenter.startGameLoop()

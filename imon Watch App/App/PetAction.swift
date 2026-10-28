@@ -30,6 +30,9 @@ nonisolated enum FeedRefusal {
     /// The reason given when the food's heart is already full.
     static let full = "Your pet is full."
 
+    /// The reason given when a ceremony or mode is running on the home screen.
+    static let busy = "Your pet is busy right now."
+
     /// The refusal reason for feeding `food` to `state`, or nil when the feed
     /// may go ahead; checks `canFeed` before `isSated`, as the home screen does.
     static func reason(for state: PetState, food: FeedAction.FoodKind) -> String? {
