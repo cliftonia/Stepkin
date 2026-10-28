@@ -41,11 +41,11 @@ struct PetPresenterTests {
     }
 
     @Test
-    func `a routed feed while busy is refused and leaves the running activity alone`() {
+    func `a routed feed while busy is refused and leaves the running activity alone`() async {
         let presenter = makePresenter(makeTestState(hunger: 1), SaveBox())
         presenter.viewModel.screenMode = .training
 
-        let outcome = presenter.perform(.feed(.meat))
+        let outcome = await presenter.perform(.feed(.meat))
 
         #expect(outcome == .refused(reason: FeedRefusal.busy))
     }

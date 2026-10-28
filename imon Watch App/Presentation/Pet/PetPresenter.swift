@@ -53,6 +53,10 @@ final class PetPresenter {
     var activityTask: Task<Void, Never>?
     /// The countdown from a lights toggle to sleep; cancelled when the game loop stops.
     let sleepSettle = DelayedTask()
+    /// Whether the scene is active, as `handleScenePhase` last reported; true
+    /// until told otherwise, since the presenter is created for a showing
+    /// screen. A routed tick reads it to choose the flash or `evolveUnseen`.
+    var isSceneActive = true
     /// The in-flight rollover of a day that ended while the app was closed.
     /// Not private: the `+Steps` extension starts and clears it.
     var dayRecoveryTask: Task<Void, Never>?
@@ -268,6 +272,7 @@ final class PetPresenter {
     /// the system — or clears them when the toggle is off. Activation never
     /// cancels: a wrist raise flips active and would wipe them before they fire.
     func handleScenePhase(isActive: Bool, notificationsEnabled: Bool) {
+        isSceneActive = isActive
         if isActive {
             adoptNewerSave()
             startGameLoop()

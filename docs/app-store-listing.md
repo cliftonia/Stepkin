@@ -91,7 +91,8 @@ optional:
 
 - Health (read step count): the daily step total decides when the creature
   evolves. Declining it leaves the creature alive and growing with time,
-  more slowly. Background delivery of steps is optional too.
+  more slowly. Background step updates follow the same Health permission;
+  there is nothing extra to grant.
 - Location (when in use): fetches local weather through WeatherKit to draw
   the scene. Declining it removes the weather effects and uses the clock for
   day and night.

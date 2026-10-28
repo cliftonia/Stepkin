@@ -10,7 +10,8 @@ import os
 ///
 /// Runs on the caller's actor (nonisolated nonsending); the router calls it
 /// on the main actor, so the hand-off check before the save and the save
-/// itself are one synchronous stretch.
+/// itself are one stretch: with no presenter the hand-off returns nil before
+/// any await of its own, so nothing can interleave between them.
 nonisolated enum OfflineSession {
 
     /// Everything a session reads and writes through, gathered so `run` stays
@@ -30,8 +31,9 @@ nonisolated enum OfflineSession {
         /// Hands the action to a live presenter when one now exists, returning
         /// its outcome, or nil while none does. The session asks before its
         /// load and again before its save, and never writes once a presenter
-        /// has appeared. `PetActionRouter` installs it; the default never hands off.
-        var liveHandOff: @MainActor @Sendable (PetAction) -> PetActionOutcome? = { _ in nil }
+        /// has appeared. Async because a live feed returns only once its
+        /// ceremony has saved. `PetActionRouter` installs it; the default never hands off.
+        var liveHandOff: @MainActor @Sendable (PetAction) async -> PetActionOutcome? = { _ in nil }
     }
 
     /// Loads the pet, advances it to `now`, settles its steps, applies
@@ -69,7 +71,10 @@ nonisolated enum OfflineSession {
         if let outcome = await dependencies.liveHandOff(action) { return outcome }
 
         let outcome = apply(action, to: &state, now: now)
-        state = evolveIfReady(state, now: now, dependencies: dependencies)
+        // Evolution otherwise runs only foregrounded; this is what lets a pet grow while away.
+        state = EvolutionAnnouncer.evolveIfReady(
+            state, now: now, notifications: dependencies.witnesses.notifications, enabled: dependencies.notificationsEnabled
+        )
 
         dependencies.store.save(state, loggingTo: Log.background)
 
@@ -96,20 +101,5 @@ nonisolated enum OfflineSession {
             state = FeedAction.apply(to: state, food: food, at: now)
             return .done
         }
-    }
-
-    /// Evolves the pet when it has met its gate, announcing it when
-    /// notifications are on; evolution otherwise runs only foregrounded, so
-    /// this is what lets a pet grow while away.
-    private static func evolveIfReady(_ state: PetState, now: Date, dependencies: Dependencies) -> PetState {
-        guard let target = EvolutionEngine.checkEvolution(for: state) else { return state }
-        let previous = state.species
-        let evolved = EvolutionEngine.evolve(state, to: target, at: now)
-        if dependencies.notificationsEnabled {
-            dependencies.witnesses.notifications.notify(
-                "Evolution!", "\(previous.displayName) evolved into \(target.displayName)!", target
-            )
-        }
-        return evolved
     }
 }

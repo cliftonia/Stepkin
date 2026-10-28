@@ -33,7 +33,7 @@ developer's.
   forward, and the Settings footer explains the two sources.
 - VoiceOver: the three buttons announce what they do; the home screen reads
   the pet's condition.
-- Build warning-free, SwiftLint clean, 345 tests green.
+- Build warning-free, SwiftLint clean, 437 tests green (package 305, app 132).
 
 ## Decide before the upload (developer)
 
@@ -72,8 +72,9 @@ developer's.
 - Review notes: explain that HealthKit steps drive evolution and can be
   declined (the pet then grows with time), that HealthKit background delivery
   needs its capability and can be declined, that Siri answers "Feed Stepkin"
-  and "Check on Stepkin", that the Smart Stack relevance is passive, that weather needs location and can be declined, and that the
-  reviewer can reach every screen without granting anything.
+  and "Check on Stepkin", that the Smart Stack relevance is passive, that
+  weather needs location and can be declined, and that the reviewer can reach
+  every screen without granting anything.
 - TestFlight on the physical watch for at least one full day/night cycle
   before submitting — the sleep-pause change and the permission timing are
   the two behaviours that cannot be judged in the simulator.

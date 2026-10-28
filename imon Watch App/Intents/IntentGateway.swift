@@ -19,19 +19,36 @@ enum IntentGateway {
         return await PetActionRouter.perform(action, app: app, offline: offline, now: Date())
     }
 
-    /// The pet's spoken sentence, or nil when there is no pet; defaults to the
-    /// live presenter's status, else the save read through the delegate's store.
+    /// The pet's spoken sentence, or nil when there is no pet; defaults to a
+    /// tick through `route` (so the single writer advances and saves the pet
+    /// first), then the live presenter's status, else the freshly saved state.
     static var describe: @MainActor () async -> String? = {
+        await sentence(after: route, reading: currentStatus)
+    }
+
+    /// Ticks the pet through `route`, then speaks the status `status` reads;
+    /// the order matters, since a suspended app's last status is stale.
+    static func sentence(
+        after route: @MainActor (PetAction) async -> PetActionOutcome,
+        reading status: @MainActor () -> PetStatus?
+    ) async -> String? {
+        _ = await route(.tick)
+        return status().map { PetStatusSentence.describe($0) }
+    }
+
+    /// The live presenter's status, else the save's read through the
+    /// delegate's store; nil without a delegate, a save or a hatched pet.
+    private static func currentStatus() -> PetStatus? {
         guard let delegate = WKApplication.shared().delegate as? AppDelegate else { return nil }
         let app = delegate.appPresenter
         if let status = app.petPresenter?.viewModel.status {
-            return PetStatusSentence.describe(status)
+            return status
         }
         let offline = app.offlineDependencies(
             witnesses: CareHandoff.Witnesses(notifications: .live(), complications: .live()),
             refresh: nil
         )
         guard let saved = try? offline.store.load(), !saved.isEgg else { return nil }
-        return PetStatusSentence.describe(PetStatus(from: saved))
+        return PetStatus(from: saved)
     }
 }

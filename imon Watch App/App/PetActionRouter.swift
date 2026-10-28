@@ -20,30 +20,38 @@ enum PetActionRouter {
 
         // Checked after the refresh's await: the UI may have created a presenter meanwhile.
         if let petPresenter = app.petPresenter {
-            return performLive(action, on: petPresenter, offline: offline, now: now)
+            return await performLive(action, on: petPresenter, offline: offline, now: now)
         }
 
         var session = offline
         session.liveHandOff = { [weak app] action in
-            app?.petPresenter.map { performLive(action, on: $0, offline: offline, now: now) }
+            guard let petPresenter = app?.petPresenter else { return nil }
+            return await performLive(action, on: petPresenter, offline: offline, now: now)
         }
         return await OfflineSession.run(
             action, readings: (night: app.currentNightReading(), steps: steps), dependencies: session, now: now
         )
     }
 
-    /// The live path: the presenter performs the action, the refresh is
-    /// re-armed when given, and a tick hands care off the way a background
-    /// wake always has. Neither of the last two writes the save.
+    /// The live path: the presenter performs the action (a feed returns once
+    /// it is saved), the refresh is re-armed when given, and a tick hands care
+    /// off the way a background wake always has. While the scene is inactive
+    /// a tick first evolves a ready pet at once, announced, so the hand-off
+    /// bakes the evolved creature; the re-arm and hand-off never write the save.
     private static func performLive(
         _ action: PetAction,
         on petPresenter: PetPresenter,
         offline: OfflineSession.Dependencies,
         now: Date
-    ) -> PetActionOutcome {
-        let outcome = petPresenter.perform(action)
+    ) async -> PetActionOutcome {
+        let outcome = await petPresenter.perform(action)
         offline.refresh?.scheduleNext(from: now)
         if case .tick = action {
+            if !petPresenter.isSceneActive {
+                petPresenter.evolveUnseen(
+                    now: now, notifications: offline.witnesses.notifications, enabled: offline.notificationsEnabled
+                )
+            }
             CareHandoff.perform(
                 state: petPresenter.state, now: now, steps: petPresenter.currentSteps().count,
                 notificationsEnabled: offline.notificationsEnabled, witnesses: offline.witnesses

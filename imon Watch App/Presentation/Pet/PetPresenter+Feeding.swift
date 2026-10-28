@@ -44,14 +44,17 @@ extension PetPresenter {
 
     /// Runs the serving, bite and satisfaction stages in order, dropping the
     /// remaining stages when the task is cancelled between them; only the
-    /// final stage applies the feed and saves.
-    func runFeedingSequence() async {
+    /// final stage applies the feed and saves. Returns whether it got that
+    /// far, so a routed feed can tell a fed pet from a cancelled ceremony.
+    @discardableResult
+    func runFeedingSequence() async -> Bool {
         let food = viewModel.selectedFood
         await runServingPhase(food: food)
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled else { return false }
         await runBitePhase(food: food)
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled else { return false }
         await runSatisfactionPhase(food: food)
+        return true
     }
 
     private func runServingPhase(

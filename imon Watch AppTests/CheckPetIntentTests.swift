@@ -26,4 +26,31 @@ struct CheckPetIntentTests {
 
         #expect(spoken == "There is no pet yet.")
     }
+
+    /// Records the order in which the gateway routes and reads the pet.
+    private final class EventLog {
+        var events: [String] = []
+    }
+
+    /// A check must describe the pet as it is now, so it ticks through the
+    /// single writer before the status is read.
+    @Test
+    func `a check ticks the pet through the router before reading its status`() async {
+        let log = EventLog()
+        let status = PetStatus(from: makeTestState())
+
+        let sentence = await IntentGateway.sentence(
+            after: { action in
+                if case .tick = action { log.events.append("tick") }
+                return .done
+            },
+            reading: {
+                log.events.append("read")
+                return status
+            }
+        )
+
+        #expect(log.events == ["tick", "read"])
+        #expect(sentence == PetStatusSentence.describe(status))
+    }
 }

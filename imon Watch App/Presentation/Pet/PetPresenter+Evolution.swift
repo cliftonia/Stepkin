@@ -11,10 +11,12 @@ extension PetPresenter {
     static let evolveFlashMilliseconds = 1_600
 
     /// Starts the evolution flash when the lifetime steps have crossed the
-    /// stage threshold and the pet is idle. The ceremony is automatic — there
-    /// is nothing to tap — matching the original toy.
+    /// stage threshold, the pet is idle and the scene is active. The ceremony
+    /// is automatic — there is nothing to tap — matching the original toy.
+    /// While the scene is inactive a routed tick evolves through
+    /// `evolveUnseen` instead, so no strobe plays to nobody.
     func checkEvolution() {
-        guard !viewModel.isBusy else { return }
+        guard isSceneActive, !viewModel.isBusy else { return }
         guard let target = EvolutionEngine.checkEvolution(for: state) else { return }
         beginEvolution(to: target)
     }
