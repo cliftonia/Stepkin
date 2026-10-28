@@ -35,9 +35,14 @@ final class WanderController {
     /// Whether a timer is pending; false after `stop`.
     var isScheduled: Bool { timer.isRunning }
 
-    private var phase = Phase.idle
-    private var isActive = false
+    @ObservationIgnored private var phase = Phase.idle
+    @ObservationIgnored private var isActive = false
     @ObservationIgnored private let timer = MainActorTimer()
+
+    /// Creates a controller standing at `offsetX`, where the pet stands when wandering begins.
+    init(offsetX: Int = 8) {
+        self.offsetX = offsetX
+    }
 
     /// Starts the loop by scheduling the first walk attempt.
     func start() {
@@ -88,8 +93,9 @@ final class WanderController {
         }
     }
 
-    // Advances the walk one step; pausing, leaving the band or running out of steps ends it.
-    private func step() {
+    /// Advances the walk one step; pausing, leaving the band or running out of
+    /// steps ends it. Internal so tests can drive a step without the timer.
+    func step() {
         guard isActive, case .walking(let direction, let remaining) = phase else { return }
         let newX = offsetX + direction
         guard !shouldPause(), remaining > 0, (2...9).contains(newX) else {

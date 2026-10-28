@@ -6,12 +6,31 @@ import Testing
 @MainActor
 struct WanderControllerTests {
 
+    /// Attempts until a walk begins; the 0.6 chance makes a single attempt unreliable.
+    private func beginWalk(_ controller: WanderController) -> Bool {
+        for _ in 0..<50 {
+            controller.tryStartWalking()
+            if controller.isWalking { return true }
+        }
+        return false
+    }
+
+    /// Drives the current walk to its end, returning the offset after each step.
+    private func finishWalk(_ controller: WanderController) -> [Int] {
+        var offsets: [Int] = []
+        while controller.isWalking {
+            controller.step()
+            offsets.append(controller.offsetX)
+        }
+        return offsets
+    }
+
     @Test
-    func `stop resets the offset and arms no timer`() async throws {
-        let controller = WanderController()
+    func `stop resets the offset and arms no timer`() {
+        let controller = WanderController(offsetX: 5)
         controller.start()
-        controller.tryStartWalking()
-        try await Task.sleep(for: .milliseconds(400))
+        #expect(beginWalk(controller))
+        controller.step()
 
         controller.stop()
 
@@ -36,23 +55,74 @@ struct WanderControllerTests {
     }
 
     @Test
-    func `a walk stays inside the band`() async throws {
-        let controller = WanderController()
+    func `a walk from the left edge is forced right`() {
+        let controller = WanderController(offsetX: 3)
         controller.start()
-        var walks = 0
-        controller.playWalk = { _ in walks += 1 }
-        while !controller.isWalking {
-            controller.tryStartWalking()
-        }
+        #expect(beginWalk(controller))
 
-        var observed: Set<Int> = []
-        for _ in 0..<50 {
-            observed.insert(controller.offsetX)
-            try await Task.sleep(for: .milliseconds(20))
+        controller.step()
+
+        #expect(controller.offsetX == 4)
+        controller.stop()
+    }
+
+    @Test
+    func `a walk from the right edge is forced left`() {
+        let controller = WanderController(offsetX: 8)
+        controller.start()
+        #expect(beginWalk(controller))
+
+        controller.step()
+
+        #expect(controller.offsetX == 7)
+        controller.stop()
+    }
+
+    @Test
+    func `every driven step stays inside the band`() {
+        let controller = WanderController(offsetX: 5)
+        controller.start()
+        var observed: [Int] = []
+        for _ in 0..<300 {
+            #expect(beginWalk(controller))
+            observed += finishWalk(controller)
         }
         controller.stop()
 
-        #expect(walks == 1)
+        #expect(observed.count > 300)
         #expect(observed.allSatisfy { (2...9).contains($0) })
+    }
+
+    @Test
+    func `a stale fire after stop is a no-op`() {
+        let controller = WanderController(offsetX: 5)
+        controller.start()
+        #expect(beginWalk(controller))
+        controller.stop()
+
+        controller.step()
+        controller.tryStartWalking()
+
+        #expect(controller.offsetX == 8)
+        #expect(!controller.isWalking)
+        #expect(!controller.isScheduled)
+    }
+
+    @Test
+    func `pausing mid-walk returns to idle`() {
+        let controller = WanderController(offsetX: 5)
+        var idleCount = 0
+        var paused = false
+        controller.shouldPause = { paused }
+        controller.onIdle = { idleCount += 1 }
+        controller.start()
+        #expect(beginWalk(controller))
+        paused = true
+
+        controller.step()
+
+        #expect(idleCount == 1)
+        #expect(!controller.isWalking)
+        controller.stop()
     }
 }
