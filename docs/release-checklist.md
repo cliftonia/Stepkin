@@ -33,7 +33,7 @@ developer's.
   forward, and the Settings footer explains the two sources.
 - VoiceOver: the three buttons announce what they do; the home screen reads
   the pet's condition.
-- Build warning-free, SwiftLint clean, 457 tests green (package 305, app 143, complication 9).
+- Build warning-free, SwiftLint clean, 465 tests green (package 307, app 146, complication 12).
 
 ## Decide before the upload (developer)
 
@@ -81,6 +81,9 @@ developer's.
 
 ## Known and accepted for 1.0
 
+- Both String Catalogs are English-only at 1.0; a translation is a `state: new`
+  entry away. The engine's mood words reach the widget as keys (`moodKey`), and
+  the widget localizes them.
 - The care-reminder replan and complication reload run on every wrist-down
   (`.inactive`); WidgetKit's reload budget may throttle some of them.
 - The DEBUG build shows a sample weather reading; Release shows nothing until

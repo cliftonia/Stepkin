@@ -154,6 +154,15 @@ imon Watch App/
                     extension target
 ```
 
+## Localization
+
+User-facing strings live in two String Catalogs: the watch app's
+`imon Watch App/Resources/Localizable.xcstrings` and the complication's
+`SkykinComplication/Localizable.xcstrings`. Code resolves them with
+`String(localized:comment:)` or a SwiftUI initialiser; the engine package carries
+keys only. After adding or changing a string, build and run
+`xcrun xcstringstool sync <catalog> --stringsdata <build>/*.stringsdata`.
+
 ## Sprites
 
 Every species has a file in `Packages/StepkinKit/Sources/StepkinSprites/Pets/`
