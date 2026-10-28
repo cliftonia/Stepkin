@@ -28,7 +28,9 @@ nonisolated enum CareHandoff {
         } else {
             witnesses.notifications.cancelAll()
         }
-        ComplicationStore.save(ComplicationTimeline.entries(for: state, from: now))
+        ComplicationStore.save(
+            ComplicationTimeline.entries(for: state, from: now, spriteRows: ComplicationEntry.spriteRows(for:))
+        )
         witnesses.complications.reload()
     }
 }

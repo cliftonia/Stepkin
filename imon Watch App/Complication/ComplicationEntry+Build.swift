@@ -1,44 +1,22 @@
 import Foundation
 
 /// App-side builder: turns a `PetState` into a `ComplicationEntry`, baking the
-/// display values and the current sprite rows. Lives only in the app target
-/// (it touches `PetStatus` and `SpriteCatalog`), keeping `ComplicationEntry`
-/// itself engine-free for sharing with the complication extension.
+/// current sprite rows. Lives only in the app target because it touches
+/// `SpriteCatalog`; the display values and mood word come from the engine's
+/// `init(date:state:spriteRows:)`.
 nonisolated extension ComplicationEntry {
 
-    /// Creates an entry from a state snapshot, baking the mood word and the
-    /// first frame of the sleep or idle sprite; a missing frame set bakes as
-    /// blank rows.
+    /// Creates an entry from a state snapshot, baking the first frame of the
+    /// sleep or idle sprite; a missing frame set bakes as blank rows.
     init(date: Date, state: PetState) {
-        let status = PetStatus(from: state)
-        let kind: SpriteCatalog.AnimationKind = status.isSleeping ? .sleep : .idle
-        let rows = SpriteCatalog.frames(for: status.species, kind: kind).first?.rows
-            ?? [UInt16](repeating: 0, count: 16)
-        self.init(
-            date: date,
-            speciesName: status.species.displayName,
-            spriteRows: rows,
-            hungerValue: status.hungerHearts.value,
-            hungerMax: status.species.maxHunger,
-            needsAttention: status.needsAttention,
-            isInjured: status.isInjured,
-            isDead: status.isDead,
-            isEgg: status.isEgg,
-            statusText: Self.mood(for: status)
-        )
+        self.init(date: date, state: state, spriteRows: Self.spriteRows(for: state))
     }
 
-    /// Status word for the complication face. The check order is the
-    /// precedence: first match wins, so `asleep` and `happy` appear only when
-    /// every earlier state is false.
-    private static func mood(for status: PetStatus) -> String {
-        if status.isDead { return "gone" }
-        if status.isEgg { return "egg" }
-        if status.isInjured { return "hurt" }
-        if status.hungerHearts.isEmpty { return "hungry" }
-        if status.strengthHearts.isEmpty { return "weak" }
-        if status.poopCount > 0 { return "messy" }
-        if status.isSleeping { return "asleep" }
-        return "happy"
+    /// The first frame of the pet's sleep or idle sprite, one `UInt16` per row;
+    /// blank rows when the species has no frames for that animation.
+    static func spriteRows(for state: PetState) -> [UInt16] {
+        let kind: SpriteCatalog.AnimationKind = state.isSleeping ? .sleep : .idle
+        return SpriteCatalog.frames(for: state.species, kind: kind).first?.rows
+            ?? [UInt16](repeating: 0, count: 16)
     }
 }

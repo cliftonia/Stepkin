@@ -17,7 +17,8 @@ let package = Package(
         .target(name: "StepkinEngine", dependencies: ["StepkinCore"], swiftSettings: settings),
         .target(name: "StepkinSprites", dependencies: ["StepkinCore", "StepkinEngine"], swiftSettings: settings),
         .target(name: "StepkinTestSupport", dependencies: ["StepkinEngine"], swiftSettings: settings),
-        .testTarget(name: "StepkinCoreTests", dependencies: ["StepkinCore"], swiftSettings: settings),
+        .testTarget(name: "StepkinCoreTests", dependencies: ["StepkinCore", "StepkinTestSupport"], swiftSettings: settings),
+        .testTarget(name: "StepkinEngineTests", dependencies: ["StepkinEngine", "StepkinTestSupport"], swiftSettings: settings),
     ],
     swiftLanguageModes: [.v6]
 )

@@ -12,6 +12,8 @@
 		1CAA70422FE9429100377A61 /* SkykinComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1CAA70302FE9429000377A61 /* SkykinComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1CACAD312F4889AD00C99F7E /* imon Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A022FF1A00000000001 /* StepkinCore */; };
+		7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A042FF1A00000000001 /* StepkinEngine */; };
+		7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A062FF1A00000000001 /* StepkinTestSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */,
+				7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +254,7 @@
 			name = "imon Watch App";
 			packageProductDependencies = (
 				7E5C0A022FF1A00000000001 /* StepkinCore */,
+				7E5C0A042FF1A00000000001 /* StepkinEngine */,
 			);
 			productName = "imon Watch App";
 			productReference = 1CACAD302F4889AD00C99F7E /* imon Watch App.app */;
@@ -273,6 +278,7 @@
 			);
 			name = "imon Watch AppTests";
 			packageProductDependencies = (
+				7E5C0A062FF1A00000000001 /* StepkinTestSupport */,
 			);
 			productName = "imon Watch AppTests";
 			productReference = 1CACAD3F2F4889AE00C99F7E /* imon Watch AppTests.xctest */;
@@ -918,6 +924,14 @@
 		7E5C0A022FF1A00000000001 /* StepkinCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StepkinCore;
+		};
+		7E5C0A042FF1A00000000001 /* StepkinEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinEngine;
+		};
+		7E5C0A062FF1A00000000001 /* StepkinTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinTestSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

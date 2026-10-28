@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import StepkinCore
+import StepkinTestSupport
 
 @Suite("MainActorTimer") @MainActor struct MainActorTimerTests {
     @Test func `start marks running and stop clears it`() {

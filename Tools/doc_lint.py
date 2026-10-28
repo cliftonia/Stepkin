@@ -20,19 +20,21 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = [ROOT / "imon Watch App", ROOT / "SkykinComplication", ROOT / "Packages/StepkinKit/Sources"]
 SKIP = ("Sprites/Pets/", "Sprites/Catalog/")
 TYPE = re.compile(
-    r"^(\s*)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:nonisolated|final|private|fileprivate|public|internal|indirect)\s+)*"
+    r"^(\s*)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:nonisolated|final|private|fileprivate|public|package|internal|indirect)\s+)*"
     r"(struct|class|enum|actor|protocol)\s+(\w+)"
 )
 FUNC = re.compile(
-    r"^(\s+)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:static|class|nonisolated|mutating|override|final|isolated|public|internal)\s+)*"
+    r"^(\s+)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:static|class|nonisolated|mutating|override|final|isolated|public|package|internal)\s+)*"
     r"(func\s+\w+|init[?(<])"
 )
 PRIVATE = re.compile(r"\b(private|fileprivate)\b(?!\(set\))")
 PROPERTY = re.compile(
-    r"^(\s+)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:static|nonisolated|weak|lazy|private\(set\)|public|internal)\s+)*"
+    r"^(\s+)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:static|nonisolated|weak|lazy|private\(set\)|public|package|internal)\s+)*"
     r"(let|var)\s+(\w+)\s*(?::|=)[^{]*$"
 )
 OPENER = re.compile(r"^\s{4}\S.*\{\s*$")
+TOP_FUNC = re.compile(r"^(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:public|package|internal|private|fileprivate)\s+)?func\s")
+TOP_OTHER = re.compile(r"^(?:@\w+(?:\([^)]*\))?\s+)*(?:\w+\s+)*(?:struct|class|enum|actor|protocol|extension)\s")
 HISTORY = re.compile(r"\b(no longer|previously|recently|used to be|as of 20\d\d|AUDIT \d|TODO|FIXME|HACK)\b", re.I)
 LINE_END = (".", ")", "?", "!", ":")
 
@@ -49,6 +51,8 @@ def check(path):
     rel = path.relative_to(ROOT)
     out = []
     nested_type = False
+    # Locals of a top-level function sit at the same indent as properties; skip them.
+    in_top_func = False
     i = 0
     while i < len(lines):
         line = lines[i]
@@ -65,8 +69,12 @@ def check(path):
             nested_type = not PRIVATE.search(line)
         elif OPENER.match(line) and not TYPE.match(line):
             nested_type = False
+        if TOP_FUNC.match(line):
+            in_top_func = True
+        elif TOP_OTHER.match(line):
+            in_top_func = False
         m = PROPERTY.match(line)
-        if m and not PRIVATE.search(line) and not has_doc(lines, i):
+        if m and not in_top_func and not PRIVATE.search(line) and not has_doc(lines, i):
             indent = len(m.group(1))
             if indent == 4 or (indent == 8 and nested_type):
                 out.append(f"{rel}:{i+1}: property: {m.group(3)} has no /// line")
