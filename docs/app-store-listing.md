@@ -45,8 +45,11 @@ scene, and real daylight decides when it is night.
 - A red battery-saver palette that follows Low Power Mode.
 - Nothing leaves your watch. No account, no ads, no tracking.
 
-Steps and weather are optional. Without steps the creature still lives, but
-it cannot evolve.
+Ask Siri to "Feed Stepkin" or "Check on Stepkin". The complication rises in
+the Smart Stack while your creature needs care.
+
+Steps and weather are optional. Without steps the creature still lives and
+grows with time, more slowly than if you walk.
 
 ## Keywords (100)
 
@@ -87,8 +90,8 @@ Two permissions are requested after a short walkthrough, and both are
 optional:
 
 - Health (read step count): the daily step total decides when the creature
-  evolves. Declining it leaves the creature alive but unable to evolve; the
-  Stats screen says so.
+  evolves. Declining it leaves the creature alive and growing with time,
+  more slowly. Background delivery of steps is optional too.
 - Location (when in use): fetches local weather through WeatherKit to draw
   the scene. Declining it removes the weather effects and uses the clock for
   day and night.

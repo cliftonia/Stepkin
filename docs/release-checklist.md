@@ -28,8 +28,9 @@ developer's.
 - A dead pet can no longer evolve on the grave tick; leaving the pet screen
   stops the wander and sprite timers; the multi-day step catch-up is bounded
   by days rather than by successful fetches.
-- Stats says "Steps off" / "Needs steps" when the Steps switch is off, and the
-  Settings footer explains that evolution is step-fed.
+- With the Steps switch off the pet evolves through time (500 step-equivalents
+  per waking hour); Stats names the battle gate when fighting is the only way
+  forward, and the Settings footer explains the two sources.
 - VoiceOver: the three buttons announce what they do; the home screen reads
   the pet's condition.
 - Build warning-free, SwiftLint clean, 345 tests green.
@@ -69,7 +70,9 @@ developer's.
   battles), no other flags. The pet's death is fine; do not mention any
   trademarked franchise in the name, subtitle, keywords or description.
 - Review notes: explain that HealthKit steps drive evolution and can be
-  declined, that weather needs location and can be declined, and that the
+  declined (the pet then grows with time), that HealthKit background delivery
+  needs its capability and can be declined, that Siri answers "Feed Stepkin"
+  and "Check on Stepkin", that the Smart Stack relevance is passive, that weather needs location and can be declined, and that the
   reviewer can reach every screen without granting anything.
 - TestFlight on the physical watch for at least one full day/night cycle
   before submitting — the sleep-pause change and the permission timing are
@@ -77,11 +80,6 @@ developer's.
 
 ## Known and accepted for 1.0
 
-- Evolution is step-fed; with HealthKit declined or the Steps switch off the
-  pet cannot evolve. Stats now says so. A time-based fallback is a design
-  decision for later.
-- Rexkin evolves only after 15 wins at an 80 % rate, faithful to the original;
-  the ring fills before the gate is met and nothing in the UI names the gate.
 - The care-reminder replan and complication reload run on every wrist-down
   (`.inactive`); WidgetKit's reload budget may throttle some of them.
 - The DEBUG build shows a sample weather reading; Release shows nothing until

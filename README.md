@@ -65,11 +65,23 @@ and the pet catches up in one call — including anything that befell it.
 | Training | 5 rounds, 3 wins to succeed; −2 g weight; builds conditioning (max +3) |
 | Battle | power = stats + trained POW ±20% variance; conditioning decays after 12 h idle |
 | Feeding | meat +1 g, vitamin +2 g |
+| Time-fed growth | with Steps off, 500 step-equivalents per waking hour |
 
 Weather maps to the LCD scene (rain, snow, storm with lightning, fog, wind),
 and the reading's daylight flag drives day/night; when the reading is stale
 or unavailable, a clock window (18:00–06:00) takes over. At night the pet
 moves indoors to a lamp-lit room.
+
+With the Steps switch off the pet still grows: waking, living time is
+credited as step-equivalents at 500 an hour, so evolution is slower than
+walking but never closed. With Steps on, HealthKit wakes and the hourly
+refresh credit new steps while the app is closed, so the pet advances
+without being opened.
+
+**Siri and the Smart Stack.** Two App Intents answer to "Feed Stepkin" and
+"Check on Stepkin" (watchOS matches the phrases literally; the Ultra Action
+button reaches them only through a Shortcut). The complication reports
+relevance to the Smart Stack, so it rises there while the pet needs care.
 
 ## Architecture
 
