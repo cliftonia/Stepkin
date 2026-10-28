@@ -66,12 +66,15 @@ struct StatsPresenterTests {
     }
 
     @Test
-    func `with steps off the activity and evolution rows say so`() {
+    func `with steps off the activity row says so and evolution shows credited total over goal`() {
+        var state = makeTestState()
+        state.lifetimeActiveSteps = 12_340
         let presenter = StatsPresenter()
-        presenter.update(from: makeTestState(), steps: nil, stepsEnabled: false)
+        presenter.update(from: state, steps: nil, stepsEnabled: false)
 
+        let expected = StatFormatter.grouped(12_340) + " / " + StatFormatter.grouped(state.evolutionGoal)
         #expect(presenter.viewModel.activityLabel == "Steps off")
-        #expect(presenter.viewModel.evolveProgress == "Needs steps")
+        #expect(presenter.viewModel.evolveProgress == expected)
     }
 
     @Test

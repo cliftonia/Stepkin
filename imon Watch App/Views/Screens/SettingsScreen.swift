@@ -23,7 +23,7 @@ struct SettingsScreen: View {
             } header: {
                 Text("Features")
             } footer: {
-                Text("Your steps grow your pet. With Steps off it cannot evolve.")
+                Text("Your steps grow your pet. With Steps off it grows with time instead. If you declined Health access, switch Steps off.")
             }
             aboutSection
             #if DEBUG

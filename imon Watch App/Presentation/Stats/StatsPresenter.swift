@@ -3,8 +3,8 @@ import Foundation
 /// Presenter for the read-only stats screen. `update(from:steps:stepsEnabled:)`
 /// formats a one-shot snapshot of the live `PetState` into display strings — the
 /// screen does not tick, so its figures are frozen at the moment Stats was opened.
-/// With the Steps switch off the activity and evolution rows say so, since
-/// evolution is step-fed and would otherwise look silently stuck.
+/// With the Steps switch off the activity row says so; the evolution row keeps
+/// its normal total over goal because a time-fed pet still grows.
 final class StatsPresenter {
 
     /// The display snapshot the stats screen renders; rewritten in full on every update.
@@ -39,8 +39,6 @@ final class StatsPresenter {
         let total = StatFormatter.grouped(state.lifetimeActiveSteps)
         if status.species.stage == .ultimate {
             viewModel.evolveProgress = "MAX \u{00b7} " + total
-        } else if !stepsEnabled {
-            viewModel.evolveProgress = "Needs steps"
         } else {
             viewModel.evolveProgress = total + " / " + StatFormatter.grouped(state.evolutionGoal)
         }
