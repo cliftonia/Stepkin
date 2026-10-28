@@ -25,7 +25,7 @@ struct ActionButton: View {
             action()
         } label: {
             Text(label)
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .font(.lcd(12, weight: .bold))
                 .frame(maxWidth: .infinity)
                 .frame(height: 28)
                 .foregroundStyle(theme.chromeTint)

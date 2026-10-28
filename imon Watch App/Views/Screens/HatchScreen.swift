@@ -30,17 +30,13 @@ struct HatchScreen: View {
             switch presenter.viewModel.phase {
             case .egg:
                 Text("An egg!")
-                    .font(.system(size: 12, design: .monospaced))
+                    .font(.lcd(12))
             case .cracking:
                 Text("It's hatching...")
-                    .font(.system(size: 12, design: .monospaced))
+                    .font(.lcd(12))
             case .hatched:
                 Text("Dotkin is born!")
-                    .font(.system(
-                        size: 12,
-                        weight: .bold,
-                        design: .monospaced
-                    ))
+                    .font(.lcd(12, weight: .bold))
             }
         }
     }

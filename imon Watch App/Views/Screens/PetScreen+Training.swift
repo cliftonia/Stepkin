@@ -32,7 +32,7 @@ extension PetScreen {
         if let training = presenter.trainingPresenter {
             HStack(spacing: 6) {
                 Text(trainingRoundText(training))
-                    .font(.system(size: 10, design: .monospaced))
+                    .font(.lcd(10))
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
@@ -41,11 +41,7 @@ extension PetScreen {
                 trainingScoreDots(training)
 
                 Text(trainingPhaseLabelText(training))
-                    .font(.system(
-                        size: 11,
-                        weight: .bold,
-                        design: .monospaced
-                    ))
+                    .font(.lcd(11, weight: .bold))
                     .foregroundStyle(
                         trainingPhaseLabelColor(training)
                     )
@@ -105,11 +101,7 @@ extension PetScreen {
             ? "\(training.viewModel.currentNumber)"
             : "?"
         return Text(text)
-            .font(.system(
-                size: 14,
-                weight: .bold,
-                design: .monospaced
-            ))
+            .font(.lcd(14, weight: .bold))
             .minimumScaleFactor(0.7)
             .lineLimit(1)
             .frame(width: 24, height: 18)

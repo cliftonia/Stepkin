@@ -102,15 +102,15 @@ struct PetScreen: View {
                         pixelColor: .white
                     )
                     Text("|")
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .font(.lcd(9, weight: .bold))
                         .foregroundStyle(.yellow.opacity(0.4))
                 }
                 Text(species.displayName)
-                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .font(.lcd(9, weight: .bold))
                     .foregroundStyle(.yellow)
                 if !presenter.viewModel.debugNotice.isEmpty {
                     Text(presenter.viewModel.debugNotice)
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .font(.lcd(9, weight: .bold))
                         .foregroundStyle(.cyan)
                 }
             }

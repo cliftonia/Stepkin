@@ -26,14 +26,10 @@ struct StatsScreen: View {
     private var speciesHeader: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(presenter.viewModel.speciesName)
-                .font(.system(
-                    size: 14,
-                    weight: .bold,
-                    design: .monospaced
-                ))
+                .font(.lcd(14, weight: .bold))
 
             Text(presenter.viewModel.stageName)
-                .font(.system(size: 11, design: .monospaced))
+                .font(.lcd(11))
                 .foregroundStyle(Color.gray)
         }
     }
@@ -104,15 +100,11 @@ struct StatsScreen: View {
     private func statRow(label: String, value: String) -> some View {
         HStack(spacing: 0) {
             Text(label)
-                .font(.system(
-                    size: 10,
-                    weight: .medium,
-                    design: .monospaced
-                ))
+                .font(.lcd(10, weight: .medium))
                 .frame(width: 50, alignment: .leading)
 
             Text(value)
-                .font(.system(size: 10, design: .monospaced))
+                .font(.lcd(10))
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(label): \(value)")

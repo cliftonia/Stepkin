@@ -18,21 +18,17 @@ struct DeathScreen: View {
                 )
 
                 Text("R.I.P.")
-                    .font(.system(
-                        size: 16,
-                        weight: .bold,
-                        design: .monospaced
-                    ))
+                    .font(.lcd(16, weight: .bold))
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
                 Text(presenter.viewModel.speciesName)
-                    .font(.system(size: 11, design: .monospaced))
+                    .font(.lcd(11))
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
                 Text("Age: \(presenter.viewModel.ageDays) days")
-                    .font(.system(size: 10, design: .monospaced))
+                    .font(.lcd(10))
                     .foregroundStyle(Color.gray)
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)

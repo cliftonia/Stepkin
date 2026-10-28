@@ -16,7 +16,7 @@ struct HeartMeter: View {
     var body: some View {
         HStack(spacing: 2) {
             Text(label)
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .font(.lcd(10, weight: .medium))
                 .frame(width: 40, alignment: .leading)
 
             HStack(spacing: 1) {

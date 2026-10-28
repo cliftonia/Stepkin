@@ -42,13 +42,13 @@ struct WeatherOverlay: View {
 
     private func field(_ text: String, opacity: Double) -> some View {
         Text(text)
-            .font(.system(size: 11, weight: .bold, design: .monospaced))
+            .font(.lcd(11, weight: .bold))
             .foregroundStyle(theme.chromeTint.opacity(opacity))
     }
 
     private var separator: some View {
         Text("|")
-            .font(.system(size: 11, weight: .bold, design: .monospaced))
+            .font(.lcd(11, weight: .bold))
             .foregroundStyle(theme.chromeTint.opacity(0.35))
     }
 

@@ -27,11 +27,7 @@ extension PetScreen {
                 choosingInfoRow(battle)
             } else {
                 Text(phaseText)
-                    .font(.system(
-                        size: 11,
-                        weight: .bold,
-                        design: .monospaced
-                    ))
+                    .font(.lcd(11, weight: .bold))
                     .minimumScaleFactor(0.7)
                     .frame(maxWidth: .infinity)
             }
@@ -101,11 +97,7 @@ extension PetScreen {
             Text("|")
             Text("\(oppName) \(oppHearts)")
         }
-        .font(.system(
-            size: 9,
-            weight: .medium,
-            design: .monospaced
-        ))
+        .font(.lcd(9, weight: .medium))
         .minimumScaleFactor(0.7)
         .lineLimit(1)
         .accessibilityLabel(

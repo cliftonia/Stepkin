@@ -53,12 +53,12 @@ struct OnboardingScreen: View {
     private var speechBubble: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(presenter.viewModel.currentTip.message)
-                .font(.system(size: 13, design: .monospaced))
+                .font(.lcd(13))
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
 
             Text(presenter.viewModel.isLastStep ? "tap to start ›" : "tap ›")
-                .font(.system(size: 9, design: .monospaced))
+                .font(.lcd(9))
                 .foregroundStyle(Color.gray)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -78,7 +78,7 @@ struct OnboardingScreen: View {
 
             #if DEBUG
             Button("SKIP", action: presenter.skipAction)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .font(.lcd(11, weight: .medium))
                 .buttonStyle(.plain)
                 .foregroundStyle(Color.gray)
                 .accessibilityLabel("Skip tutorial")
