@@ -42,7 +42,7 @@ jobs:
       - name: Test
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
-          -destination "platform=watchOS Simulator,name=Apple Watch Ultra 3 (49mm)"
+          -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)"
           -only-testing "imon Watch AppTests" -quiet
       - name: List simulators on failure
         if: failure()
