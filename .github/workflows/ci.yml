@@ -31,7 +31,7 @@ jobs:
 
   watch:
     runs-on: xcode-27
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       SIM_DEVICE: Apple Watch Ultra 4 (49mm)
     steps:
@@ -51,12 +51,13 @@ jobs:
         run: |
           xcrun simctl list runtimes
           xcrun simctl runtime list
-          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+          for attempt in $(seq 1 36); do
             xcrun simctl boot "$SIM_DEVICE" && break
-            [ "$attempt" = 12 ] && exit 1
+            [ "$attempt" = 36 ] && exit 1
             echo "runtime not ready (attempt $attempt); waiting"
             sleep 10
           done
+          echo "Booted after $attempt attempts"
           xcrun simctl bootstatus "$SIM_DEVICE" -b
       - name: Test
         run: >
