@@ -51,4 +51,26 @@ struct EvolutionChartTests {
         light.weight = Weight(20)                       // < 35
         #expect(EvolutionEngine.checkEvolution(for: light) == .galekin)
     }
+
+    // MARK: - Battle gate
+
+    @Test
+    func `rexkin is gated by fifteen wins at eighty percent`() {
+        #expect(EvolutionChart.battleGate(for: .rexkin) == BattleGate(minWins: 15, minWinRate: 0.8))
+    }
+
+    @Test
+    func `emberkin and dotkin name no battle gate`() {
+        #expect(EvolutionChart.battleGate(for: .emberkin) == nil)
+        #expect(EvolutionChart.battleGate(for: .dotkin) == nil)
+    }
+
+    /// A gate is named only when every row carries a battle requirement, so a
+    /// species with an ungated branch keeps that branch hidden.
+    @Test(arguments: PetSpecies.allCases)
+    func `a battle gate exists exactly when every row is gated`(species: PetSpecies) {
+        let rows = EvolutionChart.evolutions(for: species)
+        let allGated = !rows.isEmpty && rows.allSatisfy { $0.minBattleWins != nil }
+        #expect((EvolutionChart.battleGate(for: species) != nil) == allGated)
+    }
 }

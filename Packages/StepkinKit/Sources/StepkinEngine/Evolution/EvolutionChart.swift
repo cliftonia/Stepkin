@@ -3,7 +3,7 @@ import Foundation
 /// The full V1 evolution tree as an ordered rule table. Row order is
 /// load-bearing: `EvolutionEngine` takes the first satisfied row, so a more
 /// specific gate must sit above any broader one that would shadow it.
-enum EvolutionChart {
+public enum EvolutionChart {
 
     // MARK: - Complete Evolution Tree
 
@@ -16,6 +16,19 @@ enum EvolutionChart {
         for species: PetSpecies
     ) -> [EvolutionRequirement] {
         requirements.filter { $0.from == species }
+    }
+
+    /// The battle gate a species must clear, or `nil` unless every row leaving it
+    /// carries a battle requirement. A species with any ungated row keeps its
+    /// hidden branches hidden. Otherwise the gate is the row with the fewest wins.
+    public static func battleGate(for species: PetSpecies) -> BattleGate? {
+        let rows = evolutions(for: species)
+        guard !rows.isEmpty, rows.allSatisfy({ $0.minBattleWins != nil }) else {
+            return nil
+        }
+        let gated = rows.compactMap { row in row.minBattleWins.map { (wins: $0, rate: row.minWinRate) } }
+        guard let nearest = gated.min(by: { $0.wins < $1.wins }) else { return nil }
+        return BattleGate(minWins: nearest.wins, minWinRate: nearest.rate)
     }
 
     // MARK: - Private

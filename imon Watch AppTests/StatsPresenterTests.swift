@@ -91,4 +91,18 @@ struct StatsPresenterTests {
         }
         #expect(viewModel.winRate == "75%")
     }
+
+    @Test
+    func `a rexkin names its battle gate with progress and rate`() {
+        let viewModel = makeViewModel(species: .rexkin) {
+            $0.battleWins = 12
+            $0.battleLosses = 2
+        }
+        #expect(viewModel.battleGate == "12 / 15 wins \u{00b7} 80%")
+    }
+
+    @Test
+    func `an emberkin names no battle gate`() {
+        #expect(makeViewModel(species: .emberkin).battleGate == nil)
+    }
 }

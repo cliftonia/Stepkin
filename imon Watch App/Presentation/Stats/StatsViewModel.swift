@@ -36,4 +36,6 @@ final class StatsViewModel {
     var activityLabel: String = "—"
     /// Progress toward evolution, pre-formatted; "—" is the no-data placeholder.
     var evolveProgress: String = "—"
+    /// The battle gate line, e.g. "12 / 15 wins"; `nil` hides the row.
+    var battleGate: String?
 }

@@ -47,5 +47,19 @@ final class StatsPresenter {
 
         let battles = status.battleWins + status.battleLosses
         viewModel.winRate = StatFormatter.percent(status.battleWins, of: battles) ?? "—"
+        viewModel.battleGate = Self.battleGateLine(for: status)
+    }
+
+    // MARK: - Battle Gate
+
+    /// Formats the species' battle gate as progress over target, with the win
+    /// rate appended when the gate sets one; `nil` when no gate is named.
+    private static func battleGateLine(for status: PetStatus) -> String? {
+        guard let gate = EvolutionChart.battleGate(for: status.species) else { return nil }
+        var line = "\(status.battleWins) / \(gate.minWins) wins"
+        if let rate = gate.minWinRate {
+            line += " \u{00b7} \(Int((rate * 100).rounded()))%"
+        }
+        return line
     }
 }

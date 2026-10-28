@@ -23,6 +23,11 @@ struct StatsScreen: View {
         .navigationTitle("Stats")
     }
 
+    /// Whether the species names a battle gate; the NEXT row hides otherwise.
+    private var showsBattleGate: Bool {
+        presenter.viewModel.battleGate != nil
+    }
+
     private var speciesHeader: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(presenter.viewModel.speciesName)
@@ -52,6 +57,12 @@ struct StatsScreen: View {
                 label: "EVOLVE",
                 value: presenter.viewModel.evolveProgress
             )
+            statRow(
+                label: "NEXT",
+                value: presenter.viewModel.battleGate ?? ""
+            )
+            .opacity(showsBattleGate ? 1 : 0)
+            .accessibilityHidden(!showsBattleGate)
         }
     }
 
