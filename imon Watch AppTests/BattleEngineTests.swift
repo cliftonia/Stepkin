@@ -9,7 +9,7 @@ struct BattleEngineTests {
     func `apply result increments win count`() {
         var state = makeTestState()
         state.battleWins = 0
-        state = BattleEngine.applyResult(.win, to: state)
+        state = BattleEngine.applyResult(.win, to: state, at: .now)
         #expect(state.battleWins == 1)
     }
 
@@ -17,7 +17,7 @@ struct BattleEngineTests {
     func `apply result increments loss count`() {
         var state = makeTestState()
         state.battleLosses = 0
-        state = BattleEngine.applyResult(.lose, to: state)
+        state = BattleEngine.applyResult(.lose, to: state, at: .now)
         #expect(state.battleLosses == 1)
     }
 
@@ -26,10 +26,10 @@ struct BattleEngineTests {
     @Test
     func `winning a battle builds trained POW up to the cap`() {
         var state = makeTestState(species: .emberkin)
-        state = BattleEngine.applyResult(.win, to: state)
+        state = BattleEngine.applyResult(.win, to: state, at: .now)
         #expect(state.trainedPower == 1)
         for _ in 0..<10 {
-            state = BattleEngine.applyResult(.win, to: state)
+            state = BattleEngine.applyResult(.win, to: state, at: .now)
         }
         #expect(state.trainedPower == TimeConstants.maxConditioning)
     }
@@ -38,7 +38,7 @@ struct BattleEngineTests {
     func `Dotkin never builds trained POW`() {
         var state = makeTestState(species: .dotkin)
         for _ in 0..<5 {
-            state = BattleEngine.applyResult(.win, to: state)
+            state = BattleEngine.applyResult(.win, to: state, at: .now)
         }
         #expect(state.trainedPower == 0)
     }
@@ -125,7 +125,7 @@ struct BattleEngineTests {
         var state = makeTestState()
         state.battleWins = 2
         state.battleLosses = 1
-        state = BattleEngine.applyResult(.draw, to: state)
+        state = BattleEngine.applyResult(.draw, to: state, at: .now)
         #expect(state.battleWins == 2)
         #expect(state.battleLosses == 1)
     }
@@ -212,5 +212,23 @@ struct BattleEngineTests {
         for i in 1..<stages.count {
             #expect(stages[i].battleHP >= stages[i - 1].battleHP)
         }
+    }
+
+    // MARK: - Judge
+
+    @Test(arguments: [
+        (5, 3, BattleResult.win),
+        (3, 5, .lose),
+        (4, 4, .draw),
+        (1, 0, .win),
+        (0, 1, .lose)
+    ])
+    func `judge compares remaining HP`(petHP: Int, opponentHP: Int, expected: BattleResult) {
+        #expect(BattleEngine.judge(petHP: petHP, opponentHP: opponentHP) == expected)
+    }
+
+    @Test
+    func `a battle lasts twenty rounds at most`() {
+        #expect(BattleEngine.maxRounds == 20)
     }
 }

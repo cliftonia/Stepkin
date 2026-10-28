@@ -189,12 +189,11 @@ struct PetScreen: View {
                 lightsOn: homeScene.lightsOn,
                 leftSpriteOffsetX: presenter.wander.offsetX,
                 weatherCondition: homeScene.weather,
-                moonPhase: MoonPhase.current(date: .now),
+                moonPhase: presenter.viewModel.moonPhase,
                 dayPhase: homeScene.dayPhase,
                 evolveFlash: presenter.viewModel.isEvolving,
                 showCallSign: !presenter.viewModel.isInActionScene
-                    && presenter.viewModel.status?.isLanguishing == true
-                    && presenter.viewModel.status?.isSleeping == false
+                    && presenter.viewModel.status?.isDrooping == true
             ))
         } info: {
             MenuIconRow(

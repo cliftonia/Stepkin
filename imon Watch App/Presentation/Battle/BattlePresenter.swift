@@ -116,7 +116,7 @@ final class BattlePresenter {
     private static let introVSMs = 1_300
 
     private func runRoundLoop() async {
-        for _ in 0..<20 {
+        for _ in 0..<BattleEngine.maxRounds {
             guard !Task.isCancelled else { return }
 
             let completed = await runSingleRound()

@@ -26,7 +26,7 @@ nonisolated extension NotificationScheduler {
         content.title = title
         content.body = body
         content.sound = .default
-        let isNight = SleepSchedule.isNight(weatherNight: nil, at: fireDate)
+        let isNight = SleepSchedule.isNight(weatherNight: nil, at: fireDate, calendar: .current)
         if let sprite = NotificationSpriteRenderer.attachment(for: species, isNight: isNight) {
             content.attachments = [sprite]
         }

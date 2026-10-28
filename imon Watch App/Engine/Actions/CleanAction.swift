@@ -19,7 +19,7 @@ nonisolated enum CleanAction {
     /// Removes every pile and re-anchors `lastPoopAt` to `now`, so a pile
     /// nearly due does not reappear right after cleaning. Returns the state
     /// unchanged when `canClean` says there is nothing to do.
-    static func apply(to state: PetState, at now: Date = .now) -> PetState {
+    static func apply(to state: PetState, at now: Date) -> PetState {
         guard canClean(state) else { return state }
 
         var state = state

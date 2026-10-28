@@ -42,7 +42,7 @@ nonisolated enum StepProgress {
         todaySteps: Int,
         now: Date,
         stagePenalty: Int,
-        calendar: Calendar = .current
+        calendar: Calendar
     ) -> Progress {
         let today = max(0, todaySteps)
 

@@ -14,6 +14,10 @@ nonisolated enum RoundOutcome: Equatable, Sendable {
 /// conditioning the evolution gates read.
 nonisolated enum BattleEngine {
 
+    /// The most rounds one battle lasts; a battle still undecided then is
+    /// judged on remaining HP by `judge`.
+    static let maxRounds = 20
+
     // MARK: - Query
 
     /// Reports whether the pet may battle, which requires it to be awake and alive.
@@ -22,8 +26,8 @@ nonisolated enum BattleEngine {
     }
 
     /// Resolves one round by the height triangle. Matching heights are a
-    /// `.clash` — nobody is hit; a level session ends in the presenter's
-    /// HP tiebreaker instead.
+    /// `.clash` — nobody is hit; a level session ends on
+    /// `judge` instead.
     static func resolveRound(
         playerHeight: AttackHeight,
         opponentHeight: AttackHeight
@@ -37,6 +41,14 @@ nonisolated enum BattleEngine {
         return .clash
     }
 
+    /// Judges an undecided battle on remaining HP: more HP wins, less loses,
+    /// and equal HP is a draw.
+    static func judge(petHP: Int, opponentHP: Int) -> BattleResult {
+        if petHP > opponentHP { return .win }
+        if opponentHP > petHP { return .lose }
+        return .draw
+    }
+
     /// Applies the battle result: every result stamps `lastBattledAt`, even a
     /// draw. A win adds +1 `trainedPower` while `canCondition` holds (never for
     /// Dotkin), clamped to `TimeConstants.maxConditioning`; a loss with strength
@@ -44,7 +56,7 @@ nonisolated enum BattleEngine {
     static func applyResult(
         _ result: BattleResult,
         to state: PetState,
-        at now: Date = .now
+        at now: Date
     ) -> PetState {
         var state = state
         state.timestamps.lastBattledAt = now

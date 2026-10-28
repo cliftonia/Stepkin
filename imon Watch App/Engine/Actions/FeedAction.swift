@@ -36,7 +36,7 @@ nonisolated enum FeedAction {
     /// Feeds the pet, refilling the food's heart up to the species maximum
     /// and adding weight even when that stat is already full. Returns `state`
     /// unchanged when `canFeed` is false.
-    static func apply(to state: PetState, food: FoodKind, at now: Date = .now) -> PetState {
+    static func apply(to state: PetState, food: FoodKind, at now: Date) -> PetState {
         guard canFeed(state) else { return state }
 
         var state = state

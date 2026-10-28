@@ -190,14 +190,14 @@ final class PetPresenter {
     /// The resolved night signal — the weather's daylight flag, else the fixed
     /// clock window.
     var currentlyNight: Bool {
-        SleepSchedule.isNight(weatherNight: currentNight(), at: .now)
+        SleepSchedule.isNight(weatherNight: currentNight(), at: .now, calendar: .current)
     }
 
     private func advanceState() {
         let wasSleeping = state.isSleeping
         let wasDead = state.isDead
         state = GameEngine.advance(
-            state, to: .now, isNight: currentNight(), steps: currentSteps()
+            state, to: .now, isNight: currentNight(), steps: currentSteps(), calendar: .current
         )
         creditSteps()
 
@@ -284,6 +284,7 @@ final class PetPresenter {
     func updateViewModel() {
         viewModel.status = PetStatus(from: state)
         viewModel.evolutionProgress = state.evolutionProgressFraction
+        viewModel.moonPhase = MoonPhase.current(date: .now)
         viewModel.dayPhase = DayPhase.resolve(
             isNight: currentlyNight, lightsOn: state.lightsOn
         )
@@ -297,8 +298,8 @@ final class PetPresenter {
         // Every other activity plays its own ceremony animation — never override it.
         switch viewModel.activity {
         case .idle, .feeding(.selecting):
-            if state.isLanguishing, !state.isSleeping {
-                // Languishing droops only awake — asleep it still rests, like the toy.
+            if PetStatus(from: state).isDrooping {
+                // Drooping is languishing while awake — asleep it still rests, like the toy.
                 spriteAnimator.play(SpriteCatalog.weakAnimation(for: state.species))
             } else {
                 let kind: SpriteCatalog.AnimationKind =

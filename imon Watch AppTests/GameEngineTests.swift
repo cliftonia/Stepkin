@@ -13,7 +13,7 @@ struct GameEngineTests {
         var state = makeTestState(at: .now.addingTimeInterval(-3600))
         state.timestamps.bornAt = born
 
-        state = GameEngine.advance(state, to: .now)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
         #expect(state.age >= 3)
     }
 
@@ -33,7 +33,7 @@ struct GameEngineTests {
         state.wasNight = true
 
         // Half an hour after the clock's dawn: the replay woke the pet at dawn.
-        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: false)
+        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: false, steps: nil, calendar: .current)
 
         #expect(state.isSleeping == false)
         #expect(state.hungerHearts.value == 4)
@@ -53,7 +53,7 @@ struct GameEngineTests {
         state.lightsOn = true
         state.wasNight = false
 
-        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1))
+        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: nil, steps: nil, calendar: .current)
 
         // Awake 17:00 → 21:02 only: 3 hunger ticks (70 min), 4 strength (60 min), 2 poops (2 h).
         #expect(state.hungerHearts.value == 1)
@@ -69,7 +69,7 @@ struct GameEngineTests {
         var state = makeTestState(hunger: 1, strength: 1, at: clock(hour: 10))
         state.lightsOn = true
 
-        state = GameEngine.advance(state, to: clock(hour: 10, daysFromNow: 4))
+        state = GameEngine.advance(state, to: clock(hour: 10, daysFromNow: 4), isNight: nil, steps: nil, calendar: .current)
 
         #expect(state.isDead == true)
     }
@@ -79,7 +79,7 @@ struct GameEngineTests {
         var state = makeTestState(hunger: 4)
         state.isDead = true
         let original = state
-        state = GameEngine.advance(state, to: .now)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
         #expect(
             state.hungerHearts.value
                 == original.hungerHearts.value
@@ -94,13 +94,13 @@ struct GameEngineTests {
         state.timestamps.lastStrengthDecayAt = start
 
         // First advance arms the collapse countdown but doesn't kill yet.
-        state = GameEngine.advance(state, to: start.addingTimeInterval(60))
+        state = GameEngine.advance(state, to: start.addingTimeInterval(60), isNight: nil, steps: nil, calendar: .current)
         #expect(state.isDead == false)
         #expect(state.timestamps.collapsingAt != nil)
 
         // Left languishing past the window, it perishes.
         state = GameEngine.advance(
-            state, to: start.addingTimeInterval(TimeConstants.collapseDeathTime + 120)
+            state, to: start.addingTimeInterval(TimeConstants.collapseDeathTime + 120), isNight: nil, steps: nil, calendar: .current
         )
         #expect(state.isDead)
     }
@@ -115,7 +115,7 @@ struct GameEngineTests {
 
         // Five days on, the engine must still short-circuit the egg: it neither
         // hatches itself nor drains the stats the simulators would touch.
-        state = GameEngine.advance(state, to: .now)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
         #expect(state.isEgg)
         #expect(state.hungerHearts.value == original.hungerHearts.value)
         #expect(state.poopCount == original.poopCount)

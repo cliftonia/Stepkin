@@ -9,7 +9,7 @@ struct CleanActionTests {
     func `clean removes all poop`() {
         var state = makeTestState()
         state.poopCount = 3
-        state = CleanAction.apply(to: state)
+        state = CleanAction.apply(to: state, at: .now)
         #expect(state.poopCount == 0)
     }
 

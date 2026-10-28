@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import imon_Watch_App
 
 @Suite("FeedAction")
@@ -7,7 +8,7 @@ struct FeedActionTests {
     @Test
     func `meat increases hunger by 1 and weight by 1G`() {
         var state = makeTestState(hunger: 2, weight: 20)
-        state = FeedAction.apply(to: state, food: .meat)
+        state = FeedAction.apply(to: state, food: .meat, at: .now)
         #expect(state.hungerHearts.value == 3)
         #expect(state.weight.grams == 21)
     }
@@ -15,7 +16,7 @@ struct FeedActionTests {
     @Test
     func `vitamin increases strength by 1 and weight by 2G`() {
         var state = makeTestState(strength: 2, weight: 20)
-        state = FeedAction.apply(to: state, food: .vitamin)
+        state = FeedAction.apply(to: state, food: .vitamin, at: .now)
         #expect(state.strengthHearts.value == 3)
         #expect(state.weight.grams == 22)
     }

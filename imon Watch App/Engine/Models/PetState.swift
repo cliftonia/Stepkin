@@ -210,7 +210,7 @@ nonisolated extension PetState {
 nonisolated extension PetState {
 
     /// Creates a new Dotkin pet with full hearts and base weight.
-    static func hatched(at date: Date = .now) -> PetState {
+    static func hatched(at date: Date) -> PetState {
         let species = PetSpecies.dotkin
         return PetState(
             id: Tagged(rawValue: UUID()),

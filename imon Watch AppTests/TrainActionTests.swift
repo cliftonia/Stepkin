@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import imon_Watch_App
 
 @Suite("TrainAction")
@@ -41,7 +42,7 @@ struct TrainActionTests {
     func `winning training increases strength and decreases weight`() {
         var state = makeTestState(strength: 2, weight: 30)
         state = TrainAction.applyResult(
-            to: state, won: true
+            to: state, won: true, at: .now
         )
         #expect(state.strengthHearts.value == 3)
         #expect(state.weight.grams == 28)
@@ -51,10 +52,10 @@ struct TrainActionTests {
     @Test
     func `winning training builds trained HP up to the cap`() {
         var state = makeTestState(species: .emberkin)
-        state = TrainAction.applyResult(to: state, won: true)
+        state = TrainAction.applyResult(to: state, won: true, at: .now)
         #expect(state.trainedHP == 1)
         for _ in 0..<10 {
-            state = TrainAction.applyResult(to: state, won: true)
+            state = TrainAction.applyResult(to: state, won: true, at: .now)
         }
         #expect(state.trainedHP == TimeConstants.maxConditioning)
     }
@@ -63,7 +64,7 @@ struct TrainActionTests {
     func `Dotkin never builds trained HP`() {
         var state = makeTestState(species: .dotkin)
         for _ in 0..<5 {
-            state = TrainAction.applyResult(to: state, won: true)
+            state = TrainAction.applyResult(to: state, won: true, at: .now)
         }
         #expect(state.trainedHP == 0)
     }
@@ -71,7 +72,28 @@ struct TrainActionTests {
     @Test
     func `a lost session grants no trained HP`() {
         var state = makeTestState(species: .emberkin)
-        state = TrainAction.applyResult(to: state, won: false)
+        state = TrainAction.applyResult(to: state, won: false, at: .now)
         #expect(state.trainedHP == 0)
+    }
+
+    // MARK: - Session Outcome
+
+    @Test(arguments: [
+        ([true, true, true], true as Bool?),
+        ([false, false, false], false as Bool?),
+        ([true, false], nil),
+        ([], nil),
+        ([true, false, true, false, true], true),
+        ([false, false, true, true], nil)
+    ])
+    func `session outcome follows the wins needed`(results: [Bool], expected: Bool?) {
+        #expect(TrainAction.sessionOutcome(results: results) == expected)
+    }
+
+    @Test
+    func `session is lost once losses exceed the allowance`() {
+        let allowed = TimeConstants.trainRounds - TimeConstants.trainWinsNeeded
+        #expect(TrainAction.sessionOutcome(results: Array(repeating: false, count: allowed)) == nil)
+        #expect(TrainAction.sessionOutcome(results: Array(repeating: false, count: allowed + 1)) == false)
     }
 }

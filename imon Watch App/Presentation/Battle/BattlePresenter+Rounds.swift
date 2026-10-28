@@ -123,10 +123,10 @@ extension BattlePresenter {
     /// Judges the battle on remaining HP: the pet wins on more HP, loses on
     /// less, and equal HP is a draw.
     func resolveTiebreaker() {
-        switch (viewModel.petHP, viewModel.opponentHP) {
-        case let (pet, opp) where pet > opp: showVictory()
-        case let (pet, opp) where opp > pet: showDefeat()
-        default: showDraw()
+        switch BattleEngine.judge(petHP: viewModel.petHP, opponentHP: viewModel.opponentHP) {
+        case .win: showVictory()
+        case .lose: showDefeat()
+        case .draw: showDraw()
         }
     }
 

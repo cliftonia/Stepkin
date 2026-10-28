@@ -35,6 +35,12 @@ nonisolated struct PetStatus: Sendable {
     /// The battle-loss tally, stored on the source `PetState`.
     let battleLosses: Int
 
+    /// Whether the pet droops on screen: languishing and awake. Asleep it
+    /// still rests, like the toy.
+    let isDrooping: Bool
+    /// Whether a mess needs clearing: any poop is present or the pet is injured.
+    let hasCareMess: Bool
+
     /// The care-call flag — true while hunger or strength hearts are
     /// empty, any poop is present, or the pet is injured.
     let needsAttention: Bool
@@ -57,6 +63,8 @@ nonisolated struct PetStatus: Sendable {
         isLanguishing = state.isLanguishing
         battleWins = state.battleWins
         battleLosses = state.battleLosses
+        isDrooping = state.isLanguishing && !state.isSleeping
+        hasCareMess = state.poopCount > 0 || state.isInjured
         needsAttention = state.hungerHearts.isEmpty
             || state.strengthHearts.isEmpty
             || state.poopCount > 0

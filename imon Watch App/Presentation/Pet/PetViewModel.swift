@@ -31,6 +31,8 @@ final class PetViewModel {
 
     /// Progress toward the next evolution (0...1) — drives the bezel ring.
     var evolutionProgress: Double = 0
+    /// The moon's phase at the last refresh, shown in the night sky.
+    var moonPhase: MoonPhase = .new
 
     // MARK: - Menu
 

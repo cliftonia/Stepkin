@@ -48,7 +48,8 @@ extension PetPresenter {
                 progress,
                 todaySteps: entry.total,
                 now: entry.day,
-                stagePenalty: state.species.stage.lazyDayPenalty
+                stagePenalty: state.species.stage.lazyDayPenalty,
+                calendar: .current
             )
         }
         rollOver(progress, todaySteps: currentSteps() ?? fallbackSteps)
@@ -82,7 +83,8 @@ extension PetPresenter {
             progress,
             todaySteps: todaySteps,
             now: .now,
-            stagePenalty: state.species.stage.lazyDayPenalty
+            stagePenalty: state.species.stage.lazyDayPenalty,
+            calendar: .current
         )
         .write(to: &state)
     }

@@ -18,7 +18,7 @@ nonisolated enum SleepSchedule {
     static func isNight(
         weatherNight: Bool?,
         at now: Date,
-        calendar: Calendar = .current
+        calendar: Calendar
     ) -> Bool {
         if let weatherNight { return weatherNight }
         let hour = calendar.component(.hour, from: now)
@@ -28,7 +28,7 @@ nonisolated enum SleepSchedule {
     /// Reports whether `now` is inside bedtime, the 21:00–06:00 window in
     /// which the pet can settle to sleep; outside it the pet stays awake even
     /// at night.
-    static func isBedtime(at now: Date, calendar: Calendar = .current) -> Bool {
+    static func isBedtime(at now: Date, calendar: Calendar) -> Bool {
         let hour = calendar.component(.hour, from: now)
         return hour >= TimeConstants.sleepHour || hour < TimeConstants.nightEndHour
     }
@@ -46,7 +46,7 @@ nonisolated enum SleepSchedule {
     static func replayBoundaries(
         from start: Date,
         to end: Date,
-        calendar: Calendar = .current
+        calendar: Calendar
     ) -> [Date] {
         guard end > start else { return [] }
         let hours = [TimeConstants.nightEndHour, TimeConstants.nightStartHour, TimeConstants.sleepHour]
@@ -74,7 +74,12 @@ nonisolated enum SleepSchedule {
     /// unchanged. The pet falls asleep only inside bedtime, once the light has
     /// been out for `sleepDelay`; waking goes through `PetState.wake(at:)` so
     /// sleep is a pause.
-    static func apply(to state: PetState, at now: Date, night: Bool) -> PetState {
+    static func apply(
+        to state: PetState,
+        at now: Date,
+        night: Bool,
+        calendar: Calendar
+    ) -> PetState {
         var state = state
         guard !state.isDead, !state.isEgg else { return state }
 
@@ -89,7 +94,7 @@ nonisolated enum SleepSchedule {
             return state
         }
 
-        let bedtime = isBedtime(at: now)
+        let bedtime = isBedtime(at: now, calendar: calendar)
 
         if state.lightsOn || !bedtime {
             state.wake(at: now)

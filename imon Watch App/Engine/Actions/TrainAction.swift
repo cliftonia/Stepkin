@@ -54,6 +54,17 @@ nonisolated enum TrainAction {
         return RoundResult(won: won)
     }
 
+    /// Judges a session from its round results so far: `true` once wins reach
+    /// `TimeConstants.trainWinsNeeded`, `false` once losses exceed the allowance
+    /// (`trainRounds - trainWinsNeeded`), `nil` while the session plays on.
+    static func sessionOutcome(results: [Bool]) -> Bool? {
+        let wins = results.filter { $0 }.count
+        let losses = results.count - wins
+        if wins >= TimeConstants.trainWinsNeeded { return true }
+        if losses > TimeConstants.trainRounds - TimeConstants.trainWinsNeeded { return false }
+        return nil
+    }
+
     // MARK: - Apply
 
     /// Applies a training session's result, or nothing when `canTrain` fails.
@@ -63,7 +74,7 @@ nonisolated enum TrainAction {
     static func applyResult(
         to state: PetState,
         won: Bool,
-        at now: Date = .now
+        at now: Date
     ) -> PetState {
         guard canTrain(state) else { return state }
 

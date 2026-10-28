@@ -10,7 +10,7 @@ extension PetScreen {
     /// the full environment. `SceneResolver` owns the resolution rules.
     var homeScene: LCDScene {
         let status = presenter.viewModel.status
-        let careMessPresent = (status?.poopCount ?? 0) > 0 || status?.isInjured == true
+        let careMessPresent = status?.hasCareMess == true
         return SceneResolver.home(
             dayPhase: presenter.viewModel.dayPhase,
             lightsOn: status?.lightsOn ?? true,

@@ -22,7 +22,7 @@ struct PetSpeciesCapacityTests {
 
     @Test func `feeding cannot exceed species hunger capacity`() {
         var state = makeTestState(species: .dotkin, hunger: 0)
-        for _ in 0..<6 { state = FeedAction.apply(to: state, food: .meat) }
+        for _ in 0..<6 { state = FeedAction.apply(to: state, food: .meat, at: .now) }
         #expect(state.hungerHearts.value == PetSpecies.dotkin.maxHunger)
     }
 

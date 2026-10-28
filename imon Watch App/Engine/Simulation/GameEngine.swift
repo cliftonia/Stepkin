@@ -18,13 +18,15 @@ nonisolated enum GameEngine {
     /// is the weather's daylight reading; `nil` resolves night from the
     /// 18:00–06:00 clock window in `SleepSchedule.isNight`. `steps` is
     /// today's running count; `nil` (steps disabled or unavailable) disables
-    /// activity scaling, leaving every simulator at its base interval. For a
+    /// activity scaling, leaving every simulator at its base interval. `calendar`
+    /// supplies the age, night and bedtime hours. For a
     /// dead or egg pet only `lastAdvancedAt` moves; no simulator runs.
     static func advance(
         _ state: PetState,
         to now: Date,
-        isNight: Bool? = nil,
-        steps: Int? = nil
+        isNight: Bool?,
+        steps: Int?,
+        calendar: Calendar
     ) -> PetState {
         var state = state
 
@@ -37,13 +39,13 @@ nonisolated enum GameEngine {
         // night from the clock (isNight: nil); only the final step sees the
         // live signal.
         let boundaries = SleepSchedule.replayBoundaries(
-            from: state.timestamps.lastAdvancedAt, to: now
+            from: state.timestamps.lastAdvancedAt, to: now, calendar: calendar
         )
         for boundary in boundaries {
-            state = step(state, to: boundary, isNight: nil, steps: steps)
+            state = step(state, to: boundary, isNight: nil, steps: steps, calendar: calendar)
             if state.isDead { return state }
         }
-        return step(state, to: now, isNight: isNight, steps: steps)
+        return step(state, to: now, isNight: isNight, steps: steps, calendar: calendar)
     }
 
     /// Runs one step from `lastAdvancedAt` to `now`: every simulator, then
@@ -55,22 +57,23 @@ nonisolated enum GameEngine {
         _ state: PetState,
         to now: Date,
         isNight: Bool?,
-        steps: Int?
+        steps: Int?,
+        calendar: Calendar
     ) -> PetState {
         var state = state
 
         // Clamped so a backward clock can't produce a negative age.
-        let days = Calendar.current.dateComponents(
+        let days = calendar.dateComponents(
             [.day], from: state.timestamps.bornAt, to: now
         ).day ?? state.age
         state.age = max(0, days)
 
         // Resolve night and bedtime once so every simulator in the step sees
         // the same signal.
-        let night = SleepSchedule.isNight(weatherNight: isNight, at: now)
-        let bedtime = SleepSchedule.isBedtime(at: now)
+        let night = SleepSchedule.isNight(weatherNight: isNight, at: now, calendar: calendar)
+        let bedtime = SleepSchedule.isBedtime(at: now, calendar: calendar)
 
-        state = SleepSchedule.apply(to: state, at: now, night: night)
+        state = SleepSchedule.apply(to: state, at: now, night: night, calendar: calendar)
         state = HungerSimulator.apply(to: state, at: now, steps: steps)
         state = StrengthSimulator.apply(to: state, at: now, steps: steps)
         state = ConditioningSimulator.apply(to: state, at: now)

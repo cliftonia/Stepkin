@@ -98,7 +98,8 @@ final class AppPresenter {
             let advanced = GameEngine.advance(
                 saved, to: .now,
                 isNight: weatherStore.nightSignal(),
-                steps: stepActivityStore.todaySteps
+                steps: stepActivityStore.todaySteps,
+                calendar: .current
             )
             store.save(advanced, loggingTo: Log.presentation)
 

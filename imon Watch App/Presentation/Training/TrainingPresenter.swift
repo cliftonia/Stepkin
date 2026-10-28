@@ -157,20 +157,15 @@ final class TrainingPresenter {
     }
 
     private func advanceOrComplete() {
-        let roundsPlayed = viewModel.roundResults.count
-        let wins = viewModel.roundResults.filter(\.won).count
-        let losses = roundsPlayed - wins
-        let maxLosses = TimeConstants.trainRounds
-            - TimeConstants.trainWinsNeeded
-
-        if wins >= TimeConstants.trainWinsNeeded {
+        switch TrainAction.sessionOutcome(results: viewModel.roundResults.map(\.won)) {
+        case true:
             enterVictory()
             onComplete(true)
-        } else if losses > maxLosses {
+        case false:
             enterDefeat()
             onComplete(false)
-        } else {
-            viewModel.currentRound = roundsPlayed
+        case nil:
+            viewModel.currentRound = viewModel.roundResults.count
             viewModel.showingNumber = false
             viewModel.currentNumber = TrainAction.generateNumber()
             enterReady()

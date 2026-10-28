@@ -22,17 +22,17 @@ struct SleepScheduleTests {
     @Test
     func `weather daylight always wins over the clock`() {
         // 3pm but weather says night → night.
-        #expect(SleepSchedule.isNight(weatherNight: true, at: date(hour: 15)))
+        #expect(SleepSchedule.isNight(weatherNight: true, at: date(hour: 15), calendar: .current))
         // 11pm but weather says day → day.
-        #expect(!SleepSchedule.isNight(weatherNight: false, at: date(hour: 23)))
+        #expect(!SleepSchedule.isNight(weatherNight: false, at: date(hour: 23), calendar: .current))
     }
 
     @Test
     func `falls back to a 6am-6pm window without weather`() {
-        #expect(SleepSchedule.isNight(weatherNight: nil, at: date(hour: 20)))   // 8pm → night
-        #expect(SleepSchedule.isNight(weatherNight: nil, at: date(hour: 3)))    // 3am → night
-        #expect(!SleepSchedule.isNight(weatherNight: nil, at: date(hour: 6)))   // 6am → day
-        #expect(!SleepSchedule.isNight(weatherNight: nil, at: date(hour: 14)))  // 2pm → day
+        #expect(SleepSchedule.isNight(weatherNight: nil, at: date(hour: 20), calendar: .current))   // 8pm → night
+        #expect(SleepSchedule.isNight(weatherNight: nil, at: date(hour: 3), calendar: .current))    // 3am → night
+        #expect(!SleepSchedule.isNight(weatherNight: nil, at: date(hour: 6), calendar: .current))   // 6am → day
+        #expect(!SleepSchedule.isNight(weatherNight: nil, at: date(hour: 14), calendar: .current))  // 2pm → day
     }
 
     // MARK: - Day
@@ -43,7 +43,7 @@ struct SleepScheduleTests {
         state.lightsOn = false
         state.isSleeping = true
 
-        state = SleepSchedule.apply(to: state, at: .now, night: false)
+        state = SleepSchedule.apply(to: state, at: .now, night: false, calendar: .current)
 
         #expect(state.lightsOn == true)
         #expect(state.isSleeping == false)
@@ -53,10 +53,10 @@ struct SleepScheduleTests {
 
     @Test
     func `bedtime starts at 9pm and runs to the morning wake hour`() {
-        #expect(SleepSchedule.isBedtime(at: date(hour: 21)))      // 9pm
-        #expect(SleepSchedule.isBedtime(at: date(hour: 2)))       // 2am
-        #expect(!SleepSchedule.isBedtime(at: date(hour: 19)))     // 7pm — still up
-        #expect(!SleepSchedule.isBedtime(at: date(hour: 6)))      // 6am — awake
+        #expect(SleepSchedule.isBedtime(at: date(hour: 21), calendar: .current))      // 9pm
+        #expect(SleepSchedule.isBedtime(at: date(hour: 2), calendar: .current))       // 2am
+        #expect(!SleepSchedule.isBedtime(at: date(hour: 19), calendar: .current))     // 7pm — still up
+        #expect(!SleepSchedule.isBedtime(at: date(hour: 6), calendar: .current))      // 6am — awake
     }
 
     // MARK: - Dusk / Dawn
@@ -69,7 +69,7 @@ struct SleepScheduleTests {
         state.isSleeping = false
         state.wasNight = false
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.lightsOn == false)              // dusk dims the light
         #expect(state.wasNight == true)
@@ -85,7 +85,7 @@ struct SleepScheduleTests {
         state.lightsOn = false
         state.isSleeping = false
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.isSleeping == false)
         #expect(state.timestamps.lightsOffAt == nil)
@@ -99,7 +99,7 @@ struct SleepScheduleTests {
         state.isSleeping = true
         state.wasNight = true
 
-        state = SleepSchedule.apply(to: state, at: now, night: false)
+        state = SleepSchedule.apply(to: state, at: now, night: false, calendar: .current)
 
         #expect(state.lightsOn == true)
         #expect(state.isSleeping == false)
@@ -116,7 +116,7 @@ struct SleepScheduleTests {
         state.lightsOn = false
         state.isSleeping = false
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.timestamps.lightsOffAt == now)
         #expect(state.isSleeping == false)
@@ -133,7 +133,7 @@ struct SleepScheduleTests {
             -(TimeConstants.sleepDelay + 1)
         )
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.isSleeping == true)
         #expect(state.timestamps.lightsOffAt == nil)
@@ -148,7 +148,7 @@ struct SleepScheduleTests {
         state.isSleeping = false
         state.timestamps.lightsOffAt = now.addingTimeInterval(-1)
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.isSleeping == false)
     }
@@ -161,7 +161,7 @@ struct SleepScheduleTests {
         state.lightsOn = true
         state.isSleeping = true
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.lightsOn == true)
         #expect(state.isSleeping == false)
@@ -175,7 +175,7 @@ struct SleepScheduleTests {
         state.lightsOn = false
         state.isSleeping = true
 
-        state = SleepSchedule.apply(to: state, at: now, night: true)
+        state = SleepSchedule.apply(to: state, at: now, night: true, calendar: .current)
 
         #expect(state.isSleeping == true)
     }
@@ -188,7 +188,7 @@ struct SleepScheduleTests {
         let start = calendar.date(bySettingHour: 17, minute: 0, second: 0, of: .now) ?? .now
         let end = calendar.date(byAdding: .hour, value: 14, to: start) ?? start
 
-        let hours = SleepSchedule.replayBoundaries(from: start, to: end)
+        let hours = SleepSchedule.replayBoundaries(from: start, to: end, calendar: .current)
             .map { calendar.component(.hour, from: $0) * 100 + calendar.component(.minute, from: $0) }
 
         #expect(hours == [1800, 2100, 2102, 600])
@@ -200,8 +200,8 @@ struct SleepScheduleTests {
         let start = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: .now) ?? .now
         let end = calendar.date(byAdding: .hour, value: 5, to: start) ?? start
 
-        #expect(SleepSchedule.replayBoundaries(from: start, to: end).isEmpty)
-        #expect(SleepSchedule.replayBoundaries(from: end, to: start).isEmpty)
+        #expect(SleepSchedule.replayBoundaries(from: start, to: end, calendar: .current).isEmpty)
+        #expect(SleepSchedule.replayBoundaries(from: end, to: start, calendar: .current).isEmpty)
     }
 
     @Test
@@ -210,7 +210,7 @@ struct SleepScheduleTests {
         state.isDead = true
         state.isSleeping = false
 
-        state = SleepSchedule.apply(to: state, at: .now, night: true)
+        state = SleepSchedule.apply(to: state, at: .now, night: true, calendar: .current)
 
         #expect(state.isSleeping == false)
     }
@@ -221,7 +221,7 @@ struct SleepScheduleTests {
         state.isEgg = true
         state.isSleeping = false
 
-        state = SleepSchedule.apply(to: state, at: .now, night: true)
+        state = SleepSchedule.apply(to: state, at: .now, night: true, calendar: .current)
 
         #expect(state.isSleeping == false)
     }

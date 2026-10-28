@@ -34,7 +34,7 @@ nonisolated enum BackgroundTick {
         }
         guard let state = loaded else { return }
 
-        var advanced = GameEngine.advance(state, to: now, isNight: nil, steps: steps)
+        var advanced = GameEngine.advance(state, to: now, isNight: nil, steps: steps, calendar: .current)
 
         // Evolution otherwise runs only foregrounded — evaluate so pets grow while away.
         if let target = EvolutionEngine.checkEvolution(for: advanced) {

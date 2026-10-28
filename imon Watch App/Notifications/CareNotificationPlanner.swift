@@ -85,7 +85,7 @@ nonisolated enum CareNotificationPlanner {
         calendar: Calendar
     ) -> CareNotification? {
         guard notification.kind != .fading,
-              SleepSchedule.isNight(weatherNight: nil, at: notification.fireDate)
+              SleepSchedule.isNight(weatherNight: nil, at: notification.fireDate, calendar: calendar)
         else { return notification }
 
         guard let morning = nextMorning(after: notification.fireDate, calendar: calendar),
