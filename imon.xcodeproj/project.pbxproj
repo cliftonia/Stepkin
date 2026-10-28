@@ -14,6 +14,8 @@
 		7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A022FF1A00000000001 /* StepkinCore */; };
 		7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A042FF1A00000000001 /* StepkinEngine */; };
 		7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A062FF1A00000000001 /* StepkinTestSupport */; };
+		7E5C0A092FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A082FF1A00000000001 /* StepkinCore */; };
+		7E5C0A0B2FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A0A2FF1A00000000001 /* StepkinEngine */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +144,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E5C0A092FF1A00000000001 /* StepkinCore in Frameworks */,
+				7E5C0A0B2FF1A00000000001 /* StepkinEngine in Frameworks */,
 				7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +282,8 @@
 			);
 			name = "imon Watch AppTests";
 			packageProductDependencies = (
+				7E5C0A082FF1A00000000001 /* StepkinCore */,
+				7E5C0A0A2FF1A00000000001 /* StepkinEngine */,
 				7E5C0A062FF1A00000000001 /* StepkinTestSupport */,
 			);
 			productName = "imon Watch AppTests";
@@ -932,6 +938,14 @@
 		7E5C0A062FF1A00000000001 /* StepkinTestSupport */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StepkinTestSupport;
+		};
+		7E5C0A082FF1A00000000001 /* StepkinCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinCore;
+		};
+		7E5C0A0A2FF1A00000000001 /* StepkinEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinEngine;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
