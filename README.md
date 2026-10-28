@@ -160,7 +160,8 @@ User-facing strings live in two String Catalogs: the watch app's
 `imon Watch App/Resources/Localizable.xcstrings` and the complication's
 `SkykinComplication/Localizable.xcstrings`. Code resolves them with
 `String(localized:comment:)` or a SwiftUI initialiser; the engine package carries
-keys only. After adding or changing a string, build and run
+no user-facing English beyond the species names (the mood words are also written
+to `statusText` for one release only). After adding or changing a string, build and run
 `xcrun xcstringstool sync <catalog> --stringsdata <build>/*.stringsdata`.
 
 ## Sprites

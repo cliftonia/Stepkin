@@ -33,7 +33,7 @@ developer's.
   forward, and the Settings footer explains the two sources.
 - VoiceOver: the three buttons announce what they do; the home screen reads
   the pet's condition.
-- Build warning-free, SwiftLint clean, 465 tests green (package 307, app 146, complication 12).
+- Build warning-free, SwiftLint clean, 464 tests green (package 306, app and complication 158).
 
 ## Decide before the upload (developer)
 
@@ -84,6 +84,12 @@ developer's.
 - Both String Catalogs are English-only at 1.0; a translation is a `state: new`
   entry away. The engine's mood words reach the widget as keys (`moodKey`), and
   the widget localizes them.
+- `ComplicationEntry.statusText` is kept for one release so a timeline baked by
+  the previous build still renders; drop it after that release.
+- App Shortcut phrases and plural variants (`AppShortcuts.xcstrings`, `%lld messes`
+  and the like) are a second language's job.
+- Catalog validity is checked with `python3 -m json.tool <catalog> >/dev/null`;
+  `plutil -lint` rejects `.xcstrings`.
 - The care-reminder replan and complication reload run on every wrist-down
   (`.inactive`); WidgetKit's reload budget may throttle some of them.
 - The DEBUG build shows a sample weather reading; Release shows nothing until
