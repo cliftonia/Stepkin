@@ -3,7 +3,7 @@ import os
 
 /// The home screen's presenter: owns the live `PetState`, the tick loop, and
 /// the sprite animators, fanning out to the feeding / healing / lights /
-/// wander / evolution extensions. Each tick advances the simulation, offers
+/// evolution extensions. Each tick advances the simulation, offers
 /// evolutions, and saves; a death inside the tick fires `onDeath` during play.
 /// Foregrounding restarts the loop with the catch-up; backgrounding hands
 /// care reminders and the complication timeline to the system.
@@ -35,7 +35,7 @@ final class PetPresenter {
     private let currentNight: () -> Bool?
 
     /// Today's step count, or nil when unavailable — drives activity scaling.
-    /// Not private: the `+Wander` extension reads it when starting a battle.
+    /// Not private: the `+Modes` extension reads it when starting a battle.
     let currentSteps: () -> Int?
 
     /// The final step total for a finished day, or nil when unavailable — a
@@ -47,8 +47,8 @@ final class PetPresenter {
     private let onDeath: () -> Void
 
     private let gameTimer = MainActorTimer()
-    /// The timer stepping the wander; the `+Wander` extension owns the movement.
-    let wanderTimer = MainActorTimer()
+    /// The ambient wandering; the presenter wires its pause and sprite hooks in `init`.
+    let wander = WanderController()
     /// The single in-flight activity ceremony (feed / clean / heal / refuse).
     var activityTask: Task<Void, Never>?
     /// The countdown from a lights toggle to sleep; cancelled when the game loop stops.
@@ -62,18 +62,6 @@ final class PetPresenter {
     /// Index into the current debug evolution journey (see `+Evolution`).
     var debugStepIndex = 0
     #endif
-
-    // MARK: - Wander State
-
-    /// The wandering state: idle, or walking one direction with a count of
-    /// steps still to take. The movement itself lives in the `+Wander` extension.
-    enum WanderState {
-        case idle
-        case walking(direction: Int, stepsRemaining: Int)
-    }
-
-    /// The current wander leg, starting `.idle`; the movement lives in the `+Wander` extension.
-    var wanderState: WanderState = .idle
 
     // MARK: - Init
 
@@ -99,6 +87,26 @@ final class PetPresenter {
         self.notificationScheduler = notificationScheduler
         self.complicationReloader = complicationReloader
         updateViewModel()
+        configureWander()
+    }
+
+    // Wires the wander controller's pause condition and sprite hooks back to this presenter.
+    private func configureWander() {
+        wander.shouldPause = { [weak self] in
+            guard let self else { return true }
+            return viewModel.isBusy
+                || viewModel.screenMode != .normal
+                || state.isSleeping
+                || state.isDead
+                || state.isLanguishing
+        }
+        wander.playWalk = { [weak self] facing in
+            guard let self else { return }
+            spriteAnimator.play(SpriteCatalog.animation(for: state.species, kind: .sideWalk).facing(facing))
+        }
+        wander.onIdle = { [weak self] in
+            self?.updateAnimation()
+        }
     }
 
     // MARK: - Game Loop
@@ -113,7 +121,7 @@ final class PetPresenter {
         gameTimer.start(interval: TimeConstants.gameTickInterval, repeats: true) { [weak self] in
             self?.tick()
         }
-        startWandering()
+        wander.start()
     }
 
     /// Stops the loop and everything hanging off it: tick timer, ceremony and
@@ -130,7 +138,7 @@ final class PetPresenter {
         // otherwise a hidden screen keeps walking its pet and redrawing.
         dismissTraining()
         dismissBattle()
-        stopWandering()
+        wander.stop()
         spriteAnimator.stop()
         feedingAnimator.stop()
     }

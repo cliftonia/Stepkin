@@ -28,8 +28,6 @@ final class PetViewModel {
 
     /// The pet's state, rendered by the view; `nil` when no state has been provided yet.
     var status: PetStatus?
-    /// The pet's horizontal offset on the LCD.
-    var petOffsetX: Int = 8
 
     /// Progress toward the next evolution (0...1) — drives the bezel ring.
     var evolutionProgress: Double = 0

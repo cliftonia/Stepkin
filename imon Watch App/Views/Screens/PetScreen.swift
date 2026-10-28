@@ -189,7 +189,7 @@ struct PetScreen: View {
                         : presenter.viewModel.status?.poopCount ?? 0,
                     stinkPhase: presenter.spriteAnimator.currentFrameIndex,
                     lightsOn: homeScene.lightsOn,
-                    leftSpriteOffsetX: presenter.viewModel.petOffsetX,
+                    leftSpriteOffsetX: presenter.wander.offsetX,
                     weatherCondition: homeScene.weather,
                     moonPhase: MoonPhase.current(date: .now),
                     dayPhase: homeScene.dayPhase,

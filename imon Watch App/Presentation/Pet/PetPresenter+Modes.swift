@@ -14,7 +14,7 @@ extension PetPresenter {
             refuse()
             return
         }
-        stopWandering()
+        wander.stop()
         let presenter = TrainingPresenter(
             species: state.species
         ) { [weak self] won in
@@ -45,7 +45,7 @@ extension PetPresenter {
             refuse()
             return
         }
-        stopWandering()
+        wander.stop()
         let presenter = BattlePresenter(
             petState: state,
             steps: currentSteps()
@@ -70,6 +70,6 @@ extension PetPresenter {
     private func returnToNormalMode() {
         viewModel.screenMode = .normal
         updateAnimation()
-        startWandering()
+        wander.start()
     }
 }
