@@ -36,7 +36,7 @@ final class PetPresenter {
 
     /// Today's step count, or nil when unavailable — drives activity scaling.
     /// Not private: the `+Modes` extension reads it when starting a battle.
-    let currentSteps: () -> Int?
+    let currentSteps: () -> StepReading
 
     /// The final step total for a finished day, or nil when unavailable — a
     /// day that ended while the app was closed is credited in full at rollover.
@@ -72,7 +72,7 @@ final class PetPresenter {
         state: PetState,
         store: PetStateStore,
         currentNight: @escaping () -> Bool? = { nil },
-        currentSteps: @escaping () -> Int? = { nil },
+        currentSteps: @escaping () -> StepReading = { .unavailable },
         finalSteps: @escaping (Date) async -> Int? = { _ in nil },
         onDeath: @escaping () -> Void = {},
         notificationScheduler: NotificationScheduler = .live(),
@@ -271,7 +271,7 @@ final class PetPresenter {
             environmentDidChange()
         } else {
             CareHandoff.perform(
-                state: state, now: .now, steps: currentSteps(), notificationsEnabled: notificationsEnabled,
+                state: state, now: .now, steps: currentSteps().count, notificationsEnabled: notificationsEnabled,
                 witnesses: CareHandoff.Witnesses(notifications: notificationScheduler, complications: complicationReloader)
             )
         }

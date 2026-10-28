@@ -23,7 +23,7 @@ public enum ComplicationTimeline {
 
         return (0..<max(1, count)).map { index in
             let date = now.addingTimeInterval(Double(index) * stride)
-            let projected = GameEngine.advance(state, to: date, isNight: nil, steps: nil, calendar: .current)
+            let projected = GameEngine.advance(state, to: date, isNight: nil, steps: .unavailable, calendar: .current)
             return ComplicationEntry(date: date, state: projected, spriteRows: spriteRows(projected))
         }
     }

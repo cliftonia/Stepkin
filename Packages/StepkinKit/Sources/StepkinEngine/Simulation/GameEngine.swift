@@ -18,15 +18,15 @@ public enum GameEngine {
     /// night is slept through rather than charged as waking hours. `isNight`
     /// is the weather's daylight reading; `nil` resolves night from the
     /// 18:00–06:00 clock window in `SleepSchedule.isNight`. `steps` is
-    /// today's running count; `nil` (steps disabled or unavailable) disables
-    /// activity scaling, leaving every simulator at its base interval.
+    /// today's reading; `.off` and `.unavailable` (no count) disable activity
+    /// scaling, leaving every simulator at its base interval.
     /// `calendar` supplies the age, night and bedtime hours. For a dead or
     /// egg pet only `lastAdvancedAt` moves; no simulator runs.
     public static func advance(
         _ state: PetState,
         to now: Date,
         isNight: Bool?,
-        steps: Int?,
+        steps: StepReading,
         calendar: Calendar
     ) -> PetState {
         var state = state
@@ -58,7 +58,7 @@ public enum GameEngine {
         _ state: PetState,
         to now: Date,
         isNight: Bool?,
-        steps: Int?,
+        steps: StepReading,
         calendar: Calendar
     ) -> PetState {
         var state = state
@@ -75,11 +75,11 @@ public enum GameEngine {
         let bedtime = SleepSchedule.isBedtime(at: now, calendar: calendar)
 
         state = SleepSchedule.apply(to: state, at: now, night: night, calendar: calendar)
-        state = HungerSimulator.apply(to: state, at: now, steps: steps)
-        state = StrengthSimulator.apply(to: state, at: now, steps: steps)
+        state = HungerSimulator.apply(to: state, at: now, steps: steps.count)
+        state = StrengthSimulator.apply(to: state, at: now, steps: steps.count)
         state = ConditioningSimulator.apply(to: state, at: now)
         state = PoopSimulator.apply(to: state, at: now)
-        state = InjurySimulator.apply(to: state, at: now, steps: steps)
+        state = InjurySimulator.apply(to: state, at: now, steps: steps.count)
         state = CareMistakeTracker.apply(to: state, at: now, bedtime: bedtime)
         state = CollapseTracker.apply(to: state, at: now)
 

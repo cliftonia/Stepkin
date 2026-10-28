@@ -26,7 +26,7 @@ struct PetPresenterTests {
         _ box: SaveBox,
         onDeath: @escaping () -> Void = {},
         scheduler: SchedulerBox = SchedulerBox(),
-        steps: Int? = nil,
+        steps: StepReading = .unavailable,
         finalSteps: Int? = nil
     ) -> PetPresenter {
         makePetPresenter(
@@ -118,7 +118,7 @@ struct PetPresenterTests {
         state.stepTrackedDay = yesterday
         state.stepsCreditedToday = 1_500
         state.lifetimeActiveSteps = 1_500
-        let presenter = makePresenter(state, SaveBox(), steps: 200, finalSteps: 3_000)
+        let presenter = makePresenter(state, SaveBox(), steps: .count(200), finalSteps: 3_000)
 
         presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
         await presenter.dayRecoveryTask?.value
@@ -136,7 +136,7 @@ struct PetPresenterTests {
         var state = makeTestState()
         state.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
         state.stepsCreditedToday = 500
-        let presenter = makePresenter(state, SaveBox(), steps: 10, finalSteps: 9_000)
+        let presenter = makePresenter(state, SaveBox(), steps: .count(10), finalSteps: 9_000)
 
         presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
         await presenter.dayRecoveryTask?.value
@@ -151,7 +151,7 @@ struct PetPresenterTests {
         var state = makeTestState()
         state.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
         state.stepsCreditedToday = 4_000
-        let presenter = makePresenter(state, SaveBox(), steps: 120, finalSteps: nil)
+        let presenter = makePresenter(state, SaveBox(), steps: .count(120), finalSteps: nil)
 
         presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
         await presenter.dayRecoveryTask?.value

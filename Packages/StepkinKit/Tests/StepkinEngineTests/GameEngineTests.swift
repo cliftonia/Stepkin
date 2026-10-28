@@ -15,7 +15,7 @@ struct GameEngineTests {
         var state = makeTestState(at: .now.addingTimeInterval(-3600))
         state.timestamps.bornAt = born
 
-        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: .unavailable, calendar: .current)
         #expect(state.age >= 3)
     }
 
@@ -35,7 +35,7 @@ struct GameEngineTests {
         state.wasNight = true
 
         // Half an hour after the clock's dawn: the replay woke the pet at dawn.
-        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: false, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: false, steps: .unavailable, calendar: .current)
 
         #expect(state.isSleeping == false)
         #expect(state.hungerHearts.value == 4)
@@ -55,7 +55,7 @@ struct GameEngineTests {
         state.lightsOn = true
         state.wasNight = false
 
-        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: clock(hour: 6, minute: 30, daysFromNow: 1), isNight: nil, steps: .unavailable, calendar: .current)
 
         // Awake 17:00 → 21:02 only: 3 hunger ticks (70 min), 4 strength (60 min), 2 poops (2 h).
         #expect(state.hungerHearts.value == 1)
@@ -71,7 +71,7 @@ struct GameEngineTests {
         var state = makeTestState(hunger: 1, strength: 1, at: clock(hour: 10))
         state.lightsOn = true
 
-        state = GameEngine.advance(state, to: clock(hour: 10, daysFromNow: 4), isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: clock(hour: 10, daysFromNow: 4), isNight: nil, steps: .unavailable, calendar: .current)
 
         #expect(state.isDead == true)
     }
@@ -81,7 +81,7 @@ struct GameEngineTests {
         var state = makeTestState(hunger: 4)
         state.isDead = true
         let original = state
-        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: .unavailable, calendar: .current)
         #expect(
             state.hungerHearts.value
                 == original.hungerHearts.value
@@ -96,13 +96,13 @@ struct GameEngineTests {
         state.timestamps.lastStrengthDecayAt = start
 
         // First advance arms the collapse countdown but doesn't kill yet.
-        state = GameEngine.advance(state, to: start.addingTimeInterval(60), isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: start.addingTimeInterval(60), isNight: nil, steps: .unavailable, calendar: .current)
         #expect(state.isDead == false)
         #expect(state.timestamps.collapsingAt != nil)
 
         // Left languishing past the window, it perishes.
         state = GameEngine.advance(
-            state, to: start.addingTimeInterval(TimeConstants.collapseDeathTime + 120), isNight: nil, steps: nil, calendar: .current
+            state, to: start.addingTimeInterval(TimeConstants.collapseDeathTime + 120), isNight: nil, steps: .unavailable, calendar: .current
         )
         #expect(state.isDead)
     }
@@ -117,9 +117,33 @@ struct GameEngineTests {
 
         // Five days on, the engine must still short-circuit the egg: it neither
         // hatches itself nor drains the stats the simulators would touch.
-        state = GameEngine.advance(state, to: .now, isNight: nil, steps: nil, calendar: .current)
+        state = GameEngine.advance(state, to: .now, isNight: nil, steps: .unavailable, calendar: .current)
         #expect(state.isEgg)
         #expect(state.hungerHearts.value == original.hungerHearts.value)
         #expect(state.poopCount == original.poopCount)
+    }
+
+    // Parity: the reading's count reaches the simulators exactly as the old optional did.
+    private func daytimeHunger(steps: StepReading) -> (engine: Int, direct: Int) {
+        let start = clock(hour: 10)
+        let end = start.addingTimeInterval(TimeConstants.hungerDepletionInterval * 3)
+        var state = makeTestState(hunger: 4, at: start)
+        state.timestamps.lastHungerDecayAt = start
+        let advanced = GameEngine.advance(state, to: end, isNight: false, steps: steps, calendar: .current)
+        let direct = HungerSimulator.apply(to: state, at: end, steps: steps.count)
+        return (advanced.hungerHearts.value, direct.hungerHearts.value)
+    }
+
+    @Test
+    func `a count reading drains hunger as the plain count did`() {
+        let result = daytimeHunger(steps: .count(ActivityModel.stepGoal))
+        #expect(result.engine == result.direct)
+        #expect(result.engine < daytimeHunger(steps: .count(0)).engine)
+    }
+
+    @Test
+    func `an unavailable reading drains hunger as no count did`() {
+        let result = daytimeHunger(steps: .unavailable)
+        #expect(result.engine == result.direct)
     }
 }

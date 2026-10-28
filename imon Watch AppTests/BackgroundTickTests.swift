@@ -41,7 +41,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(NoteCapture()),
-            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         #expect(box.saveCount == 1)
@@ -59,7 +59,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(note),
-            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         let expected = CareNotificationPlanner.plan(
@@ -78,7 +78,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(NoteCapture()),
-            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         #expect(refresh.date == now.addingTimeInterval(TimeConstants.backgroundRefreshInterval))
@@ -92,7 +92,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(note),
-            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: today(at: 9)
+            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: today(at: 9)
         )
 
         #expect(box.saveCount == 0)
@@ -109,7 +109,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: store, notifications: capturing(NoteCapture()),
-            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(refresh), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         // A transient decode failure must not kill the refresh chain.
@@ -127,7 +127,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(note),
-            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         #expect(box.state?.species == .hopkin)
@@ -146,7 +146,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(note),
-            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: nil, now: now
+            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: true, steps: .unavailable, now: now
         )
 
         #expect(box.state?.isInjured == true)
@@ -164,7 +164,7 @@ struct BackgroundTickTests {
 
         BackgroundTick.perform(
             store: makeStore(box), notifications: capturing(note),
-            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: false, steps: nil, now: now
+            refresh: capturing(RefreshCapture()), complications: ComplicationReloader(reload: {}), notificationsEnabled: false, steps: .unavailable, now: now
         )
 
         // The pet still advances, evolves, and is saved — only the user-facing

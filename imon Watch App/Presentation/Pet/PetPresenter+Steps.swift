@@ -12,7 +12,7 @@ extension PetPresenter {
     /// settles asynchronously first: HealthKit keeps counting unwatched, so
     /// the last figure seen would lose steps and misjudge the day's laziness.
     func creditSteps() {
-        guard let steps = currentSteps() else { return }
+        guard let steps = currentSteps().count else { return }
         let progress = StepProgress.Progress(of: state)
 
         guard let trackedDay = progress.trackedDay,
@@ -52,7 +52,7 @@ extension PetPresenter {
                 calendar: .current
             )
         }
-        rollOver(progress, todaySteps: currentSteps() ?? fallbackSteps)
+        rollOver(progress, todaySteps: currentSteps().count ?? fallbackSteps)
         save()
     }
 

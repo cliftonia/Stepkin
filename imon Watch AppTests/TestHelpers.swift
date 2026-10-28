@@ -18,7 +18,7 @@ func makePetPresenter(
         schedule: { _ in }, notify: { _, _, _ in }, cancelAll: {}, requestAuthorization: { true }
     ),
     reloader: ComplicationReloader = ComplicationReloader(reload: {}),
-    steps: Int? = nil,
+    steps: StepReading = .unavailable,
     finalSteps: Int? = nil,
     onDeath: @escaping () -> Void = {}
 ) -> PetPresenter {

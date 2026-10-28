@@ -70,11 +70,7 @@ final class AppDelegate: NSObject, WKApplicationDelegate {
     private func handleRefresh(_ task: WKApplicationRefreshBackgroundTask) {
         Task { @MainActor in
             let settings = SettingsStore()
-            let steps: Int? = if settings.stepsEnabled {
-                try? await StepCountProvider.live().fetchTodaySteps()
-            } else {
-                nil
-            }
+            let steps = await Self.stepReading(stepsEnabled: settings.stepsEnabled)
             BackgroundTick.perform(
                 store: JSONPetStateStore.live(),
                 notifications: .live(),
@@ -97,5 +93,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .sound, .list]
+    }
+
+    /// Reads today's steps for a background wake: `.off` when the player has
+    /// switched Steps off, `.count` on a successful fetch, else `.unavailable`.
+    private static func stepReading(stepsEnabled: Bool) async -> StepReading {
+        guard stepsEnabled else { return .off }
+        guard let steps = try? await StepCountProvider.live().fetchTodaySteps() else { return .unavailable }
+        return .count(steps)
     }
 }

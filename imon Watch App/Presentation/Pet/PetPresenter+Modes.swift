@@ -48,7 +48,7 @@ extension PetPresenter {
         wander.stop()
         let presenter = BattlePresenter(
             petState: state,
-            steps: currentSteps()
+            steps: currentSteps().count
         ) { [weak self] result in
             self?.applyBattleResult(result)
         }

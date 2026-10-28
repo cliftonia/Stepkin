@@ -98,7 +98,7 @@ final class AppPresenter {
             let advanced = GameEngine.advance(
                 saved, to: .now,
                 isNight: weatherStore.nightSignal(),
-                steps: stepActivityStore.todaySteps,
+                steps: currentStepReading(),
                 calendar: .current
             )
             store.save(advanced, loggingTo: Log.presentation)
@@ -155,10 +155,7 @@ final class AppPresenter {
                 // Weather off -> no night signal, so day/night falls back to the clock.
                 settings.weatherEnabled ? weatherStore.nightSignal() : nil
             },
-            currentSteps: { [stepActivityStore, settings] in
-                // Steps off -> no reading, so no activity scaling.
-                settings.stepsEnabled ? stepActivityStore.todaySteps : nil
-            },
+            currentSteps: { [weak self] in self?.currentStepReading() ?? .unavailable },
             finalSteps: { [stepActivityStore, settings] day in
                 settings.stepsEnabled ? await stepActivityStore.finalSteps(for: day) : nil
             },
@@ -205,6 +202,16 @@ final class AppPresenter {
             Log.presentation.error("Failed to delete state: \(error, privacy: .public)")
         }
         startHatching()
+    }
+
+    // MARK: - Step Reading
+
+    /// The step signal the engine reads: `.off` while Steps is switched off,
+    /// `.count` once the store has a figure, else `.unavailable`.
+    private func currentStepReading() -> StepReading {
+        guard settings.stepsEnabled else { return .off }
+        guard let steps = stepActivityStore.todaySteps else { return .unavailable }
+        return .count(steps)
     }
 
     // MARK: - Navigation Actions

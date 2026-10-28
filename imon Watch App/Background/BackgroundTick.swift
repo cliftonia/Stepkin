@@ -4,8 +4,9 @@ import os
 /// Runs one background tick: advances the saved pet to `now`, persists it,
 /// re-arms the next wake-up, and re-evaluates care reminders and complications.
 /// Self-contained: reads and writes `PetStateStore` directly, so a bare
-/// background launch runs it. `steps` is today's HealthKit total, or `nil` when
-/// the Steps toggle is off or the read failed — activity scaling is skipped.
+/// background launch runs it. `steps` is the step reading: a HealthKit total, `.off`
+/// when the Steps toggle is off, or `.unavailable` when the read failed — without
+/// a count, activity scaling is skipped.
 nonisolated enum BackgroundTick {
 
     // swiftlint:disable function_parameter_count
@@ -19,7 +20,7 @@ nonisolated enum BackgroundTick {
         refresh: BackgroundRefreshScheduler,
         complications: ComplicationReloader,
         notificationsEnabled: Bool,
-        steps: Int?,
+        steps: StepReading,
         now: Date = .now
     ) {
         // swiftlint:enable function_parameter_count
@@ -54,7 +55,7 @@ nonisolated enum BackgroundTick {
 
         // The foreground path also hands off through `CareHandoff`, sharing the toggle handling.
         CareHandoff.perform(
-            state: advanced, now: now, steps: steps, notificationsEnabled: notificationsEnabled,
+            state: advanced, now: now, steps: steps.count, notificationsEnabled: notificationsEnabled,
             witnesses: CareHandoff.Witnesses(notifications: notifications, complications: complications)
         )
     }
