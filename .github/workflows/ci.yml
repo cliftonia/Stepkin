@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: xcode-27
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SwiftLint 0.53.0
+        run: |
+          curl -sSL -o swiftlint.zip https://github.com/realm/SwiftLint/releases/download/0.53.0/portable_swiftlint.zip
+          mkdir -p "$HOME/bin" && unzip -q swiftlint.zip -d "$HOME/bin"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: SwiftLint
+        run: swiftlint lint --strict --quiet
+      - name: Doc checker
+        run: python3 Tools/doc_lint.py
+
+  watch:
+    runs-on: xcode-27
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode 27.1
+        run: sudo xcode-select -s /Applications/Xcode_27.1.app && xcodebuild -version
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: dd-${{ runner.os }}-xcode27.1-${{ hashFiles('imon.xcodeproj/project.pbxproj') }}
+      - name: Build
+        run: >
+          xcodebuild build -project imon.xcodeproj -scheme "imon Watch App"
+          -destination "generic/platform=watchOS Simulator" -quiet
+      - name: Test
+        run: >
+          xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
+          -destination "platform=watchOS Simulator,name=Apple Watch Ultra 3 (49mm)"
+          -only-testing "imon Watch AppTests" -quiet
+      - name: List simulators on failure
+        if: failure()
+        run: xcrun simctl list devices available

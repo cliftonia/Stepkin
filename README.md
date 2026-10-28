@@ -1,5 +1,7 @@
 # Stepkin
 
+[![CI](https://github.com/cliftonia/Stepkin/actions/workflows/ci.yml/badge.svg)](https://github.com/cliftonia/Stepkin/actions/workflows/ci.yml)
+
 A virtual pet for Apple Watch, inspired by late-'90s LCD pets and built
 natively for watchOS. A creature lives on a 32×20 pixel LCD on your
 wrist: it hatches, begs for food, poops, sleeps when the lights go out,
@@ -33,6 +35,8 @@ also needs the WeatherKit capability provisioned; in DEBUG a sample snapshot
 stands in). SwiftLint is not a build phase; run `swiftlint lint` from the repo root —
 the codebase holds a zero-warning bar. `python3 Tools/doc_lint.py` checks
 every comment against `docs/DOCUMENTATION.md` and must report nothing.
+The same four commands run on every push and pull request through GitHub Actions
+(`.github/workflows/ci.yml`).
 
 ## How the game works
 
