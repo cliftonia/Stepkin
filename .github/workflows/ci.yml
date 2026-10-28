@@ -46,7 +46,13 @@ jobs:
       - name: Boot simulator
         run: |
           xcrun simctl list runtimes
-          xcrun simctl boot "Apple Watch Ultra 4 (49mm)"
+          xcrun simctl runtime list
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            xcrun simctl boot "Apple Watch Ultra 4 (49mm)" && break
+            echo "runtime not ready (attempt $attempt); waiting"
+            sleep 10
+            [ "$attempt" = 12 ] && exit 1
+          done
           xcrun simctl bootstatus "Apple Watch Ultra 4 (49mm)" -b
       - name: Test
         run: >
