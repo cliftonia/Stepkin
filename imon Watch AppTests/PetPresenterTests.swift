@@ -103,6 +103,90 @@ struct PetPresenterTests {
         #expect(deaths.count == 1)
     }
 
+    // MARK: - Step Settle Across the Fetch
+
+    /// Holds a `finalSteps` fetch suspended until the test opens it.
+    private final class FetchGate {
+        private(set) var entered = false
+        private var opened = false
+        private var continuation: CheckedContinuation<Void, Never>?
+
+        func wait() async {
+            entered = true
+            guard !opened else { return }
+            await withCheckedContinuation { continuation = $0 }
+        }
+
+        func open() {
+            opened = true
+            continuation?.resume()
+            continuation = nil
+        }
+    }
+
+    /// A presenter whose live count is `steps` and whose missed day settles at
+    /// `total` once `gate` opens; the pet last tracked yesterday at 500 steps.
+    private func makeSettlingPresenter(gate: FetchGate, total: Int) -> PetPresenter {
+        var state = makeTestState(species: .emberkin)
+        state.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
+        state.stepsCreditedToday = 500
+        state.lifetimeActiveSteps = 500
+        state.evolutionGoalPenalty = 1_234
+        return PetPresenter(
+            state: state,
+            store: PetStateStore(save: { _ in }, load: { nil }, delete: {}),
+            currentSteps: { .count(10) },
+            finalSteps: { _ in
+                await gate.wait()
+                return total
+            },
+            notificationScheduler: NotificationScheduler(
+                schedule: { _ in }, notify: { _, _, _ in }, cancelAll: {}, requestAuthorization: { true }
+            ),
+            complicationReloader: ComplicationReloader(reload: {})
+        )
+    }
+
+    /// An evolution accepted while HealthKit is answering resets the goal
+    /// penalty; the settle must add only its own missed-day charge on top.
+    @Test
+    func `an evolution during the settle keeps its penalty reset`() async {
+        let gate = FetchGate()
+        let presenter = makeSettlingPresenter(gate: gate, total: 900)
+        let charge = presenter.state.species.stage.lazyDayPenalty
+
+        presenter.creditSteps()
+        #expect(await waitUntil { gate.entered })
+        presenter.state = EvolutionEngine.evolve(presenter.state, to: .rexkin, at: .now)
+        gate.open()
+        await presenter.dayRecoveryTask?.value
+
+        #expect(presenter.state.species == .rexkin)
+        #expect(presenter.state.evolutionGoalPenalty == charge)
+        // 500 credited + a 400 tail + today's 10.
+        #expect(presenter.state.lifetimeActiveSteps == 910)
+        #expect(presenter.state.stepsCreditedToday == 10)
+    }
+
+    /// When the live accumulator moved to another day meanwhile, the settle is
+    /// stale and is dropped rather than written over it.
+    @Test
+    func `a settle is dropped when the tracked day changed meanwhile`() async {
+        let gate = FetchGate()
+        let presenter = makeSettlingPresenter(gate: gate, total: 3_000)
+
+        presenter.creditSteps()
+        #expect(await waitUntil { gate.entered })
+        presenter.state.stepTrackedDay = Date.now.addingTimeInterval(86_400 * 3)
+        presenter.state.stepsCreditedToday = 42
+        gate.open()
+        await presenter.dayRecoveryTask?.value
+
+        #expect(presenter.state.stepsCreditedToday == 42)
+        #expect(presenter.state.lifetimeActiveSteps == 500)
+        #expect(presenter.state.evolutionGoalPenalty == 1_234)
+    }
+
     // MARK: - Scene Phase
 
     /// A save written while the presenter was suspended (a background wake or

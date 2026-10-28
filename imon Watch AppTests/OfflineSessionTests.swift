@@ -138,6 +138,22 @@ struct OfflineSessionTests {
     }
 
     @Test
+    func `an injury that emerges during the advance is reminded`() async {
+        let base = today(at: 9)
+        let box = StoreBox()
+        var seeded = makeTestState(species: .emberkin, at: base)
+        seeded.poopCount = TimeConstants.maxPoopPiles  // injures on the next advance
+        box.state = seeded
+        let now = base.addingTimeInterval(60)
+        let note = NoteCapture()
+
+        _ = await run(makeDependencies(store: makeStore(box), note: note), now: now)
+
+        #expect(box.state?.isInjured == true)
+        #expect(note.plan?.contains { $0.kind == .injury } == true)
+    }
+
+    @Test
     func `disabled notifications skip the announce and clear pending reminders`() async {
         let now = today(at: 9)
         let box = StoreBox()

@@ -23,19 +23,28 @@ nonisolated enum OfflineSession {
         let refresh: BackgroundRefreshScheduler?
         /// Whether evolution announcements and care reminders are switched on.
         let notificationsEnabled: Bool
+        /// Hands the action to a live presenter when one now exists, returning
+        /// its outcome, or nil while none does. The session asks before its
+        /// load and again before its save, and never writes once a presenter
+        /// has appeared. `PetActionRouter` installs it; the default never hands off.
+        var liveHandOff: @MainActor @Sendable (PetAction) -> PetActionOutcome? = { _ in nil }
     }
 
     /// Loads the pet, advances it to `now`, settles its steps, applies
     /// `action`, offers evolution, saves, re-arms the refresh and hands care
     /// off. A load failure re-arms the refresh so the chain survives and
     /// returns `.noPet`, as does a missing pet. A refused action still saves
-    /// the advance, since the time away happened either way.
+    /// the advance, since the time away happened either way. When
+    /// `liveHandOff` takes the action (a presenter appeared across an await),
+    /// its outcome is returned and nothing is saved.
     static func run(
         _ action: PetAction,
         readings: (night: Bool?, steps: StepReading),
         dependencies: Dependencies,
         now: Date
     ) async -> PetActionOutcome {
+        if let outcome = await dependencies.liveHandOff(action) { return outcome }
+
         let loaded: PetState?
         do {
             loaded = try dependencies.store.load()
@@ -50,6 +59,10 @@ nonisolated enum OfflineSession {
         state = await StepCrediting.settle(
             state, todaySteps: readings.steps.count, now: now, finalSteps: dependencies.finalSteps, calendar: .current
         )
+
+        // The settle awaited HealthKit: a presenter may have appeared since,
+        // and it is then the only writer.
+        if let outcome = await dependencies.liveHandOff(action) { return outcome }
 
         let outcome = apply(action, to: &state, now: now)
         state = evolveIfReady(state, now: now, dependencies: dependencies)

@@ -28,12 +28,14 @@ extension PetPresenter {
         }
     }
 
-    /// Writes a finished settle's step accumulator back and saves. The state
-    /// is re-read after the fetch rather than replaced by the settled copy, so
-    /// an evolution or feed accepted meanwhile is not overwritten: only the
-    /// four step fields are taken, and only while the accumulator still
-    /// tracks the day the settle started from. Today's latest live count then
-    /// tops the credit up.
+    /// Applies a finished settle on top of the live state read after the
+    /// fetch, never the snapshot it ran against: an evolution or feed accepted
+    /// meanwhile must survive, including the evolution's goal-penalty reset.
+    /// So only what the settle added (the lifetime credit and the missed-day
+    /// charges) is added to the live fields, and the settled day and count are
+    /// taken only while the live accumulator still tracks the snapshot's day;
+    /// otherwise the settle is dropped. Today's latest live count then tops
+    /// the credit up, and the result is saved.
     func adoptSettledSteps(_ settled: PetState, from snapshot: PetState) {
         defer { dayRecoveryTask = nil }
         guard !Task.isCancelled else { return }
@@ -41,7 +43,10 @@ extension PetPresenter {
               state.stepTrackedDay?.isSameDay(as: trackedDay) == true
         else { return }
 
-        StepProgress.Progress(of: settled).write(to: &state)
+        state.lifetimeActiveSteps += settled.lifetimeActiveSteps - snapshot.lifetimeActiveSteps
+        state.evolutionGoalPenalty += settled.evolutionGoalPenalty - snapshot.evolutionGoalPenalty
+        state.stepsCreditedToday = settled.stepsCreditedToday
+        state.stepTrackedDay = settled.stepTrackedDay
         if let latest = currentSteps().count {
             state = StepCrediting.creditLive(state, todaySteps: latest, now: .now, calendar: .current)
         }

@@ -18,6 +18,10 @@ struct PetActionRouterTests {
         var date: Date?
     }
 
+    private final class ReloadCount: @unchecked Sendable {
+        var count = 0
+    }
+
     private func makeStore(_ box: StoreBox) -> PetStateStore {
         PetStateStore(
             save: { box.state = $0; box.saveCount += 1 },
@@ -35,7 +39,11 @@ struct PetActionRouterTests {
         )
     }
 
-    private func makeOffline(store: PetStateStore, refresh: RefreshCapture? = nil) -> OfflineSession.Dependencies {
+    private func makeOffline(
+        store: PetStateStore,
+        refresh: RefreshCapture? = nil,
+        reloads: ReloadCount = ReloadCount()
+    ) -> OfflineSession.Dependencies {
         OfflineSession.Dependencies(
             store: store,
             finalSteps: { _ in nil },
@@ -43,7 +51,7 @@ struct PetActionRouterTests {
                 notifications: NotificationScheduler(
                     schedule: { _ in }, notify: { _, _, _ in }, cancelAll: {}, requestAuthorization: { true }
                 ),
-                complications: ComplicationReloader(reload: {})
+                complications: ComplicationReloader(reload: { reloads.count += 1 })
             ),
             refresh: refresh.map { capture in BackgroundRefreshScheduler(schedule: { capture.date = $0 }) },
             notificationsEnabled: false
@@ -94,13 +102,16 @@ struct PetActionRouterTests {
         let savesBefore = appBox.saveCount
         let offlineBox = StoreBox()
         let refresh = RefreshCapture()
+        let reloads = ReloadCount()
         let now = Date.now
 
         let outcome = await PetActionRouter.perform(
-            .tick, app: app, offline: makeOffline(store: makeStore(offlineBox), refresh: refresh), now: now
+            .tick, app: app, offline: makeOffline(store: makeStore(offlineBox), refresh: refresh, reloads: reloads), now: now
         )
 
         #expect(outcome == .done)
+        // The live tick still hands care off: the complication is reloaded once.
+        #expect(reloads.count == 1)
         #expect(appBox.saveCount == savesBefore + 1)
         #expect(offlineBox.saveCount == 0)
         #expect(refresh.date == now.addingTimeInterval(TimeConstants.backgroundRefreshInterval))
@@ -121,6 +132,35 @@ struct PetActionRouterTests {
         )
 
         #expect(outcome == .refused(reason: FeedRefusal.full))
+        app.petPresenter?.stopGameLoop()
+    }
+
+    /// A presenter that appears while the session is mid-flight (the UI opened
+    /// during a cold background wake) takes the action; the session never saves.
+    @Test
+    func `a presenter that appears mid-session takes the action and the session does not save`() async {
+        let appBox = StoreBox()
+        appBox.state = makeTestState(species: .emberkin, hunger: 1)
+        let app = makeApp(store: makeStore(appBox))
+        let offlineBox = StoreBox()
+        offlineBox.state = makeTestState(species: .emberkin, hunger: 1)
+        let offlineStore = PetStateStore(
+            save: { offlineBox.state = $0; offlineBox.saveCount += 1 },
+            load: {
+                // The UI comes up between the session's first check and its save.
+                MainActor.assumeIsolated { app.onAppear() }
+                return offlineBox.state
+            },
+            delete: {}
+        )
+
+        let outcome = await PetActionRouter.perform(.feed(.meat), app: app, offline: makeOffline(store: offlineStore), now: .now)
+
+        #expect(outcome == .done)
+        #expect(offlineBox.saveCount == 0)
+        #expect(app.petPresenter != nil)
+        #expect(await waitUntil { app.petPresenter?.viewModel.activity == .feeding(.serving) })
+        await app.permissionTask?.value
         app.petPresenter?.stopGameLoop()
     }
 }
