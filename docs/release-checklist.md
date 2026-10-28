@@ -33,7 +33,7 @@ developer's.
   forward, and the Settings footer explains the two sources.
 - VoiceOver: the three buttons announce what they do; the home screen reads
   the pet's condition.
-- Build warning-free, SwiftLint clean, 437 tests green (package 305, app 132).
+- Build warning-free, SwiftLint clean, 455 tests green (package 305, app 141, complication 9).
 
 ## Decide before the upload (developer)
 

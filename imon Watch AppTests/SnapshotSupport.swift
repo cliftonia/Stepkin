@@ -31,7 +31,9 @@ func renderLCD(_ configuration: LCDDisplayConfiguration, theme: LCDTheme, weathe
 /// in the test bundle. In record mode it writes the reference into the source
 /// tree and records an issue, so a recording run never passes silently. On a
 /// mismatch it writes `<name>.actual.png` beside the reference and fails with
-/// the number of differing pixels.
+/// the number of differing pixels. Record from the command line with
+/// `TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test …` (xcodebuild strips the prefix when forwarding), or set
+/// `RECORD_SNAPSHOTS=1` in the scheme's environment.
 @MainActor
 func assertSnapshot(
     _ image: CGImage,
@@ -49,7 +51,10 @@ func assertSnapshot(
         return
     }
     guard let reference = loadReference(named: name) else {
-        Issue.record("no reference for \(name) - run with RECORD_SNAPSHOTS=1", sourceLocation: sourceLocation)
+        Issue.record(
+            "no reference for \(name) - record with TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test (or RECORD_SNAPSHOTS=1 in the scheme)",
+            sourceLocation: sourceLocation
+        )
         return
     }
     let differing = actual.differingPixels(from: reference)

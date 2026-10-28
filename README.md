@@ -25,15 +25,17 @@ xcodebuild build -project imon.xcodeproj -scheme "imon Watch App" \
 
 # Unit tests
 xcodebuild test -project imon.xcodeproj -scheme "imon Watch App" \
-  -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)" \
-  -only-testing "imon Watch AppTests"
+  -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)"
 
 # Package tests (fast path, no simulator)
 swift test --package-path Packages/StepkinKit
 ```
 
-`swift test` runs the Core, Engine and Sprites suites on the host in seconds;
-the watch scheme's `xcodebuild test` runs the app suites.
+`swift test --package-path Packages/StepkinKit` runs the pure layers (Core, Engine and Sprites) on the host in seconds;
+the watch scheme's `xcodebuild test` runs the app bundle (presenters, stores and the LCD snapshots in
+`imon Watch AppTests/Snapshots/`) and the host-less complication bundle `SkykinComplicationTests`.
+To re-record the snapshots, run `TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test …` (xcodebuild forwards only
+`TEST_RUNNER_`-prefixed variables to the test process); in Xcode, set `RECORD_SNAPSHOTS=1` in the scheme's environment.
 The simulator builds and runs everything, but two integrations only produce
 real data on a physical watch: HealthKit step counts and WeatherKit (which
 also needs the WeatherKit capability provisioned; in DEBUG a sample snapshot

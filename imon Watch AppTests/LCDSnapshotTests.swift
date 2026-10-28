@@ -28,7 +28,8 @@ nonisolated struct LCDSnapshotCase: Sendable, CustomTestStringConvertible {
 }
 
 /// Pins the LCD's look: each scene renders to pixels identical to its
-/// committed reference. Record new references with `RECORD_SNAPSHOTS=1`.
+/// committed reference. Record new references with `TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test …`
+/// or `RECORD_SNAPSHOTS=1` in the scheme's environment.
 @MainActor
 struct LCDSnapshotTests {
 
