@@ -1,0 +1,165 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%@: %lld of %lld hearts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$lld of %3$lld hearts"
+          }
+        }
+      }
+    },
+    "About" : {
+
+    },
+    "Age: %lld days" : {
+
+    },
+    "An egg!" : {
+
+    },
+    "Battery saver" : {
+
+    },
+    "Check on" : {
+
+    },
+    "Check on Stepkin" : {
+
+    },
+    "Death screen. Your Creature has passed away." : {
+
+    },
+    "Debug" : {
+
+    },
+    "Display" : {
+
+    },
+    "Dotkin is born!" : {
+
+    },
+    "Drain + care test" : {
+
+    },
+    "Egg hatching screen" : {
+
+    },
+    "Features" : {
+
+    },
+    "Feed" : {
+
+    },
+    "Feed Stepkin" : {
+
+    },
+    "Food" : {
+
+    },
+    "Force evolve" : {
+
+    },
+    "Haptics" : {
+
+    },
+    "It's hatching..." : {
+
+    },
+    "Kill pet" : {
+
+    },
+    "Loading" : {
+
+    },
+    "Meat" : {
+
+    },
+    "Morph into" : {
+
+    },
+    "New Egg" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Number: %@" : {
+
+    },
+    "R.I.P." : {
+
+    },
+    "Real weather" : {
+
+    },
+    "SKIP" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Skip tutorial" : {
+
+    },
+    "Start new egg" : {
+
+    },
+    "Stats" : {
+
+    },
+    "Steps" : {
+
+    },
+    "Version" : {
+
+    },
+    "Vitamin" : {
+
+    },
+    "Weather" : {
+
+    },
+    "Weather data by Apple Weather" : {
+
+    },
+    "Weather data by Apple Weather. Opens the attribution page." : {
+
+    },
+    "Your steps grow your pet. With Steps off it grows with time instead. If you declined Health access, switch Steps off." : {
+
+    },
+    "tap to start ›" : {
+
+    },
+    "tap ›" : {
+
+    },
+    "|" : {
+
+    }
+  },
+  "version" : "1.0"
+}
