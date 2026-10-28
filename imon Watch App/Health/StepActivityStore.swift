@@ -37,8 +37,7 @@ final class StepActivityStore {
             isFresh: {
                 now.timeIntervalSince($0) < TimeConstants.stepCacheInterval
                     && $0.isSameDay(as: now)
-            }
-        ,
+            },
             run: { [weak self] in
                 await self?.refresh(now: now)
             }
@@ -57,12 +56,10 @@ final class StepActivityStore {
     /// Failures still count toward the cache window, but never refresh the
     /// reading's age.
     func refresh(now: Date = .now) async {
-        do {
-            fetchedSteps = try await provider.fetchTodaySteps()
-            throttle.record(now: now, success: true)
-        } catch {
-            Log.health.error("Step fetch failed: \(error, privacy: .public)")
-            throttle.record(now: now, success: false)
-        }
+        await throttle.perform(
+            now: now,
+            { fetchedSteps = try await provider.fetchTodaySteps() },
+            onFailure: { Log.health.error("Step fetch failed: \($0, privacy: .public)") }
+        )
     }
 }

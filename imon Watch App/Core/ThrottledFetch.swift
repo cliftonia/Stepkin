@@ -32,6 +32,23 @@ final class ThrottledFetch {
         return spawned
     }
 
+    /// Runs `fetch` and records the outcome at `now`: a success refreshes the
+    /// reading's age; a throw is passed to `onFailure` and still counts as an
+    /// attempt, without refreshing the age.
+    func perform(
+        now: Date,
+        _ fetch: () async throws -> Void,
+        onFailure: (any Error) -> Void
+    ) async {
+        do {
+            try await fetch()
+            record(now: now, success: true)
+        } catch {
+            onFailure(error)
+            record(now: now, success: false)
+        }
+    }
+
     /// Notes an attempt at `now`; successes also refresh the reading's age.
     func record(now: Date, success: Bool) {
         lastFetch = now

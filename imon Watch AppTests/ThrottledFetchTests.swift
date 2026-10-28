@@ -56,4 +56,29 @@ struct ThrottledFetchTests {
         #expect(fetch.lastFetch == success)
         #expect(fetch.lastSuccess == success)
     }
+
+    @Test
+    func `perform records a success`() async {
+        let fetch = ThrottledFetch()
+        let attempt = Self.base.addingTimeInterval(100)
+        var ran = false
+
+        await fetch.perform(now: attempt, { ran = true }, onFailure: { _ in Issue.record("unexpected failure") })
+        #expect(ran)
+        #expect(fetch.lastFetch == attempt)
+        #expect(fetch.lastSuccess == attempt)
+    }
+
+    @Test
+    func `perform records a failure and reports the error`() async {
+        struct Boom: Error, Equatable {}
+        let fetch = ThrottledFetch()
+        let attempt = Self.base.addingTimeInterval(100)
+        var reported: (any Error)?
+
+        await fetch.perform(now: attempt, { throw Boom() }, onFailure: { reported = $0 })
+        #expect(reported as? Boom == Boom())
+        #expect(fetch.lastFetch == attempt)
+        #expect(fetch.lastSuccess == nil)
+    }
 }

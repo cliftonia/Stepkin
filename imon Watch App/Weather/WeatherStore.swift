@@ -81,8 +81,7 @@ final class WeatherStore {
     func refreshIfStale(now: Date = .now) -> Task<Void, Never>? {
         throttle.startIfStale(
             now: now,
-            isFresh: { now.timeIntervalSince($0) < TimeConstants.weatherCacheInterval }
-        ,
+            isFresh: { now.timeIntervalSince($0) < TimeConstants.weatherCacheInterval },
             run: { [weak self] in
                 await self?.refresh(now: now)
             }
@@ -94,13 +93,11 @@ final class WeatherStore {
     /// authorization doesn't spin a fetch on every wrist raise) but never
     /// refresh the reading's age — the surviving snapshot keeps its true age.
     func refresh(now: Date = .now) async {
-        do {
-            snapshot = try await provider.fetchCurrent()
-            throttle.record(now: now, success: true)
-        } catch {
-            Log.weather.error("Weather fetch failed: \(error, privacy: .public)")
-            throttle.record(now: now, success: false)
-        }
+        await throttle.perform(
+            now: now,
+            { snapshot = try await provider.fetchCurrent() },
+            onFailure: { Log.weather.error("Weather fetch failed: \($0, privacy: .public)") }
+        )
     }
 
     /// Creates the live store with a DEBUG-only placeholder so the overlay is
