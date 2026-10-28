@@ -8,7 +8,7 @@ struct StepProgressTests {
     /// A gregorian calendar pinned to UTC so day boundaries do not depend on the host time zone.
     private static let calendar: Calendar = {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC") ?? .gmt
+        calendar.timeZone = .gmt
         return calendar
     }()
 

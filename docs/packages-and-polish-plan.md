@@ -138,7 +138,9 @@ image name and select the Xcode version explicitly in the first run). Jobs:
 - **package-tests** — `swift test` in the package directory on the macOS
   host. Fast; no simulator.
 - **watch** — `xcodebuild build` and `xcodebuild test` for the watch scheme
-  on a watchOS 26.2 simulator, with the SwiftPM and DerivedData caches keyed
+  on the newest watchOS simulator runtime the runner image carries (27.0 today;
+  the 26.2 deployment target remains a compile-time check, and downloading an
+  older runtime per run is not worth the minutes), with the SwiftPM and DerivedData caches keyed
   on the project and package files.
 
 The README gains the status badge and the commands stay the README's

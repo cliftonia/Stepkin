@@ -10,11 +10,12 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
     runs-on: xcode-27
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - name: Install SwiftLint 0.53.0
@@ -31,6 +32,8 @@ jobs:
   watch:
     runs-on: xcode-27
     timeout-minutes: 20
+    env:
+      SIM_DEVICE: Apple Watch Ultra 4 (49mm)
     steps:
       - uses: actions/checkout@v5
       - name: Select Xcode 27.1
@@ -49,16 +52,16 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl runtime list
           for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
-            xcrun simctl boot "Apple Watch Ultra 4 (49mm)" && break
+            xcrun simctl boot "$SIM_DEVICE" && break
+            [ "$attempt" = 12 ] && exit 1
             echo "runtime not ready (attempt $attempt); waiting"
             sleep 10
-            [ "$attempt" = 12 ] && exit 1
           done
-          xcrun simctl bootstatus "Apple Watch Ultra 4 (49mm)" -b
+          xcrun simctl bootstatus "$SIM_DEVICE" -b
       - name: Test
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
-          -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)"
+          -destination "platform=watchOS Simulator,name=$SIM_DEVICE"
           -only-testing "imon Watch AppTests" -quiet
       - name: List simulators on failure
         if: failure()

@@ -95,7 +95,7 @@ nonisolated struct PetState: Sendable {
 
 // MARK: - Timestamps
 
-extension PetState {
+nonisolated extension PetState {
 
     /// Every event timestamp for the pet, grouped together. Anchors are
     /// non-optional; one-off / pending events are optional.
