@@ -63,10 +63,13 @@ jobs:
           done
           echo "Booted after $attempt attempts"
       - name: Test
+        timeout-minutes: 15
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
           -destination "platform=watchOS Simulator,name=$SIM_DEVICE"
           -only-testing "imon Watch AppTests" -quiet
+          -test-timeouts-enabled YES -default-test-execution-time-allowance 60
+          -maximum-test-execution-time-allowance 120
       - name: List simulators on failure
         if: failure()
         run: xcrun simctl list devices available
