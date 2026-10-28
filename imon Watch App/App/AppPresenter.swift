@@ -142,6 +142,7 @@ final class AppPresenter {
 
     private func startOnboarding() {
         phase = .onboarding
+        hatchPresenter?.cancel()
         hatchPresenter = nil
         onboardingPresenter = OnboardingPresenter { [weak self] in
             self?.finishOnboarding()

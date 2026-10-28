@@ -36,7 +36,7 @@ final class OnboardingPresenter {
         }
         viewModel.index += 1
         playCurrentTip()
-        WKInterfaceDevice.current().play(.click)
+        WKInterfaceDevice.buttonHaptic()
     }
 
     /// Jumps straight to play, skipping the rest of the walkthrough.

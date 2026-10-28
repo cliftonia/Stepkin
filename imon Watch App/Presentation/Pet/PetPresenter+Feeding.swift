@@ -66,7 +66,7 @@ extension PetPresenter {
         let idle = SpriteCatalog.animation(for: state.species, kind: .idle)
         spriteAnimator.play(idle.facing(.left))
 
-        try? await Task.sleep(for: .milliseconds(800))
+        _ = await pause(ms: 800)
     }
 
     private func runBitePhase(

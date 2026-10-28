@@ -55,7 +55,7 @@ extension BattlePresenter {
             SpriteCatalog.sideAttack(for: petState.species)
         )
         WKInterfaceDevice.battleHaptic()
-        try? await Task.sleep(for: .milliseconds(800))
+        _ = await pause(ms: 800)
     }
 
     private func runProjectile(height: AttackHeight) async {
@@ -63,7 +63,7 @@ extension BattlePresenter {
         petAnimator.play(
             SpriteCatalog.projectile(for: petState.species, height: height)
         )
-        try? await Task.sleep(for: .milliseconds(600))
+        _ = await pause(ms: 600)
     }
 
     private func runOpponentAttacking() async {
@@ -72,7 +72,7 @@ extension BattlePresenter {
         opponentAnimator.play(
             SpriteCatalog.sideAttack(for: opp.species)
         )
-        try? await Task.sleep(for: .milliseconds(800))
+        _ = await pause(ms: 800)
     }
 
     private func runOpponentProjectile(height: AttackHeight) async {
@@ -82,7 +82,7 @@ extension BattlePresenter {
             SpriteCatalog.projectileReversed(for: opp.species, height: height)
         )
         WKInterfaceDevice.battleHaptic()
-        try? await Task.sleep(for: .milliseconds(600))
+        _ = await pause(ms: 600)
     }
 
     private func runImpact(outcome: RoundOutcome) async {
@@ -117,7 +117,7 @@ extension BattlePresenter {
             WKInterfaceDevice.buttonHaptic()
         }
 
-        try? await Task.sleep(for: .seconds(1.5))
+        _ = await pause(ms: 1_500)
     }
 
     /// Judges the battle on remaining HP: the pet wins on more HP, loses on

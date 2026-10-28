@@ -100,22 +100,20 @@ final class BattlePresenter {
     /// Opening beats: our monster, a "VS" flash, then the opponent.
     private func runIntro() async {
         // Our monster is already on screen from `startBattle` — just hold the beat.
-        try? await Task.sleep(for: .seconds(Self.introSceneDuration))
-        guard !Task.isCancelled, let opp = opponent else { return }
+        guard await pause(ms: Self.introSceneMs), let opp = opponent else { return }
 
         // The LCD flash layer draws the strobing "VS" — nothing to animate here.
         viewModel.phase = .introVS
         WKInterfaceDevice.battleHaptic()
-        try? await Task.sleep(for: .seconds(Self.introVSDuration))
-        guard !Task.isCancelled else { return }
+        guard await pause(ms: Self.introVSMs) else { return }
 
         viewModel.phase = .introEnemy
         opponentAnimator.play(.idle, for: opp.species)
-        try? await Task.sleep(for: .seconds(Self.introSceneDuration))
+        _ = await pause(ms: Self.introSceneMs)
     }
 
-    private static let introSceneDuration = 1.3
-    private static let introVSDuration = 1.3
+    private static let introSceneMs = 1_300
+    private static let introVSMs = 1_300
 
     private func runRoundLoop() async {
         for _ in 0..<20 {
