@@ -2,7 +2,9 @@ import Foundation
 
 /// Runs one main-actor closure after a delay; scheduling again cancels the
 /// pending run. Owners hold one instance, and deinit cancels the wait so a
-/// discarded owner never fires late.
+/// discarded owner never fires late. `schedule` and `cancel` both cancel the
+/// previous task, so a superseded wait always sees cancellation after its
+/// sleep; no identity check is needed.
 @MainActor
 final class DelayedTask {
 
@@ -10,18 +12,14 @@ final class DelayedTask {
     private(set) var isPending = false
 
     private var task: Task<Void, Never>?
-    private var generation = 0
 
     /// Runs `run` on the main actor after `delay`, replacing any run already pending.
     func schedule(after delay: Duration, _ run: @escaping @MainActor () -> Void) {
         task?.cancel()
-        generation += 1
-        let current = generation
         isPending = true
         task = Task { [weak self] in
             try? await Task.sleep(for: delay)
-            // A superseded or cancelled wait must neither run nor clear the newer one's state.
-            guard !Task.isCancelled, let self, self.generation == current else { return }
+            guard !Task.isCancelled, let self else { return }
             self.task = nil
             self.isPending = false
             run()
@@ -32,7 +30,6 @@ final class DelayedTask {
     func cancel() {
         task?.cancel()
         task = nil
-        generation += 1
         isPending = false
     }
 
