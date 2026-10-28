@@ -10,7 +10,7 @@ import StepkinCore
 struct PetStateDTO: Codable, Sendable {
 
     /// The version `init(from:)` writes into `schemaVersion`.
-    static let currentVersion = 3
+    static let currentVersion = 4
 
     /// Save format version; nil in pre-versioning saves, which decode as v1.
     var schemaVersion: Int?
@@ -118,6 +118,9 @@ struct PetStateDTO: Codable, Sendable {
     /// When the pet last battled. Nil in older saves, defaulted to `bornAt`
     /// on load.
     var lastBattledAt: Date?
+    /// Anchor the time-credit simulator counts from while Steps is off. Nil in
+    /// saves before v4, defaulted to `lastAdvancedAt` on load.
+    var lastTimeCreditAt: Date?
 }
 
 // MARK: - Mapping
@@ -168,13 +171,14 @@ extension PetStateDTO {
         strengthEmptiedAt = times.strengthEmptiedAt
         lastAdvancedAt = times.lastAdvancedAt
         lastBattledAt = times.lastBattledAt
+        lastTimeCreditAt = times.lastTimeCreditAt
     }
 }
 
 extension PetState {
     /// Rebuilds a domain `PetState` from its stored form; fields absent from
     /// older saves decode as nil and are defaulted here — numeric fields to 0,
-    /// `wasNight` to `false`, `lastBattledAt` to `bornAt`.
+    /// `wasNight` to `false`, `lastBattledAt` to `bornAt`, `lastTimeCreditAt` to `lastAdvancedAt`.
     init(from dto: PetStateDTO) {
         self.init(
             id: dto.id,
@@ -217,7 +221,8 @@ extension PetState {
                 lightsOffAt: dto.lightsOffAt,
                 collapsingAt: dto.collapsingAt,
                 hungerEmptiedAt: dto.hungerEmptiedAt,
-                strengthEmptiedAt: dto.strengthEmptiedAt
+                strengthEmptiedAt: dto.strengthEmptiedAt,
+                lastTimeCreditAt: dto.lastTimeCreditAt
             )
         )
     }

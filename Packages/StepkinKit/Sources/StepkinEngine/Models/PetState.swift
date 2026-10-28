@@ -144,6 +144,9 @@ extension PetState {
         /// When strength ran out; non-nil only while strength is empty (see
         /// `hungerEmptiedAt`).
         var strengthEmptiedAt: Date?
+        /// Time-credit anchor — waking time since here is owed as step-equivalents
+        /// while Steps is off.
+        var lastTimeCreditAt: Date
 
         /// A freshly created pet: every anchor starts at `date`, with no
         /// pending events outstanding.
@@ -164,6 +167,7 @@ extension PetState {
             collapsingAt = nil
             hungerEmptiedAt = nil
             strengthEmptiedAt = nil
+            lastTimeCreditAt = date
         }
 
         /// Creates a fully specified timestamp set; handwritten because the
@@ -184,7 +188,8 @@ extension PetState {
             lightsOffAt: Date?,
             collapsingAt: Date?,
             hungerEmptiedAt: Date? = nil,
-            strengthEmptiedAt: Date? = nil
+            strengthEmptiedAt: Date? = nil,
+            lastTimeCreditAt: Date? = nil
         ) {
             self.bornAt = bornAt
             self.lastFedAt = lastFedAt
@@ -202,6 +207,7 @@ extension PetState {
             self.collapsingAt = collapsingAt
             self.hungerEmptiedAt = hungerEmptiedAt
             self.strengthEmptiedAt = strengthEmptiedAt
+            self.lastTimeCreditAt = lastTimeCreditAt ?? lastAdvancedAt
         }
     }
 }

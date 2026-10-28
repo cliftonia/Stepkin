@@ -19,6 +19,22 @@ struct GameEngineTests {
         #expect(state.age >= 3)
     }
 
+    @Test
+    func `two hours of 30 second ticks with Steps off credit the waking time and touch no other step field`() {
+        let noon = clock(hour: 12)
+        var state = makeTestState(at: noon)
+        for tick in 1...120 {
+            state = GameEngine.advance(
+                state, to: noon.addingTimeInterval(TimeInterval(tick) * 30), isNight: false, steps: .off, calendar: .current
+            )
+        }
+
+        #expect(state.lifetimeActiveSteps == TimeConstants.fallbackStepsPerWakingHour)
+        #expect(state.stepsCreditedToday == 0)
+        #expect(state.stepTrackedDay == nil)
+        #expect(state.evolutionGoalPenalty == 0)
+    }
+
     private func clock(hour: Int, minute: Int = 0, daysFromNow days: Int = 0) -> Date {
         let calendar = Calendar.current
         let day = calendar.date(byAdding: .day, value: days, to: .now) ?? .now

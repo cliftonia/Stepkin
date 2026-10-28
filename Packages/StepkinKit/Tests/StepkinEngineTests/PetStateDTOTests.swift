@@ -214,6 +214,34 @@ struct PetStateDTOTests {
     }
 
     @Test
+    func `a v3 save without the time-credit anchor takes lastAdvancedAt`() throws {
+        var state = PetState.hatched(at: Self.base)
+        state.timestamps.lastAdvancedAt = Self.base.addingTimeInterval(99)
+        let data = try JSONEncoder().encode(PetStateDTO(from: state))
+        var json = try #require(
+            try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        json["schemaVersion"] = 3
+        json.removeValue(forKey: "lastTimeCreditAt")
+        let stripped = try JSONSerialization.data(withJSONObject: json)
+
+        let decoded = PetState(from: try JSONDecoder().decode(PetStateDTO.self, from: stripped))
+
+        #expect(decoded.timestamps.lastTimeCreditAt == Self.base.addingTimeInterval(99))
+    }
+
+    @Test
+    func `a v4 save round-trips the time-credit anchor`() throws {
+        var state = PetState.hatched(at: Self.base)
+        state.timestamps.lastTimeCreditAt = Self.base.addingTimeInterval(17)
+
+        let decoded = try roundTrip(state)
+
+        #expect(decoded.timestamps.lastTimeCreditAt == Self.base.addingTimeInterval(17))
+        #expect(PetStateDTO.currentVersion == 4)
+    }
+
+    @Test
     func `legacy save without a schema version still decodes`() throws {
         var dto = PetStateDTO(from: .hatched(at: Date(timeIntervalSince1970: 0)))
         dto.schemaVersion = nil

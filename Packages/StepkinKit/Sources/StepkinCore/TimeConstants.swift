@@ -82,6 +82,13 @@ public enum TimeConstants {
     /// roughly one per hour for a Dock app, so asking sooner is pointless.
     public static let backgroundRefreshInterval: TimeInterval = 3_600
 
+    // MARK: - Time Credit
+
+    /// Step-equivalents a waking, living pet earns per hour while the Steps switch is off. About
+    /// 7,500 a day over a 15-hour waking day: the fresh stage then takes roughly a day and a half
+    /// and in-training about a week.
+    package static let fallbackStepsPerWakingHour: Int = 500
+
     // MARK: - Feeding
 
     /// Weight gained from one serving of meat (grams).

@@ -53,7 +53,9 @@ public enum GameEngine {
     /// the death check.
     ///
     /// The simulator order is load-bearing — the trackers read the hearts and
-    /// flags the earlier simulators wrote — so do not reorder it.
+    /// flags the earlier simulators wrote — so do not reorder it. The time
+    /// credit runs after the stat decay and before conditioning, and reads only
+    /// the sleep flag the schedule has already settled.
     private static func step(
         _ state: PetState,
         to now: Date,
@@ -77,6 +79,7 @@ public enum GameEngine {
         state = SleepSchedule.apply(to: state, at: now, night: night, calendar: calendar)
         state = HungerSimulator.apply(to: state, at: now, steps: steps.count)
         state = StrengthSimulator.apply(to: state, at: now, steps: steps.count)
+        state = TimeCreditSimulator.apply(to: state, at: now, steps: steps)
         state = ConditioningSimulator.apply(to: state, at: now)
         state = PoopSimulator.apply(to: state, at: now)
         state = InjurySimulator.apply(to: state, at: now, steps: steps.count)
