@@ -207,7 +207,7 @@ extension PetState {
 
 // MARK: - Factory
 
-extension PetState {
+nonisolated extension PetState {
 
     /// Creates a new Dotkin pet with full hearts and base weight.
     static func hatched(at date: Date = .now) -> PetState {
