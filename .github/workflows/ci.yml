@@ -52,13 +52,13 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl runtime list
           for attempt in $(seq 1 36); do
-            xcrun simctl boot "$SIM_DEVICE" && break
+            xcrun simctl bootstatus "$SIM_DEVICE" -b && break
             [ "$attempt" = 36 ] && exit 1
             echo "runtime not ready (attempt $attempt); waiting"
+            xcrun simctl shutdown "$SIM_DEVICE" || true
             sleep 10
           done
           echo "Booted after $attempt attempts"
-          xcrun simctl bootstatus "$SIM_DEVICE" -b
       - name: Test
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
