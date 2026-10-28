@@ -29,16 +29,20 @@ final class StatsPresenter {
         viewModel.hpDisplay = state.trainedHP > 0 ? "\(hp) (+\(state.trainedHP))" : "\(hp)"
         viewModel.powerBonus = "+\(state.trainedPower)"
         if !stepsEnabled {
-            viewModel.activityLabel = "Steps off"
+            viewModel.activityLabel = String(localized: "Steps off", comment: "Stats activity row when step counting is switched off.")
         } else if let steps {
             let active = !ActivityModel.isSedentary(steps: steps)
-            viewModel.activityLabel = "\(steps) \u{00b7} \(active ? "Active" : "Resting")"
+            let word = active
+                ? String(localized: "Active", comment: "Stats activity word: today's steps count as active.")
+                : String(localized: "Resting", comment: "Stats activity word: today's steps count as sedentary.")
+            viewModel.activityLabel = "\(steps) \u{00b7} \(word)"
         } else {
             viewModel.activityLabel = "—"
         }
         let total = StatFormatter.grouped(state.lifetimeActiveSteps)
         if status.species.stage == .ultimate {
-            viewModel.evolveProgress = "MAX \u{00b7} " + total
+            let maxLabel = String(localized: "MAX", comment: "Stats evolve row: the pet is at its final stage.")
+            viewModel.evolveProgress = "\(maxLabel) \u{00b7} \(total)"
         } else {
             viewModel.evolveProgress = total + " / " + StatFormatter.grouped(state.evolutionGoal)
         }
@@ -56,7 +60,10 @@ final class StatsPresenter {
     /// rate appended when the gate sets one; `nil` when no gate is named.
     private static func battleGateLine(for status: PetStatus) -> String? {
         guard let gate = EvolutionChart.battleGate(for: status.species) else { return nil }
-        var line = "\(status.battleWins) / \(gate.minWins) wins"
+        var line = String(
+            localized: "\(status.battleWins) / \(gate.minWins) wins",
+            comment: "Stats NEXT row: battle wins so far over the wins the next evolution needs."
+        )
         if let rate = gate.minWinRate {
             line += " \u{00b7} \(Int((rate * 100).rounded()))%"
         }

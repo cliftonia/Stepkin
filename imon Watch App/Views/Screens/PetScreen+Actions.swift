@@ -30,31 +30,36 @@ extension PetScreen {
     // MARK: - Button Labels
 
     var buttonALabel: String {
-        presenter.viewModel.feedingPhase == .selecting ? "MEAT" : "A"
+        presenter.viewModel.feedingPhase == .selecting ? String(localized: "MEAT", comment: "Button A label while choosing food.") : "A"
     }
 
     var buttonBLabel: String {
-        presenter.viewModel.feedingPhase == .selecting ? "BACK" : "B"
+        presenter.viewModel.feedingPhase == .selecting ? String(localized: "BACK", comment: "Button B label while choosing food.") : "B"
     }
 
     var buttonCLabel: String {
-        presenter.viewModel.feedingPhase == .selecting ? "VITA" : "C"
+        presenter.viewModel.feedingPhase == .selecting ? String(localized: "VITA", comment: "Button C label while choosing food; short for vitamin.") : "C"
     }
 
     // MARK: - Button Accessibility
 
     var buttonAAccessibilityLabel: String {
-        presenter.viewModel.feedingPhase == .selecting ? "Feed meat" : "Previous menu item"
+        presenter.viewModel.feedingPhase == .selecting
+            ? String(localized: "Feed meat", comment: "VoiceOver label for button A.")
+            : String(localized: "Previous menu item", comment: "VoiceOver label for button A.")
     }
 
     var buttonBAccessibilityLabel: String {
-        if presenter.viewModel.feedingPhase == .selecting { return "Back" }
-        if presenter.viewModel.isBusy { return "Cancel" }
-        return "Select \(presenter.viewModel.menuSelection.accessibilityName)"
+        if presenter.viewModel.feedingPhase == .selecting { return String(localized: "Back", comment: "VoiceOver label for button B while choosing food.") }
+        if presenter.viewModel.isBusy { return String(localized: "Cancel", comment: "VoiceOver label for button B during an activity.") }
+        let entry = presenter.viewModel.menuSelection.accessibilityName
+        return String(localized: "Select \(entry)", comment: "VoiceOver label for button B; the argument is the menu entry.")
     }
 
     var buttonCAccessibilityLabel: String {
-        presenter.viewModel.feedingPhase == .selecting ? "Feed vitamin" : "Next menu item"
+        presenter.viewModel.feedingPhase == .selecting
+            ? String(localized: "Feed vitamin", comment: "VoiceOver label for button C.")
+            : String(localized: "Next menu item", comment: "VoiceOver label for button C.")
     }
 
     // MARK: - Effect Display

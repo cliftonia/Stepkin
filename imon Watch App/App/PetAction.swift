@@ -25,13 +25,13 @@ nonisolated enum PetActionOutcome: Sendable, Equatable {
 nonisolated enum FeedRefusal {
 
     /// The reason given when `FeedAction.canFeed` fails: the pet is asleep or gone.
-    static let cannotEat = "Your pet can't eat right now."
+    static var cannotEat: String { String(localized: "Your pet can't eat right now.", comment: "Feed refusal: the pet is asleep or gone.") }
 
     /// The reason given when the food's heart is already full.
-    static let full = "Your pet is full."
+    static var full: String { String(localized: "Your pet is full.", comment: "Feed refusal: the food's heart is already full.") }
 
     /// The reason given when a ceremony or mode is running on the home screen.
-    static let busy = "Your pet is busy right now."
+    static var busy: String { String(localized: "Your pet is busy right now.", comment: "Feed refusal: a ceremony is running.") }
 
     /// The refusal reason for feeding `food` to `state`, or nil when the feed
     /// may go ahead; checks `canFeed` before `isSated`, as the home screen does.

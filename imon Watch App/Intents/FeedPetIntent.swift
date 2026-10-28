@@ -22,9 +22,9 @@ struct FeedPetIntent: AppIntent {
     @MainActor
     static func speak(food: FoodChoice) async -> String {
         switch await IntentGateway.route(.feed(food.kind)) {
-        case .done: "Fed."
+        case .done: String(localized: "Fed.", comment: "Siri answer after feeding the pet.")
         case .refused(let reason): reason
-        case .noPet: "There is no pet to feed yet."
+        case .noPet: String(localized: "There is no pet to feed yet.", comment: "Siri answer when no pet has hatched.")
         }
     }
 }

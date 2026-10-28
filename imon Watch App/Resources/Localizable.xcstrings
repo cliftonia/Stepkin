@@ -11,6 +11,46 @@
         }
       }
     },
+    "%@ (%@)" : {
+      "comment" : "Settings About row: app version and build number.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "%@ evolved into %@!" : {
+      "comment" : "Evolution notification body; the arguments are the old and the new species names.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ evolved into %2$@!"
+          }
+        }
+      }
+    },
+    "%@ is fading — care for it now!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
+    "%@ is hungry!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
+    "%@ is hurt — heal it!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
+    "%@ is weak — give it vitamins!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
+    "%@ made a mess!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
+    "%@ needs some exercise!" : {
+      "comment" : "Care reminder body; the argument is the pet's species name."
+    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -31,8 +71,28 @@
         }
       }
     },
+    "%lld / %lld wins" : {
+      "comment" : "Stats NEXT row: battle wins so far over the wins the next evolution needs.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld wins"
+          }
+        }
+      }
+    },
+    "%lld messes to clean" : {
+      "comment" : "Spoken pet status phrase: several messes on screen."
+    },
+    "1 mess to clean" : {
+      "comment" : "Spoken pet status phrase: one mess on screen."
+    },
     "About" : {
 
+    },
+    "Active" : {
+      "comment" : "Stats activity word: today's steps count as active."
     },
     "Age: %lld days" : {
 
@@ -40,14 +100,38 @@
     "An egg!" : {
 
     },
+    "BACK" : {
+      "comment" : "Button B label while choosing food."
+    },
+    "Back" : {
+      "comment" : "VoiceOver label for button B while choosing food."
+    },
     "Battery saver" : {
 
+    },
+    "Cancel" : {
+      "comment" : "VoiceOver label for button B during an activity."
+    },
+    "Care well and stay active to evolve me!" : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "Champion" : {
+      "comment" : "Growth stage name."
     },
     "Check on" : {
 
     },
     "Check on Stepkin" : {
 
+    },
+    "Clean my mess, and heal me when I'm sick." : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "Clear" : {
+      "comment" : "Weather condition name."
+    },
+    "Cloudy" : {
+      "comment" : "Weather condition name."
     },
     "Death screen. Your Creature has passed away." : {
 
@@ -67,8 +151,14 @@
     "Egg hatching screen" : {
 
     },
+    "Evolution!" : {
+      "comment" : "Notification title announcing that the pet evolved."
+    },
     "Features" : {
 
+    },
+    "Fed." : {
+      "comment" : "Siri answer after feeding the pet."
     },
     "Feed" : {
 
@@ -76,14 +166,38 @@
     "Feed Stepkin" : {
 
     },
+    "Feed me meat to fill up, vitamins for strength." : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "Feed meat" : {
+      "comment" : "VoiceOver label for button A."
+    },
+    "Feed vitamin" : {
+      "comment" : "VoiceOver label for button C."
+    },
+    "Fog" : {
+      "comment" : "Weather condition name."
+    },
     "Food" : {
 
     },
     "Force evolve" : {
 
     },
+    "Fresh" : {
+      "comment" : "Growth stage name."
+    },
     "Haptics" : {
 
+    },
+    "Hi! I'm Dotkin. Look after me and I'll grow!" : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "I follow real weather. Lights off to sleep." : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "In-Training" : {
+      "comment" : "Growth stage name."
     },
     "It's hatching..." : {
 
@@ -94,6 +208,12 @@
     "Loading" : {
 
     },
+    "MAX" : {
+      "comment" : "Stats evolve row: the pet is at its final stage."
+    },
+    "MEAT" : {
+      "comment" : "Button A label while choosing food."
+    },
     "Meat" : {
 
     },
@@ -103,26 +223,47 @@
     "New Egg" : {
 
     },
+    "Next menu item" : {
+      "comment" : "VoiceOver label for button C."
+    },
     "Notifications" : {
 
     },
     "Number: %@" : {
 
     },
+    "Previous menu item" : {
+      "comment" : "VoiceOver label for button A."
+    },
     "R.I.P." : {
 
+    },
+    "Rain" : {
+      "comment" : "Weather condition name."
     },
     "Real weather" : {
 
     },
+    "Resting" : {
+      "comment" : "Stats activity word: today's steps count as sedentary."
+    },
+    "Rookie" : {
+      "comment" : "Growth stage name."
+    },
     "SKIP" : {
 
+    },
+    "Select %@" : {
+      "comment" : "VoiceOver label for button B; the argument is the menu entry."
     },
     "Settings" : {
 
     },
     "Skip tutorial" : {
 
+    },
+    "Snow" : {
+      "comment" : "Weather condition name."
     },
     "Start new egg" : {
 
@@ -133,8 +274,35 @@
     "Steps" : {
 
     },
+    "Steps off" : {
+      "comment" : "Stats activity row when step counting is switched off."
+    },
+    "Storm" : {
+      "comment" : "Weather condition name."
+    },
+    "That's it. Let's begin!" : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "There is no pet to feed yet." : {
+      "comment" : "Siri answer when no pet has hatched."
+    },
+    "There is no pet yet." : {
+      "comment" : "Siri answer when no pet has hatched."
+    },
+    "Train and battle to grow stronger." : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
+    "Ultimate" : {
+      "comment" : "Growth stage name."
+    },
+    "VITA" : {
+      "comment" : "Button C label while choosing food; short for vitamin."
+    },
     "Version" : {
 
+    },
+    "Virtual pet" : {
+      "comment" : "VoiceOver label for the home screen before a pet exists."
     },
     "Vitamin" : {
 
@@ -148,14 +316,90 @@
     "Weather data by Apple Weather. Opens the attribution page." : {
 
     },
+    "Windy" : {
+      "comment" : "Weather condition name."
+    },
+    "Your pet can't eat right now." : {
+      "comment" : "Feed refusal: the pet is asleep or gone."
+    },
+    "Your pet is busy right now." : {
+      "comment" : "Feed refusal: a ceremony is running."
+    },
+    "Your pet is full." : {
+      "comment" : "Feed refusal: the food's heart is already full."
+    },
+    "Your real steps grow me. Walk daily!" : {
+      "comment" : "Onboarding tip spoken by Dotkin."
+    },
     "Your steps grow your pet. With Steps off it grows with time instead. If you declined Health access, switch Steps off." : {
 
+    },
+    "battle" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "clean" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "feed" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "has passed away" : {
+      "comment" : "Spoken pet status: the pet has died."
+    },
+    "heal" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "hunger %lld of %lld" : {
+      "comment" : "Spoken pet status: full hunger hearts of the maximum.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "hunger %1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "injured" : {
+      "comment" : "Spoken pet status phrase."
+    },
+    "lights" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "menu: %@" : {
+      "comment" : "Spoken pet status: the highlighted menu entry."
+    },
+    "needs care" : {
+      "comment" : "Spoken pet status phrase."
+    },
+    "settings" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "sleeping" : {
+      "comment" : "Spoken pet status phrase."
+    },
+    "stats" : {
+      "comment" : "Spoken menu entry name."
+    },
+    "strength %lld of %lld" : {
+      "comment" : "Spoken pet status: full strength hearts of the maximum.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "strength %1$lld of %2$lld"
+          }
+        }
+      }
     },
     "tap to start ›" : {
 
     },
     "tap ›" : {
 
+    },
+    "train" : {
+      "comment" : "Spoken menu entry name."
     },
     "|" : {
 

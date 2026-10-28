@@ -16,7 +16,7 @@ final class SettingsPresenter {
         let info = Bundle.main.infoDictionary
         let version = info?["CFBundleShortVersionString"] as? String ?? "—"
         let build = info?["CFBundleVersion"] as? String ?? "—"
-        return "\(version) (\(build))"
+        return String(localized: "\(version) (\(build))", comment: "Settings About row: app version and build number.")
     }
 
     #if DEBUG

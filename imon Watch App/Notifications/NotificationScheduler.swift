@@ -41,8 +41,10 @@ nonisolated extension NotificationScheduler {
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
                 for notification in notifications {
+                    let name = notification.species.displayName
                     let content = makeContent(
-                        title: notification.title, body: notification.body,
+                        title: CareNotificationText.title(for: notification.kind, speciesName: name),
+                        body: CareNotificationText.body(for: notification.kind, speciesName: name),
                         species: notification.species, fireDate: notification.fireDate
                     )
                     // Floor of one second so a past fire date cannot yield a

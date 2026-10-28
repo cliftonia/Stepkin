@@ -7,7 +7,7 @@ extension PetViewModel {
     /// One spoken sentence for the whole home screen — the LCD itself is a
     /// Canvas, so this is the only way the pet's condition reaches VoiceOver.
     var accessibilityDescription: String {
-        guard let status else { return "Virtual pet" }
+        guard let status else { return String(localized: "Virtual pet", comment: "VoiceOver label for the home screen before a pet exists.") }
         return PetStatusSentence.describe(status, includeMenu: menuSelection.accessibilityName)
     }
 }
@@ -34,14 +34,14 @@ extension PetViewModel.MenuAction: Identifiable {
     /// The spoken name of this entry, used for VoiceOver labels.
     var accessibilityName: String {
         switch self {
-        case .stats: "stats"
-        case .feed: "feed"
-        case .train: "train"
-        case .battle: "battle"
-        case .clean: "clean"
-        case .lights: "lights"
-        case .heal: "heal"
-        case .settings: "settings"
+        case .stats: String(localized: "stats", comment: "Spoken menu entry name.")
+        case .feed: String(localized: "feed", comment: "Spoken menu entry name.")
+        case .train: String(localized: "train", comment: "Spoken menu entry name.")
+        case .battle: String(localized: "battle", comment: "Spoken menu entry name.")
+        case .clean: String(localized: "clean", comment: "Spoken menu entry name.")
+        case .lights: String(localized: "lights", comment: "Spoken menu entry name.")
+        case .heal: String(localized: "heal", comment: "Spoken menu entry name.")
+        case .settings: String(localized: "settings", comment: "Spoken menu entry name.")
         }
     }
 }

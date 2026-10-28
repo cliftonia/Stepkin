@@ -47,15 +47,4 @@ public enum EvolutionStage: Int, Codable, Sendable, CaseIterable {
         case .ultimate: 0
         }
     }
-
-    /// The stage name shown on the stats screen.
-    public var displayName: String {
-        switch self {
-        case .fresh: "Fresh"
-        case .inTraining: "In-Training"
-        case .rookie: "Rookie"
-        case .champion: "Champion"
-        case .ultimate: "Ultimate"
-        }
-    }
 }

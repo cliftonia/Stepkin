@@ -20,35 +20,35 @@ extension OnboardingTip {
     static let walkthrough: [OnboardingTip] = [
         OnboardingTip(
             id: 0, animation: .happy,
-            message: "Hi! I'm Dotkin. Look after me and I'll grow!"
+            message: String(localized: "Hi! I'm Dotkin. Look after me and I'll grow!", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 1, animation: .eat,
-            message: "Feed me meat to fill up, vitamins for strength."
+            message: String(localized: "Feed me meat to fill up, vitamins for strength.", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 2, animation: .idle,
-            message: "Clean my mess, and heal me when I'm sick."
+            message: String(localized: "Clean my mess, and heal me when I'm sick.", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 3, animation: .sideWalk,
-            message: "Your real steps grow me. Walk daily!"
+            message: String(localized: "Your real steps grow me. Walk daily!", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 4, animation: .attack,
-            message: "Train and battle to grow stronger."
+            message: String(localized: "Train and battle to grow stronger.", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 5, animation: .happy,
-            message: "Care well and stay active to evolve me!"
+            message: String(localized: "Care well and stay active to evolve me!", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 6, animation: .sleep,
-            message: "I follow real weather. Lights off to sleep."
+            message: String(localized: "I follow real weather. Lights off to sleep.", comment: "Onboarding tip spoken by Dotkin.")
         ),
         OnboardingTip(
             id: 7, animation: .happy,
-            message: "That's it. Let's begin!"
+            message: String(localized: "That's it. Let's begin!", comment: "Onboarding tip spoken by Dotkin.")
         )
     ]
 }

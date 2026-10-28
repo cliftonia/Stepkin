@@ -18,7 +18,11 @@ nonisolated enum EvolutionAnnouncer {
         let previous = state.species
         let evolved = EvolutionEngine.evolve(state, to: target, at: now)
         if enabled {
-            notifications.notify("Evolution!", "\(previous.displayName) evolved into \(target.displayName)!", target)
+            notifications.notify(
+                CareNotificationText.evolutionTitle,
+                CareNotificationText.evolutionBody(from: previous.displayName, to: target.displayName),
+                target
+            )
         }
         return evolved
     }

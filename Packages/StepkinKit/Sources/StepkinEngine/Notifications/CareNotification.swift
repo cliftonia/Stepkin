@@ -5,8 +5,9 @@ import Foundation
 /// duplicates.
 public struct CareNotification: Sendable, Equatable, Identifiable {
 
-    /// The reason the reminder fires. Keys both the message text and the stable
-    /// identifier: `id` is the raw value, so one pending request per kind.
+    /// The reason the reminder fires. Keys both the message text (worded by the
+    /// app, which owns every user-facing string) and the stable identifier: `id`
+    /// is the raw value, so one pending request per kind.
     public enum Kind: String, Sendable {
         case hunger
         case strength
@@ -16,7 +17,7 @@ public struct CareNotification: Sendable, Equatable, Identifiable {
         case fading
     }
 
-    /// Which care need this reminder is for; chooses the message in `title` and `body`.
+    /// Which care need this reminder is for; the app chooses the message from it.
     public let kind: Kind
     /// When the reminder is due — the fire time of the pending request.
     public let fireDate: Date
@@ -25,21 +26,4 @@ public struct CareNotification: Sendable, Equatable, Identifiable {
 
     /// The stable request identifier, one per kind.
     public var id: String { kind.rawValue }
-
-    private var name: String { species.displayName }
-
-    /// The notification title, the species name.
-    public var title: String { name }
-
-    /// The notification body, the care need in a short sentence.
-    public var body: String {
-        switch kind {
-        case .hunger: "\(name) is hungry!"
-        case .strength: "\(name) is weak \u{2014} give it vitamins!"
-        case .mess: "\(name) made a mess!"
-        case .injury: "\(name) is hurt \u{2014} heal it!"
-        case .exercise: "\(name) needs some exercise!"
-        case .fading: "\(name) is fading \u{2014} care for it now!"
-        }
-    }
 }

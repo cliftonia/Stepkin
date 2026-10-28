@@ -17,6 +17,6 @@ struct CheckPetIntent: AppIntent {
     /// The sentence spoken for a check: the pet's condition, or the no-pet notice.
     @MainActor
     static func speak() async -> String {
-        await IntentGateway.describe() ?? "There is no pet yet."
+        await IntentGateway.describe() ?? String(localized: "There is no pet yet.", comment: "Siri answer when no pet has hatched.")
     }
 }

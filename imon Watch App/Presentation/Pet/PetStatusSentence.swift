@@ -9,25 +9,36 @@ nonisolated enum PetStatusSentence {
     static func describe(_ status: PetStatus, includeMenu menu: String? = nil) -> String {
         var parts = ["\(status.species.displayName), \(status.stage.displayName)"]
         if status.isDead {
-            parts.append("has passed away")
+            parts.append(String(localized: "has passed away", comment: "Spoken pet status: the pet has died."))
         } else {
-            parts.append("hunger \(status.hungerHearts.value) of \(status.species.maxHunger)")
-            parts.append("strength \(status.strengthHearts.value) of \(status.species.maxStrength)")
+            let hunger = status.hungerHearts.value
+            let maxHunger = status.species.maxHunger
+            parts.append(String(localized: "hunger \(hunger) of \(maxHunger)", comment: "Spoken pet status: full hunger hearts of the maximum."))
+            let strength = status.strengthHearts.value
+            let maxStrength = status.species.maxStrength
+            parts.append(
+                String(localized: "strength \(strength) of \(maxStrength)", comment: "Spoken pet status: full strength hearts of the maximum.")
+            )
             parts += conditions(of: status)
         }
-        if let menu { parts.append("menu: \(menu)") }
+        if let menu { parts.append(String(localized: "menu: \(menu)", comment: "Spoken pet status: the highlighted menu entry.")) }
         return parts.joined(separator: ", ")
     }
 
     /// The attention phrases, in the order they are spoken.
     private static func conditions(of status: PetStatus) -> [String] {
         var parts: [String] = []
-        if status.isSleeping { parts.append("sleeping") }
+        if status.isSleeping { parts.append(String(localized: "sleeping", comment: "Spoken pet status phrase.")) }
         if status.poopCount > 0 {
-            parts.append(status.poopCount == 1 ? "1 mess to clean" : "\(status.poopCount) messes to clean")
+            let count = status.poopCount
+            parts.append(
+                count == 1
+                    ? String(localized: "1 mess to clean", comment: "Spoken pet status phrase: one mess on screen.")
+                    : String(localized: "\(count) messes to clean", comment: "Spoken pet status phrase: several messes on screen.")
+            )
         }
-        if status.isInjured { parts.append("injured") }
-        if status.isLanguishing { parts.append("needs care") }
+        if status.isInjured { parts.append(String(localized: "injured", comment: "Spoken pet status phrase.")) }
+        if status.isLanguishing { parts.append(String(localized: "needs care", comment: "Spoken pet status phrase.")) }
         return parts
     }
 }

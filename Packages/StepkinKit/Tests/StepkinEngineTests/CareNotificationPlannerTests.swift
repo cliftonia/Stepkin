@@ -229,15 +229,12 @@ struct CareNotificationPlannerTests {
     }
 
     @Test
-    func `reminders are addressed to the pet by name`() {
+    func `reminders carry the pet's species for the app to word and illustrate`() {
         let now = today(at: 8)
         let state = makeTestState(species: .emberkin, hunger: 1, at: now)
         let plan = CareNotificationPlanner.plan(for: state, now: now, steps: nil)
 
-        let name = PetSpecies.emberkin.displayName
-        let hunger = notification(plan, .hunger)
-        #expect(hunger?.title == name)
-        #expect(hunger?.body == "\(name) is hungry!")
+        #expect(notification(plan, .hunger)?.species == .emberkin)
     }
 
     @Test

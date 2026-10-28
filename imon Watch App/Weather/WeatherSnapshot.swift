@@ -14,13 +14,13 @@ nonisolated enum WeatherIconCondition: Sendable, Equatable, CaseIterable, Identi
 
     var displayName: String {
         switch self {
-        case .clear: "Clear"
-        case .cloudy: "Cloudy"
-        case .rain: "Rain"
-        case .snow: "Snow"
-        case .storm: "Storm"
-        case .fog: "Fog"
-        case .wind: "Windy"
+        case .clear: String(localized: "Clear", comment: "Weather condition name.")
+        case .cloudy: String(localized: "Cloudy", comment: "Weather condition name.")
+        case .rain: String(localized: "Rain", comment: "Weather condition name.")
+        case .snow: String(localized: "Snow", comment: "Weather condition name.")
+        case .storm: String(localized: "Storm", comment: "Weather condition name.")
+        case .fog: String(localized: "Fog", comment: "Weather condition name.")
+        case .wind: String(localized: "Windy", comment: "Weather condition name.")
         }
     }
 }
