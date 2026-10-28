@@ -10,9 +10,9 @@ import UserNotifications
 /// app icon. Uses CoreGraphics + ImageIO (watchOS lacks UIKit's renderer).
 nonisolated enum NotificationSpriteRenderer {
 
-    // The LCD is a 32x20 cell grid; each cell renders at `pixelScale` points.
-    private static let columns = 32
-    private static let rows = 20
+    // The LCD's cell grid comes from `LCDGeometry`; each cell renders at `pixelScale` points.
+    private static let columns = LCDGeometry.columns
+    private static let rows = LCDGeometry.rows
     private static let pixelScale = 12
 
     /// Where the pet rests on the grid — matching the on-screen idle offset.
@@ -96,12 +96,12 @@ nonisolated enum NotificationSpriteRenderer {
     private static func drawGrid(pixel: RGB, in context: CGContext) {
         fill(pixel, alpha: 0.06, in: context)
         let thickness: CGFloat = 1
-        for col in stride(from: 0, through: columns, by: 4) {
+        for col in stride(from: 0, through: columns, by: LCDGeometry.gridStride) {
             context.fill(CGRect(
                 x: CGFloat(col * pixelScale), y: 0, width: thickness, height: CGFloat(rows * pixelScale)
             ))
         }
-        for row in stride(from: 0, through: rows, by: 4) {
+        for row in stride(from: 0, through: rows, by: LCDGeometry.gridStride) {
             context.fill(CGRect(
                 x: 0, y: CGFloat(row * pixelScale), width: CGFloat(columns * pixelScale), height: thickness
             ))
@@ -112,22 +112,22 @@ nonisolated enum NotificationSpriteRenderer {
     private static func drawGround(pixel: RGB, in context: CGContext) {
         fill(pixel, alpha: 0.12, in: context)
         context.fill(CGRect(
-            x: 0, y: 19 * pixelScale, width: columns * pixelScale, height: pixelScale
+            x: 0, y: LCDGeometry.groundRow * pixelScale, width: columns * pixelScale, height: pixelScale
         ))
         fill(pixel, alpha: 0.10, in: context)
-        for col in [1, 5, 10, 15, 21, 26, 30] {
-            fillCell(x: col, y: 18, in: context)
+        for col in LCDGeometry.tuftColumns {
+            fillCell(x: col, y: LCDGeometry.groundRow - 1, in: context)
         }
     }
 
     /// Draws a full moon in the top-right with a few stars kept clear of the pet.
     private static func drawNightSky(pixel: RGB, in context: CGContext) {
         fill(pixel, alpha: 1, in: context)
-        for disc in moonDisc {
-            fillCell(x: moonCenter.x + disc.0, y: moonCenter.y + disc.1, in: context)
+        for disc in LCDGeometry.moonDisc {
+            fillCell(x: LCDGeometry.moonCenter.x + disc.dx, y: LCDGeometry.moonCenter.y + disc.dy, in: context)
         }
-        for star in starSpots {
-            fillCell(x: star.0, y: star.1, in: context)
+        for star in LCDGeometry.starSpots {
+            fillCell(x: star.x, y: star.y, in: context)
         }
     }
 
@@ -152,17 +152,4 @@ nonisolated enum NotificationSpriteRenderer {
             x: x * pixelScale, y: y * pixelScale, width: pixelScale, height: pixelScale
         ))
     }
-
-    // The moon disc and star field, sharing the LCD's own cell layout.
-    private static let moonCenter = (x: 26, y: 4)
-    private static let moonDisc: [(Int, Int)] = [
-        (-1, -3), (0, -3), (1, -3),
-        (-2, -2), (-1, -2), (0, -2), (1, -2), (2, -2),
-        (-3, -1), (-2, -1), (-1, -1), (0, -1), (1, -1), (2, -1), (3, -1),
-        (-3, 0), (-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0), (3, 0),
-        (-3, 1), (-2, 1), (-1, 1), (0, 1), (1, 1), (2, 1), (3, 1),
-        (-2, 2), (-1, 2), (0, 2), (1, 2), (2, 2),
-        (-1, 3), (0, 3), (1, 3)
-    ]
-    private static let starSpots = [(3, 2), (6, 5), (4, 9), (2, 13), (30, 11), (28, 14)]
 }

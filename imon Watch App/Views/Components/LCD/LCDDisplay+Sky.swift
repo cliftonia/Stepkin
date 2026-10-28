@@ -56,20 +56,9 @@ extension LCDDisplay {
         return cells
     }
 
-    private static let moonCenter = (x: 26, y: 4)
-    private static let moonDisc: [(Int, Int)] = [
-        (-1, -3), (0, -3), (1, -3),
-        (-2, -2), (-1, -2), (0, -2), (1, -2), (2, -2),
-        (-3, -1), (-2, -1), (-1, -1), (0, -1), (1, -1), (2, -1), (3, -1),
-        (-3, 0), (-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0), (3, 0),
-        (-3, 1), (-2, 1), (-1, 1), (0, 1), (1, 1), (2, 1), (3, 1),
-        (-2, 2), (-1, 2), (0, 2), (1, 2), (2, 2),
-        (-1, 3), (0, 3), (1, 3)
-    ]
-
     /// The full moon disc — always drawn (dim), so the shadowed side still shows.
     static func moonDiscCells() -> [(x: Int, y: Int)] {
-        moonDisc.map { (x: moonCenter.x + $0.0, y: moonCenter.y + $0.1) }
+        LCDGeometry.moonDisc.map { (x: LCDGeometry.moonCenter.x + $0.dx, y: LCDGeometry.moonCenter.y + $0.dy) }
     }
 
     /// The lit fraction of the moon for the given phase (waxing lit on the
@@ -89,8 +78,8 @@ extension LCDDisplay {
             case .waningGibbous: return dx <= 1
             }
         }
-        return moonDisc.filter { isLit($0.0) }
-            .map { (x: moonCenter.x + $0.0, y: moonCenter.y + $0.1) }
+        return LCDGeometry.moonDisc.filter { isLit($0.dx) }
+            .map { (x: LCDGeometry.moonCenter.x + $0.dx, y: LCDGeometry.moonCenter.y + $0.dy) }
     }
 
     /// A meteor streaking down-right with a short trail, every ~44 frames.

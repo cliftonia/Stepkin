@@ -81,7 +81,7 @@ struct LCDDisplay: View {
             drawScene(weatherPhase: weatherPhase, in: context, size: size)
         }
         .background(backgroundColor)
-        .aspectRatio(32.0 / 20.0, contentMode: .fit)
+        .aspectRatio(Double(LCDGeometry.columns) / Double(LCDGeometry.rows), contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 4))
         .accessibilityHidden(true)
     }
@@ -91,8 +91,8 @@ struct LCDDisplay: View {
         in context: GraphicsContext,
         size: CGSize
     ) {
-        let pixelWidth = size.width / 32
-        let pixelHeight = size.height / 20
+        let pixelWidth = size.width / CGFloat(LCDGeometry.columns)
+        let pixelHeight = size.height / CGFloat(LCDGeometry.rows)
 
         if isIndoor {
             drawRoomGlow(
@@ -261,7 +261,7 @@ struct LCDDisplay: View {
         guard configuration.poopCount > 0 else { return }
         let color = basePixelColor
 
-        // Poop pile positions on the 32x20 LCD (ground at row 19)
+        // Poop pile positions on the LCD, sitting just above the ground row.
         let bases: [(x: Int, y: Int)] = [
             (25, 16), (29, 16),
             (25, 13), (29, 13)

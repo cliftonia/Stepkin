@@ -14,7 +14,7 @@ extension LCDDisplay {
     ) {
         let gridColor = basePixelColor.opacity(isDarkScreen ? 0.24 : 0.06)
 
-        for col in stride(from: 0, through: 32, by: 4) {
+        for col in stride(from: 0, through: LCDGeometry.columns, by: LCDGeometry.gridStride) {
             let x = Double(col) * pixelWidth
             let line = Path(
                 CGRect(
@@ -24,7 +24,7 @@ extension LCDDisplay {
             )
             context.fill(line, with: .color(gridColor))
         }
-        for row in stride(from: 0, through: 20, by: 4) {
+        for row in stride(from: 0, through: LCDGeometry.rows, by: LCDGeometry.gridStride) {
             let y = Double(row) * pixelHeight
             let line = Path(
                 CGRect(
@@ -36,7 +36,7 @@ extension LCDDisplay {
         }
     }
 
-    /// Draws the ground line at row 19 and a tuft of grass one row above it
+    /// Draws the ground line on the ground row and a tuft of grass one row above it
     /// at seven fixed columns, dimmer on a dark screen.
     func drawGround(
         in context: GraphicsContext,
@@ -46,7 +46,7 @@ extension LCDDisplay {
     ) {
         let groundColor = basePixelColor.opacity(isDarkScreen ? 0.34 : 0.12)
 
-        let groundY = 19.0 * pixelHeight
+        let groundY = Double(LCDGeometry.groundRow) * pixelHeight
         let groundLine = Path(
             CGRect(
                 x: 0, y: groundY,
@@ -55,12 +55,11 @@ extension LCDDisplay {
         )
         context.fill(groundLine, with: .color(groundColor))
 
-        let tufts: [Int] = [1, 5, 10, 15, 21, 26, 30]
         let tuftColor = basePixelColor.opacity(isDarkScreen ? 0.28 : 0.10)
-        for col in tufts {
+        for col in LCDGeometry.tuftColumns {
             let rect = CGRect(
                 x: Double(col) * pixelWidth,
-                y: 18.0 * pixelHeight,
+                y: Double(LCDGeometry.groundRow - 1) * pixelHeight,
                 width: pixelWidth,
                 height: pixelHeight
             )
