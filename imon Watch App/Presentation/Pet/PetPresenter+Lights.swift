@@ -28,12 +28,9 @@ extension PetPresenter {
     /// cancels the pending run. Does nothing while the light is on or the
     /// pet is already asleep.
     private func scheduleSleepSettle() {
-        sleepToggleTask?.cancel()
-        sleepToggleTask = nil
+        sleepSettle.cancel()
         guard state.timestamps.lightsOffAt != nil, !state.isSleeping else { return }
-        sleepToggleTask = Task { [weak self] in
-            try? await Task.sleep(for: .seconds(TimeConstants.sleepDelay))
-            guard !Task.isCancelled else { return }
+        sleepSettle.schedule(after: .seconds(TimeConstants.sleepDelay)) { [weak self] in
             self?.environmentDidChange()
         }
     }

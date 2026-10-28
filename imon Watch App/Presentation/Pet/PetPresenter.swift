@@ -51,8 +51,8 @@ final class PetPresenter {
     let wanderTimer = MainActorTimer()
     /// The single in-flight activity ceremony (feed / clean / heal / refuse).
     var activityTask: Task<Void, Never>?
-    /// The in-flight sleep toggle; cancelled and cleared when the game loop stops.
-    var sleepToggleTask: Task<Void, Never>?
+    /// The countdown from a lights toggle to sleep; cancelled when the game loop stops.
+    let sleepSettle = DelayedTask()
     /// The in-flight rollover of a day that ended while the app was closed.
     /// Not private: the tests await it, since the rollover is asynchronous but
     /// must be observed.
@@ -122,8 +122,7 @@ final class PetPresenter {
     func stopGameLoop() {
         gameTimer.stop()
         cancelActivity()
-        sleepToggleTask?.cancel()
-        sleepToggleTask = nil
+        sleepSettle.cancel()
         // Left running, it would save a pet the app has already discarded.
         dayRecoveryTask?.cancel()
         dayRecoveryTask = nil

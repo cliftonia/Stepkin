@@ -20,9 +20,9 @@ final class TrainingPresenter {
     private let species: PetSpecies
     private let onComplete: (Bool) -> Void
 
-    /// The single in-flight phase-advance timer, so it can be cancelled on
+    /// The single pending phase advance, so it can be cancelled on
     /// dismiss instead of firing into a torn-down presenter.
-    private var phaseTask: Task<Void, Never>?
+    private let phase = DelayedTask()
 
     // MARK: - Computed
 
@@ -44,19 +44,7 @@ final class TrainingPresenter {
 
     /// Cancels any pending phase advance — called when training is dismissed.
     func cancel() {
-        phaseTask?.cancel()
-        phaseTask = nil
-    }
-
-    /// Schedules the next phase after a delay, replacing any pending one. Captures
-    /// `self` weakly so a dismissed presenter can deallocate immediately.
-    private func schedule(after milliseconds: Int, _ advance: @escaping (TrainingPresenter) -> Void) {
-        phaseTask?.cancel()
-        phaseTask = Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(milliseconds))
-            guard let self, !Task.isCancelled else { return }
-            advance(self)
-        }
+        phase.cancel()
     }
 
     // MARK: - Actions
@@ -93,9 +81,9 @@ final class TrainingPresenter {
         spriteAnimator.play(.idle, for: species)
         targetAnimator.stop()
 
-        schedule(after: 600) { presenter in
-            guard presenter.viewModel.phase == .ready else { return }
-            presenter.enterChallenge()
+        phase.schedule(after: .milliseconds(600)) { [weak self] in
+            guard let self, self.viewModel.phase == .ready else { return }
+            self.enterChallenge()
         }
     }
 
@@ -112,9 +100,9 @@ final class TrainingPresenter {
         )
         WKInterfaceDevice.battleHaptic()
 
-        schedule(after: 500) { presenter in
-            guard presenter.viewModel.phase == .attacking else { return }
-            presenter.enterProjectile(won: won)
+        phase.schedule(after: .milliseconds(500)) { [weak self] in
+            guard let self, self.viewModel.phase == .attacking else { return }
+            self.enterProjectile(won: won)
         }
     }
 
@@ -128,12 +116,12 @@ final class TrainingPresenter {
         )
         spriteAnimator.play(animation)
 
-        schedule(after: 700) { presenter in
-            guard presenter.viewModel.phase == .projectile else { return }
+        phase.schedule(after: .milliseconds(700)) { [weak self] in
+            guard let self, self.viewModel.phase == .projectile else { return }
             if won {
-                presenter.enterHit()
+                self.enterHit()
             } else {
-                presenter.enterMiss()
+                self.enterMiss()
             }
         }
     }
@@ -146,9 +134,9 @@ final class TrainingPresenter {
         targetAnimator.play(SharedSprites.trainingHitSequence)
         WKInterfaceDevice.trainingHitHaptic()
 
-        schedule(after: 800) { presenter in
-            guard presenter.viewModel.phase == .hit else { return }
-            presenter.advanceOrComplete()
+        phase.schedule(after: .milliseconds(800)) { [weak self] in
+            guard let self, self.viewModel.phase == .hit else { return }
+            self.advanceOrComplete()
         }
     }
 
@@ -160,9 +148,9 @@ final class TrainingPresenter {
         targetAnimator.play(SharedSprites.missStreaks)
         WKInterfaceDevice.trainingMissHaptic()
 
-        schedule(after: 800) { presenter in
-            guard presenter.viewModel.phase == .miss else { return }
-            presenter.advanceOrComplete()
+        phase.schedule(after: .milliseconds(800)) { [weak self] in
+            guard let self, self.viewModel.phase == .miss else { return }
+            self.advanceOrComplete()
         }
     }
 
