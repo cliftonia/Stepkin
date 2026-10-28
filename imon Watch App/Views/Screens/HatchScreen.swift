@@ -31,12 +31,15 @@ struct HatchScreen: View {
             Text("An egg!")
                 .font(.lcd(12))
                 .opacity(phase == .egg ? 1 : 0)
+                .accessibilityHidden(phase != .egg)
             Text("It's hatching...")
                 .font(.lcd(12))
                 .opacity(phase == .cracking ? 1 : 0)
+                .accessibilityHidden(phase != .cracking)
             Text("Dotkin is born!")
                 .font(.lcd(12, weight: .bold))
                 .opacity(phase == .hatched ? 1 : 0)
+                .accessibilityHidden(phase != .hatched)
         }
     }
 }

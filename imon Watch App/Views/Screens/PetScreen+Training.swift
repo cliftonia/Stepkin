@@ -60,7 +60,8 @@ extension PetScreen {
     var trainingButtons: some View {
         if let training = presenter.trainingPresenter {
             let phase = training.viewModel.phase
-            let isComplete = phase == .victory || phase == .defeat
+            let showsGuessButtons = phase == .challenge
+            let showsDoneButton = phase == .victory || phase == .defeat
 
             ZStack {
                 HStack(spacing: 4) {
@@ -71,16 +72,18 @@ extension PetScreen {
                         training.guessAction(.low)
                     }
                 }
-                .opacity(phase == .challenge ? 1 : 0)
-                .allowsHitTesting(phase == .challenge)
+                .opacity(showsGuessButtons ? 1 : 0)
+                .allowsHitTesting(showsGuessButtons)
+                .accessibilityHidden(!showsGuessButtons)
 
                 HStack(spacing: 4) {
                     ActionButton(label: "DONE", accessibilityLabel: "Finish training") {
                         presenter.dismissTraining()
                     }
                 }
-                .opacity(isComplete ? 1 : 0)
-                .allowsHitTesting(isComplete)
+                .opacity(showsDoneButton ? 1 : 0)
+                .allowsHitTesting(showsDoneButton)
+                .accessibilityHidden(!showsDoneButton)
             }
         }
     }

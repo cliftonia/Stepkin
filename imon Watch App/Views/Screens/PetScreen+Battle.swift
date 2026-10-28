@@ -23,15 +23,18 @@ extension PetScreen {
     var battleInfoRow: some View {
         if let battle = presenter.battlePresenter {
             let phaseText = battlePhaseText(battle)
-            let isChoosing = phaseText.isEmpty
+            let showsHearts = phaseText.isEmpty
+            let showsPhaseText = !showsHearts
             ZStack {
                 choosingInfoRow(battle)
-                    .opacity(isChoosing ? 1 : 0)
+                    .opacity(showsHearts ? 1 : 0)
+                    .accessibilityHidden(!showsHearts)
                 Text(phaseText)
                     .font(.lcd(11, weight: .bold))
                     .minimumScaleFactor(0.7)
                     .frame(maxWidth: .infinity)
-                    .opacity(isChoosing ? 0 : 1)
+                    .opacity(showsPhaseText ? 1 : 0)
+                    .accessibilityHidden(!showsPhaseText)
             }
         }
     }
@@ -42,8 +45,8 @@ extension PetScreen {
     var battleButtons: some View {
         if let battle = presenter.battlePresenter {
             let phase = battle.viewModel.phase
-            let isChoosing = phase == .choosing
-            let isComplete = phase == .victory || phase == .defeat
+            let showsAttackButtons = phase == .choosing
+            let showsDoneButton = phase == .victory || phase == .defeat
 
             ZStack {
                 HStack(spacing: 4) {
@@ -57,16 +60,18 @@ extension PetScreen {
                         battle.pickAction(.low)
                     }
                 }
-                .opacity(isChoosing ? 1 : 0)
-                .allowsHitTesting(isChoosing)
+                .opacity(showsAttackButtons ? 1 : 0)
+                .allowsHitTesting(showsAttackButtons)
+                .accessibilityHidden(!showsAttackButtons)
 
                 HStack(spacing: 4) {
                     ActionButton(label: "DONE", accessibilityLabel: "Finish battle") {
                         presenter.dismissBattle()
                     }
                 }
-                .opacity(isComplete ? 1 : 0)
-                .allowsHitTesting(isComplete)
+                .opacity(showsDoneButton ? 1 : 0)
+                .allowsHitTesting(showsDoneButton)
+                .accessibilityHidden(!showsDoneButton)
             }
         }
     }
