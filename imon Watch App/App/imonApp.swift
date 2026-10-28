@@ -5,7 +5,7 @@ import os
 
 /// The watchOS app's entry point.
 /// Hosts `ContentView` in the single window and installs `AppDelegate` as the
-/// application delegate.
+/// application delegate, passing the delegate's `AppPresenter` to the view.
 @main
 struct imon_Watch_AppApp: App {
 
@@ -13,7 +13,7 @@ struct imon_Watch_AppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(appPresenter: appDelegate.appPresenter)
         }
     }
 }
@@ -22,6 +22,11 @@ struct imon_Watch_AppApp: App {
 /// The one object the OS targets for launch, activation, background refresh
 /// tasks, and notification presentation, so those hooks all live here.
 final class AppDelegate: NSObject, WKApplicationDelegate {
+
+    /// The app's one lifecycle presenter. Owned here rather than by the view
+    /// so a background wake reaches the live `PetPresenter` when one exists,
+    /// keeping a single writer for the save.
+    let appPresenter = AppPresenter()
 
     /// Handles application launch, installing this delegate so notification
     /// events — including foreground care reminders — arrive here.
@@ -64,22 +69,18 @@ final class AppDelegate: NSObject, WKApplicationDelegate {
         }
     }
 
-    /// Advances the pet, replans reminders, re-arms the next wake, then completes.
-    /// Reads the persisted `SettingsStore` toggles so a background wake honours
-    /// the same Steps and Notifications switches the foreground does.
+    /// Ticks the pet through `PetActionRouter`, which advances, replans
+    /// reminders and re-arms the next wake, then completes the task. The live
+    /// presenter takes the tick when the app holds one; otherwise the offline
+    /// session reads the persisted Steps and Notifications switches the
+    /// foreground honours.
     private func handleRefresh(_ task: WKApplicationRefreshBackgroundTask) {
         Task { @MainActor in
-            let settings = SettingsStore()
-            let steps = await Self.stepReading(stepsEnabled: settings.stepsEnabled)
-            BackgroundTick.perform(
-                store: JSONPetStateStore.live(),
-                notifications: .live(),
-                refresh: .live(),
-                complications: .live(),
-                notificationsEnabled: settings.notificationsEnabled,
-                steps: steps,
-                now: Date()
+            let offline = appPresenter.offlineDependencies(
+                witnesses: CareHandoff.Witnesses(notifications: .live(), complications: .live()),
+                refresh: .live()
             )
+            _ = await PetActionRouter.perform(.tick, app: appPresenter, offline: offline, now: Date())
             task.setTaskCompletedWithSnapshot(false)
         }
     }
@@ -93,13 +94,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .sound, .list]
-    }
-
-    /// Reads today's steps for a background wake: `.off` when the player has
-    /// switched Steps off, `.count` on a successful fetch, else `.unavailable`.
-    private static func stepReading(stepsEnabled: Bool) async -> StepReading {
-        guard stepsEnabled else { return .off }
-        guard let steps = try? await StepCountProvider.live().fetchTodaySteps() else { return .unavailable }
-        return .count(steps)
     }
 }

@@ -25,9 +25,7 @@ struct PetPresenterTests {
         _ state: PetState,
         _ box: SaveBox,
         onDeath: @escaping () -> Void = {},
-        scheduler: SchedulerBox = SchedulerBox(),
-        steps: StepReading = .unavailable,
-        finalSteps: Int? = nil
+        scheduler: SchedulerBox = SchedulerBox()
     ) -> PetPresenter {
         makePetPresenter(
             state: state,
@@ -38,8 +36,6 @@ struct PetPresenterTests {
                 cancelAll: { scheduler.cancelCount += 1 },
                 requestAuthorization: { true }
             ),
-            steps: steps,
-            finalSteps: finalSteps,
             onDeath: onDeath
         )
     }
@@ -107,61 +103,40 @@ struct PetPresenterTests {
         #expect(deaths.count == 1)
     }
 
-    // MARK: - Step Credit
-
-    /// A day that ends while the app is closed must still credit the steps
-    /// taken after its last reading — HealthKit kept counting, the app did not.
-    @Test
-    func `a day that ended while closed credits its uncounted tail`() async {
-        var state = makeTestState()
-        let yesterday = Date.now.addingTimeInterval(-86_400)
-        state.stepTrackedDay = yesterday
-        state.stepsCreditedToday = 1_500
-        state.lifetimeActiveSteps = 1_500
-        let presenter = makePresenter(state, SaveBox(), steps: .count(200), finalSteps: 3_000)
-
-        presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
-        await presenter.dayRecoveryTask?.value
-        presenter.stopGameLoop()
-
-        // 1,500 already credited + the 1,500 tail recovered + today's 200.
-        #expect(presenter.state.lifetimeActiveSteps == 3_200)
-        #expect(presenter.state.stepsCreditedToday == 200)
-    }
-
-    /// The recovered tail must also decide the lazy-day penalty: a day that
-    /// finished above the threshold was never lazy, whatever the app last saw.
-    @Test
-    func `a recovered day above the lazy threshold escapes the penalty`() async {
-        var state = makeTestState()
-        state.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
-        state.stepsCreditedToday = 500
-        let presenter = makePresenter(state, SaveBox(), steps: .count(10), finalSteps: 9_000)
-
-        presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
-        await presenter.dayRecoveryTask?.value
-        presenter.stopGameLoop()
-
-        #expect(presenter.state.evolutionGoalPenalty == 0)
-    }
-
-    /// A missing tail must delay the rollover, never stall it.
-    @Test
-    func `an unavailable tail still rolls the day over`() async {
-        var state = makeTestState()
-        state.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
-        state.stepsCreditedToday = 4_000
-        let presenter = makePresenter(state, SaveBox(), steps: .count(120), finalSteps: nil)
-
-        presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
-        await presenter.dayRecoveryTask?.value
-        presenter.stopGameLoop()
-
-        #expect(presenter.state.stepsCreditedToday == 120)
-        #expect(presenter.state.stepTrackedDay?.isSameDay(as: .now) == true)
-    }
-
     // MARK: - Scene Phase
+
+    /// A save written while the presenter was suspended (a background wake or
+    /// an intent) is newer than the in-memory pet, so activation adopts it.
+    @Test
+    func `activation adopts a newer save`() {
+        var saved = makeTestState(at: .now.addingTimeInterval(-60))
+        saved.battleWins = 7
+        let presenter = makePetPresenter(
+            state: makeTestState(at: .now.addingTimeInterval(-3_600)),
+            store: PetStateStore(save: { _ in }, load: { [saved] in saved }, delete: {})
+        )
+
+        presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
+        presenter.stopGameLoop()
+
+        #expect(presenter.state.battleWins == 7)
+    }
+
+    /// An older save is the presenter's own stale write: the live pet wins.
+    @Test
+    func `activation keeps the live pet over an older save`() {
+        var saved = makeTestState(at: .now.addingTimeInterval(-7_200))
+        saved.battleWins = 7
+        let presenter = makePetPresenter(
+            state: makeTestState(at: .now.addingTimeInterval(-3_600)),
+            store: PetStateStore(save: { _ in }, load: { [saved] in saved }, delete: {})
+        )
+
+        presenter.handleScenePhase(isActive: true, notificationsEnabled: false)
+        presenter.stopGameLoop()
+
+        #expect(presenter.state.battleWins == 0)
+    }
 
     @Test
     func `backgrounding with notifications on schedules care reminders`() {

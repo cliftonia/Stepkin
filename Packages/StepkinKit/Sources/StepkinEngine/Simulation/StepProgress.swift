@@ -8,7 +8,7 @@ import Foundation
 /// goal by a stage-scaled penalty, so progression rewards staying active
 /// rather than a single burst. The accumulator is a plain value so a catch-up
 /// can replay each missed day through the same `advance` call, as
-/// `PetPresenter.settleAndRollOver` does. All tuning lives here and in
+/// `StepCrediting.settle` does. All tuning lives here and in
 /// `EvolutionStage`.
 public enum StepProgress {
 
@@ -67,7 +67,7 @@ public enum StepProgress {
         }
 
         // One rollover charges at most one lazy day: a multi-day absence is
-        // settled by `PetPresenter.settleAndRollOver` replaying each missed day
+        // settled by `StepCrediting.settle` replaying each missed day
         // through here, so every day gets its own verdict rather than one
         // approximate charge.
         let penalty = progress.creditedToday < lazyThreshold ? stagePenalty : 0

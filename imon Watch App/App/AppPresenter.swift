@@ -151,14 +151,9 @@ final class AppPresenter {
         let presenter = PetPresenter(
             state: state,
             store: store,
-            currentNight: { [weatherStore, settings] in
-                // Weather off -> no night signal, so day/night falls back to the clock.
-                settings.weatherEnabled ? weatherStore.nightSignal() : nil
-            },
+            currentNight: { [weak self] in self?.currentNightReading() },
             currentSteps: { [weak self] in self?.currentStepReading() ?? .unavailable },
-            finalSteps: { [stepActivityStore, settings] day in
-                settings.stepsEnabled ? await stepActivityStore.finalSteps(for: day) : nil
-            },
+            finalSteps: finalStepTotals(),
             onDeath: { [weak self] in self?.checkDeath() }
         )
         petPresenter = presenter
@@ -204,14 +199,54 @@ final class AppPresenter {
         startHatching()
     }
 
-    // MARK: - Step Reading
+    // MARK: - Readings
 
     /// The step signal the engine reads: `.off` while Steps is switched off,
     /// `.count` once the store has a figure, else `.unavailable`.
-    private func currentStepReading() -> StepReading {
+    func currentStepReading() -> StepReading {
         guard settings.stepsEnabled else { return .off }
         guard let steps = stepActivityStore.todaySteps else { return .unavailable }
         return .count(steps)
+    }
+
+    /// Re-reads today's steps when Steps is on, then returns the reading; the
+    /// offline path's reading, since a bare background launch has no figure yet.
+    func refreshedStepReading(now: Date) async -> StepReading {
+        if settings.stepsEnabled {
+            await stepActivityStore.refresh(now: now)
+        }
+        return currentStepReading()
+    }
+
+    /// The weather's night signal, or nil while Weather is switched off so
+    /// day/night falls back to the clock.
+    func currentNightReading() -> Bool? {
+        settings.weatherEnabled ? weatherStore.nightSignal() : nil
+    }
+
+    /// The settled total for a finished day, or nil while Steps is off; the
+    /// one witness both the live presenter and the offline session settle with.
+    private func finalStepTotals() -> @Sendable (Date) async -> Int? {
+        { @MainActor [stepActivityStore, settings] day in
+            settings.stepsEnabled ? await stepActivityStore.finalSteps(for: day) : nil
+        }
+    }
+
+    /// The offline session's dependencies, built over this presenter's own
+    /// store and settings so the session writes the same save the presenter
+    /// reads. `refresh` is the chain to re-arm, nil for a caller that is not a
+    /// background wake.
+    func offlineDependencies(
+        witnesses: CareHandoff.Witnesses,
+        refresh: BackgroundRefreshScheduler?
+    ) -> OfflineSession.Dependencies {
+        OfflineSession.Dependencies(
+            store: store,
+            finalSteps: finalStepTotals(),
+            witnesses: witnesses,
+            refresh: refresh,
+            notificationsEnabled: settings.notificationsEnabled
+        )
     }
 
     // MARK: - Navigation Actions

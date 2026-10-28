@@ -3,9 +3,12 @@ import SwiftUI
 /// The app's root view, switching the hosted screen on `AppPresenter.phase`
 /// from loading through hatching, onboarding, alive, and dead. Owns the
 /// battery-saver theme override so the red palette reaches every hosted screen
-/// and both navigation destinations.
+/// and both navigation destinations. The `AppPresenter` is handed in by the
+/// app struct from `AppDelegate`, which owns it so a background wake routes
+/// actions through the same live presenter the screen shows.
 struct ContentView: View {
-    @State private var appPresenter = AppPresenter()
+    /// The delegate-owned lifecycle presenter; observed through `@Observable`.
+    let appPresenter: AppPresenter
     @State private var powerSaver = PowerSaverStore.live()
 
     /// The manual Settings switch or the system Low Power Mode — either turns on

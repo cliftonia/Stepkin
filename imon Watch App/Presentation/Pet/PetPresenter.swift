@@ -54,8 +54,7 @@ final class PetPresenter {
     /// The countdown from a lights toggle to sleep; cancelled when the game loop stops.
     let sleepSettle = DelayedTask()
     /// The in-flight rollover of a day that ended while the app was closed.
-    /// Not private: the tests await it, since the rollover is asynchronous but
-    /// must be observed.
+    /// Not private: the `+Steps` extension starts and clears it.
     var dayRecoveryTask: Task<Void, Never>?
 
     #if DEBUG
@@ -174,7 +173,9 @@ final class PetPresenter {
         startActivity { await $0.runRefuseSequence() }
     }
 
-    private func tick() {
+    /// One game-loop tick: advance, offer evolution, save. Not private: a
+    /// routed `PetAction.tick` runs the same tick.
+    func tick() {
         advanceState()
         checkEvolution()
         save()
@@ -261,12 +262,14 @@ final class PetPresenter {
 
     // MARK: - Scene Phase
 
-    /// Foregrounding runs the catch-up at once (no stale scene after hours away)
+    /// Foregrounding first adopts a newer save (see `adoptNewerSave`), then runs
+    /// the catch-up at once (no stale scene after hours away)
     /// and restarts the loop if stopped; backgrounding hands care reminders to
     /// the system — or clears them when the toggle is off. Activation never
     /// cancels: a wrist raise flips active and would wipe them before they fire.
     func handleScenePhase(isActive: Bool, notificationsEnabled: Bool) {
         if isActive {
+            adoptNewerSave()
             startGameLoop()
             environmentDidChange()
         } else {
