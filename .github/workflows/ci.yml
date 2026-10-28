@@ -67,9 +67,18 @@ jobs:
         run: >
           xcodebuild test -project imon.xcodeproj -scheme "imon Watch App"
           -destination "platform=watchOS Simulator,name=$SIM_DEVICE"
-          -only-testing "imon Watch AppTests" -quiet
+          -only-testing "imon Watch AppTests"
+          -resultBundlePath "$RUNNER_TEMP/tests.xcresult"
           -test-timeouts-enabled YES -default-test-execution-time-allowance 60
           -maximum-test-execution-time-allowance 120
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-xcresult
+          path: ${{ runner.temp }}/tests.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
       - name: List simulators on failure
         if: failure()
         run: xcrun simctl list devices available
