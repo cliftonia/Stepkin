@@ -23,13 +23,15 @@ extension PetScreen {
     var battleInfoRow: some View {
         if let battle = presenter.battlePresenter {
             let phaseText = battlePhaseText(battle)
-            if phaseText.isEmpty {
+            let isChoosing = phaseText.isEmpty
+            ZStack {
                 choosingInfoRow(battle)
-            } else {
+                    .opacity(isChoosing ? 1 : 0)
                 Text(phaseText)
                     .font(.lcd(11, weight: .bold))
                     .minimumScaleFactor(0.7)
                     .frame(maxWidth: .infinity)
+                    .opacity(isChoosing ? 0 : 1)
             }
         }
     }
@@ -39,30 +41,32 @@ extension PetScreen {
     @ViewBuilder
     var battleButtons: some View {
         if let battle = presenter.battlePresenter {
-            switch battle.viewModel.phase {
-            case .choosing:
+            let phase = battle.viewModel.phase
+            let isChoosing = phase == .choosing
+            let isComplete = phase == .victory || phase == .defeat
+
+            ZStack {
                 HStack(spacing: 4) {
-                    ActionButton(label: "HIGH") {
+                    ActionButton(label: "HIGH", accessibilityLabel: "Attack high") {
                         battle.pickAction(.high)
                     }
-                    ActionButton(label: "MED") {
+                    ActionButton(label: "MED", accessibilityLabel: "Attack medium") {
                         battle.pickAction(.medium)
                     }
-                    ActionButton(label: "LOW") {
+                    ActionButton(label: "LOW", accessibilityLabel: "Attack low") {
                         battle.pickAction(.low)
                     }
                 }
+                .opacity(isChoosing ? 1 : 0)
+                .allowsHitTesting(isChoosing)
 
-            case .victory, .defeat:
                 HStack(spacing: 4) {
-                    ActionButton(label: "DONE") {
+                    ActionButton(label: "DONE", accessibilityLabel: "Finish battle") {
                         presenter.dismissBattle()
                     }
                 }
-
-            case .introPet, .introVS, .introEnemy, .attacking, .projectile,
-                 .opponentAttacking, .opponentProjectile, .impact:
-                EmptyView()
+                .opacity(isComplete ? 1 : 0)
+                .allowsHitTesting(isComplete)
             }
         }
     }

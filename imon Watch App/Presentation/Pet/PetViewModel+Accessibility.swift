@@ -24,8 +24,26 @@ extension PetViewModel {
     }
 }
 
-extension PetViewModel.MenuAction {
+extension PetViewModel.MenuAction: Identifiable {
 
+    /// The entry itself identifies its icon in the menu strip.
+    var id: Self { self }
+
+    /// The SF Symbol shown for this entry in the menu icon row.
+    var systemImage: String {
+        switch self {
+        case .stats: "heart.text.square"
+        case .feed: "fork.knife"
+        case .train: "figure.run"
+        case .battle: "burst"
+        case .clean: "shower"
+        case .lights: "lightbulb"
+        case .heal: "cross.case"
+        case .settings: "gearshape"
+        }
+    }
+
+    /// The spoken name of this entry, used for VoiceOver labels.
     var accessibilityName: String {
         switch self {
         case .stats: "stats"

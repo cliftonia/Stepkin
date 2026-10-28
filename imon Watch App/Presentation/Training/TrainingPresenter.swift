@@ -67,7 +67,9 @@ final class TrainingPresenter {
             guess: guess
         )
         viewModel.showingNumber = true
-        viewModel.roundResults.append(result.won)
+        viewModel.roundResults.append(
+            TrainingViewModel.RoundResult(id: viewModel.roundResults.count, won: result.won)
+        )
         viewModel.lastGuessHigh = guess == .high
 
         enterAttacking(won: result.won)
@@ -156,7 +158,7 @@ final class TrainingPresenter {
 
     private func advanceOrComplete() {
         let roundsPlayed = viewModel.roundResults.count
-        let wins = viewModel.roundResults.filter { $0 }.count
+        let wins = viewModel.roundResults.filter(\.won).count
         let losses = roundsPlayed - wins
         let maxLosses = TimeConstants.trainRounds
             - TimeConstants.trainWinsNeeded

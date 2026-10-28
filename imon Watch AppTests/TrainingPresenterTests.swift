@@ -27,7 +27,9 @@ struct TrainingPresenterTests {
         let box = OutcomeBox()
         let presenter = makePresenter(box)
         presenter.viewModel.phase = .defeat
-        presenter.viewModel.roundResults = [false, false, false]
+        presenter.viewModel.roundResults = (0..<3).map {
+            TrainingViewModel.RoundResult(id: $0, won: false)
+        }
         presenter.viewModel.showingNumber = true
 
         presenter.startTraining()
@@ -90,7 +92,7 @@ struct TrainingPresenterTests {
 
         presenter.guessAction(guess)
 
-        #expect(presenter.viewModel.roundResults == [expectedWon])
+        #expect(presenter.viewModel.roundResults == [TrainingViewModel.RoundResult(id: 0, won: expectedWon)])
         #expect(presenter.viewModel.phase == .attacking)
         #expect(presenter.viewModel.showingNumber == true)
         #expect(presenter.viewModel.lastGuessHigh == (guess == .high))
@@ -113,7 +115,7 @@ struct TrainingPresenterTests {
             presenter.guessAction(round.guess)
         }
 
-        #expect(presenter.viewModel.roundResults == [true, false, true])
+        #expect(presenter.viewModel.roundResults.map(\.won) == [true, false, true])
         #expect(box.outcomes.isEmpty)
         presenter.cancel()
     }

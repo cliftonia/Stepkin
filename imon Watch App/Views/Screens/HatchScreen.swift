@@ -26,18 +26,17 @@ struct HatchScreen: View {
     }
 
     private var phaseLabel: some View {
-        Group {
-            switch presenter.viewModel.phase {
-            case .egg:
-                Text("An egg!")
-                    .font(.lcd(12))
-            case .cracking:
-                Text("It's hatching...")
-                    .font(.lcd(12))
-            case .hatched:
-                Text("Dotkin is born!")
-                    .font(.lcd(12, weight: .bold))
-            }
+        let phase = presenter.viewModel.phase
+        return ZStack {
+            Text("An egg!")
+                .font(.lcd(12))
+                .opacity(phase == .egg ? 1 : 0)
+            Text("It's hatching...")
+                .font(.lcd(12))
+                .opacity(phase == .cracking ? 1 : 0)
+            Text("Dotkin is born!")
+                .font(.lcd(12, weight: .bold))
+                .opacity(phase == .hatched ? 1 : 0)
         }
     }
 }

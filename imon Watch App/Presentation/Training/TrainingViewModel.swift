@@ -15,11 +15,19 @@ final class TrainingViewModel {
     /// The number shown in the current round.
     var currentNumber: Int = 5
     /// The result of each round the run has played.
-    var roundResults: [Bool] = []
+    var roundResults: [RoundResult] = []
     /// Whether `currentNumber` is visible on screen.
     var showingNumber: Bool = false
     /// Whether the last guess was high; meaningless before the first guess.
     var lastGuessHigh: Bool = true
+
+    /// The outcome of one round, identified by its position in the run.
+    nonisolated struct RoundResult: Identifiable, Hashable, Sendable {
+        /// The round's index within the run.
+        let id: Int
+        /// Whether the guess was correct.
+        let won: Bool
+    }
 
     /// The stage of a training run, from `ready` through the attack
     /// sequence to `victory` or `defeat`.

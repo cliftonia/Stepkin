@@ -64,10 +64,10 @@ extension PetScreen {
 
             ZStack {
                 HStack(spacing: 4) {
-                    ActionButton(label: "HIGH") {
+                    ActionButton(label: "HIGH", accessibilityLabel: "Guess high") {
                         training.guessAction(.high)
                     }
-                    ActionButton(label: "LOW") {
+                    ActionButton(label: "LOW", accessibilityLabel: "Guess low") {
                         training.guessAction(.low)
                     }
                 }
@@ -75,7 +75,7 @@ extension PetScreen {
                 .allowsHitTesting(phase == .challenge)
 
                 HStack(spacing: 4) {
-                    ActionButton(label: "DONE") {
+                    ActionButton(label: "DONE", accessibilityLabel: "Finish training") {
                         presenter.dismissTraining()
                     }
                 }
@@ -116,14 +116,9 @@ extension PetScreen {
         _ training: TrainingPresenter
     ) -> some View {
         HStack(spacing: 3) {
-            ForEach(
-                Array(
-                    training.viewModel.roundResults.enumerated()
-                ),
-                id: \.offset
-            ) { _, won in
+            ForEach(training.viewModel.roundResults) { result in
                 Circle()
-                    .fill(won ? Color.green : Color.red)
+                    .fill(result.won ? Color.green : Color.red)
                     .frame(width: 6, height: 6)
             }
         }
@@ -137,7 +132,7 @@ extension PetScreen {
         _ training: TrainingPresenter
     ) -> String {
         let wins = training.viewModel.roundResults
-            .filter { $0 }.count
+            .filter(\.won).count
         let total = training.viewModel.roundResults.count
         return "Score: \(wins) of \(total) correct"
     }

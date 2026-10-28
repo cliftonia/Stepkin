@@ -10,24 +10,11 @@ struct MenuIconRow: View {
     let selectedIndex: Int
     @Environment(\.lcdTheme) private var theme
 
-    private let icons: [(String, String)] = [
-        ("heart.text.square", "Status"),
-        ("fork.knife", "Feed"),
-        ("figure.run", "Train"),
-        ("burst", "Battle"),
-        ("shower", "Clean"),
-        ("lightbulb", "Lights"),
-        ("cross.case", "Medical"),
-        ("gearshape", "Settings")
-    ]
-
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(
-                Array(icons.enumerated()),
-                id: \.offset
-            ) { index, icon in
-                Image(systemName: icon.0)
+            ForEach(PetViewModel.MenuAction.allCases) { action in
+                let index = action.rawValue
+                Image(systemName: action.systemImage)
                     .font(.system(size: 14))
                     .frame(maxWidth: .infinity)
                     .frame(height: 22)
@@ -42,7 +29,7 @@ struct MenuIconRow: View {
                                 .fill(theme.chromeTint.opacity(0.2))
                             : nil
                     )
-                    .accessibilityLabel(icon.1)
+                    .accessibilityLabel(action.accessibilityName)
             }
         }
     }
