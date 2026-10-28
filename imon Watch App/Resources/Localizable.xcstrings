@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ %lld HP, %@ %lld HP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$lld HP, %3$@ %4$lld HP"
+          }
+        }
+      }
+    },
     "%@ (%@)" : {
       "comment" : "Settings About row: app version and build number.",
       "localizations" : {
@@ -21,6 +31,9 @@
           }
         }
       }
+    },
+    "%@ button" : {
+      "comment" : "VoiceOver fallback for a button with no stated action; the argument is the printed button letter."
     },
     "%@ evolved into %@!" : {
       "comment" : "Evolution notification body; the arguments are the old and the new species names.",
@@ -51,6 +64,23 @@
     "%@ needs some exercise!" : {
       "comment" : "Care reminder body; the argument is the pet's species name."
     },
+    "%@, %@, humidity %@" : {
+      "comment" : "VoiceOver: weather condition, temperature, then humidity; the arguments are already localized or numeric.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@, humidity %3$@"
+          }
+        }
+      }
+    },
+    "%@. Tap to continue." : {
+      "comment" : "VoiceOver: the tip text, then the instruction on an onboarding step."
+    },
+    "%@. Tap to start." : {
+      "comment" : "VoiceOver: the tip text, then the instruction on the last onboarding step."
+    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -59,7 +89,8 @@
             "value" : "%1$@: %2$@"
           }
         }
-      }
+      },
+      "comment" : "VoiceOver for a stats row: the row label, then its value."
     },
     "%@: %lld of %lld hearts" : {
       "localizations" : {
@@ -85,20 +116,37 @@
     "%lld messes to clean" : {
       "comment" : "Spoken pet status phrase: several messes on screen."
     },
+    "%lldG" : {
+      "comment" : "Weight on the LCD; the argument is a whole number and G is an abbreviation of grams."
+    },
+    "%lldd" : {
+      "comment" : "Age in days on the LCD; the argument is a whole number and d is an abbreviation of days."
+    },
     "1 mess to clean" : {
       "comment" : "Spoken pet status phrase: one mess on screen."
     },
+    "AGE" : {
+      "comment" : "Stats row label: the pet's age in days; keep it short and capitalised."
+    },
+    "ATTACK!" : {
+      "comment" : "LCD caption while your monster attacks; keep it short and capitalised."
+    },
     "About" : {
-
+      "comment" : "Settings section header for version and attribution details."
     },
     "Active" : {
       "comment" : "Stats activity word: today's steps count as active."
     },
-    "Age: %lld days" : {
-
+    "Age: %lld days" : {},
+    "An egg!" : {},
+    "Attack high" : {
+      "comment" : "VoiceOver label: attack the opponent's upper body."
     },
-    "An egg!" : {
-
+    "Attack low" : {
+      "comment" : "VoiceOver label: attack the opponent's lower body."
+    },
+    "Attack medium" : {
+      "comment" : "VoiceOver label: attack the opponent's middle."
     },
     "BACK" : {
       "comment" : "Button B label while choosing food."
@@ -106,8 +154,12 @@
     "Back" : {
       "comment" : "VoiceOver label for button B while choosing food."
     },
-    "Battery saver" : {
-
+    "Battery saver" : {},
+    "CLASH!" : {
+      "comment" : "LCD caption when both attacks collide; keep it short and capitalised."
+    },
+    "COUNTER!" : {
+      "comment" : "LCD caption while the opponent strikes back; keep it short and capitalised."
     },
     "Cancel" : {
       "comment" : "VoiceOver label for button B during an activity."
@@ -118,12 +170,8 @@
     "Champion" : {
       "comment" : "Growth stage name."
     },
-    "Check on" : {
-
-    },
-    "Check on Stepkin" : {
-
-    },
+    "Check on" : {},
+    "Check on Stepkin" : {},
     "Clean my mess, and heal me when I'm sick." : {
       "comment" : "Onboarding tip spoken by Dotkin."
     },
@@ -133,39 +181,36 @@
     "Cloudy" : {
       "comment" : "Weather condition name."
     },
-    "Death screen. Your Creature has passed away." : {
-
+    "DONE" : {
+      "comment" : "Printed face of the button that leaves a finished game; keep it short and capitalised."
     },
-    "Debug" : {
-
+    "DRAW" : {
+      "comment" : "LCD caption when the battle ends level; keep it short and capitalised."
     },
+    "Death screen. Your Creature has passed away." : {},
+    "Debug" : {},
     "Display" : {
-
+      "comment" : "Settings section header for display options such as battery saver."
     },
     "Dotkin is born!" : {
-
+      "comment" : "Hatch screen caption. A fresh hatchling can only be a Dotkin (the engine's only first-stage species), so the name is fixed in the sentence."
     },
-    "Drain + care test" : {
-
+    "Drain + care test" : {},
+    "EVOLVE" : {
+      "comment" : "Stats row label: progress toward the next evolution; keep it short and capitalised."
     },
-    "Egg hatching screen" : {
-
-    },
+    "Egg hatching screen" : {},
     "Evolution!" : {
       "comment" : "Notification title announcing that the pet evolved."
     },
     "Features" : {
-
+      "comment" : "Settings section header for the switches that turn features on and off."
     },
     "Fed." : {
       "comment" : "Siri answer after feeding the pet."
     },
-    "Feed" : {
-
-    },
-    "Feed Stepkin" : {
-
-    },
+    "Feed" : {},
+    "Feed Stepkin" : {},
     "Feed me meat to fill up, vitamins for strength." : {
       "comment" : "Onboarding tip spoken by Dotkin."
     },
@@ -175,38 +220,61 @@
     "Feed vitamin" : {
       "comment" : "VoiceOver label for button C."
     },
+    "Finish battle" : {
+      "comment" : "VoiceOver label: leave the battle."
+    },
+    "Finish training" : {
+      "comment" : "VoiceOver label: leave the training game."
+    },
     "Fog" : {
       "comment" : "Weather condition name."
     },
-    "Food" : {
-
-    },
-    "Force evolve" : {
-
-    },
+    "Food" : {},
+    "Force evolve" : {},
     "Fresh" : {
       "comment" : "Growth stage name."
     },
-    "Haptics" : {
-
+    "Guess high" : {
+      "comment" : "VoiceOver label: guess that the next number is higher."
     },
+    "Guess low" : {
+      "comment" : "VoiceOver label: guess that the next number is lower."
+    },
+    "HIGH" : {
+      "comment" : "Printed face of a button on the LCD screen; keep it short and capitalised."
+    },
+    "HIT!" : {
+      "comment" : "LCD caption when an attack or guess lands; keep it short and capitalised."
+    },
+    "HP" : {
+      "comment" : "Stats row label for hit points; a translator may keep the abbreviation."
+    },
+    "HUNGER" : {
+      "comment" : "Stats row label for the hunger hearts; keep it short and capitalised."
+    },
+    "Haptics" : {},
     "Hi! I'm Dotkin. Look after me and I'll grow!" : {
       "comment" : "Onboarding tip spoken by Dotkin."
     },
     "I follow real weather. Lights off to sleep." : {
       "comment" : "Onboarding tip spoken by Dotkin."
     },
+    "INCOMING!" : {
+      "comment" : "LCD caption while the opponent's shot flies in; keep it short and capitalised."
+    },
     "In-Training" : {
       "comment" : "Growth stage name."
     },
-    "It's hatching..." : {
-
+    "It's hatching..." : {},
+    "Kill pet" : {},
+    "LOSE" : {
+      "comment" : "Stats row label for battles lost, and LCD caption for a lost game; keep it short and capitalised."
     },
-    "Kill pet" : {
-
+    "LOW" : {
+      "comment" : "Printed face of a button on the LCD screen; keep it short and capitalised."
     },
     "Loading" : {
-
+      "comment" : "VoiceOver label while the saved pet loads at launch."
     },
     "MAX" : {
       "comment" : "Stats evolve row: the pet is at its final stage."
@@ -214,36 +282,46 @@
     "MEAT" : {
       "comment" : "Button A label while choosing food."
     },
-    "Meat" : {
-
+    "MED" : {
+      "comment" : "Printed face of a button on the LCD screen; keep it short and capitalised."
     },
-    "Morph into" : {
-
+    "MISS" : {
+      "comment" : "LCD caption when a training guess is wrong; keep it short and capitalised."
+    },
+    "MISS!" : {
+      "comment" : "LCD caption when your attack misses; keep it short and capitalised."
+    },
+    "Meat" : {},
+    "Morph into" : {},
+    "NEXT" : {
+      "comment" : "Stats row label: what the next evolution still needs from battles; keep it short and capitalised."
     },
     "New Egg" : {
-
+      "comment" : "Button that starts over with a new egg after the pet has died."
     },
     "Next menu item" : {
       "comment" : "VoiceOver label for button C."
     },
-    "Notifications" : {
-
-    },
+    "Notifications" : {},
     "Number: %@" : {
-
+      "comment" : "VoiceOver for the number shown in the training game; the argument is the digit or a question mark."
+    },
+    "POW" : {
+      "comment" : "Stats row label for power bonus on a 16-cell LCD; an abbreviation of power, a translator may keep it."
     },
     "Previous menu item" : {
       "comment" : "VoiceOver label for button A."
     },
     "R.I.P." : {
-
+      "comment" : "Heading on the screen shown after the pet has died."
+    },
+    "RATE" : {
+      "comment" : "Stats row label for the win rate; keep it short and capitalised."
     },
     "Rain" : {
       "comment" : "Weather condition name."
     },
-    "Real weather" : {
-
-    },
+    "Real weather" : {},
     "Resting" : {
       "comment" : "Stats activity word: today's steps count as sedentary."
     },
@@ -251,34 +329,47 @@
       "comment" : "Growth stage name."
     },
     "SKIP" : {
-
+      "comment" : "Button that skips the onboarding tutorial; keep it short and capitalised."
+    },
+    "STR" : {
+      "comment" : "Stats row label for strength on a 16-cell LCD; an abbreviation of strength, a translator may keep it."
+    },
+    "Score: %lld of %lld correct" : {
+      "comment" : "VoiceOver: training rounds won of rounds played; the arguments are two whole numbers.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Score: %1$lld of %2$lld correct"
+          }
+        }
+      }
     },
     "Select %@" : {
       "comment" : "VoiceOver label for button B; the argument is the menu entry."
     },
     "Settings" : {
-
+      "comment" : "Navigation title of the settings screen."
     },
-    "Skip tutorial" : {
-
-    },
+    "Skip tutorial" : {},
     "Snow" : {
       "comment" : "Weather condition name."
     },
-    "Start new egg" : {
-
-    },
+    "Start new egg" : {},
     "Stats" : {
-
+      "comment" : "Navigation title of the pet statistics screen."
     },
     "Steps" : {
-
+      "comment" : "Settings switch label: use HealthKit step counts to grow the pet."
     },
     "Steps off" : {
       "comment" : "Stats activity row when step counting is switched off."
     },
     "Storm" : {
       "comment" : "Weather condition name."
+    },
+    "TODAY" : {
+      "comment" : "Stats row label: today's step activity; keep it short and capitalised."
     },
     "That's it. Let's begin!" : {
       "comment" : "Onboarding tip spoken by Dotkin."
@@ -299,25 +390,34 @@
       "comment" : "Button C label while choosing food; short for vitamin."
     },
     "Version" : {
-
+      "comment" : "Settings row label; the value is the app version and build."
     },
     "Virtual pet" : {
       "comment" : "VoiceOver label for the home screen before a pet exists."
     },
-    "Vitamin" : {
-
+    "Vitamin" : {},
+    "WEIGHT" : {
+      "comment" : "Stats row label: the pet's weight; keep it short and capitalised."
+    },
+    "WIN" : {
+      "comment" : "Stats row label for battles won; keep it short and capitalised."
+    },
+    "WIN!" : {
+      "comment" : "LCD caption when a training game is won; keep it short and capitalised."
     },
     "Weather" : {
-
+      "comment" : "Settings switch label and section name for the weather overlay."
     },
-    "Weather data by Apple Weather" : {
-
-    },
-    "Weather data by Apple Weather. Opens the attribution page." : {
-
-    },
+    "Weather data by Apple Weather" : {},
+    "Weather data by Apple Weather. Opens the attribution page." : {},
     "Windy" : {
       "comment" : "Weather condition name."
+    },
+    "YOU LOSE" : {
+      "comment" : "LCD caption when the battle is lost; keep it short and capitalised."
+    },
+    "YOU WIN!" : {
+      "comment" : "LCD caption when the battle is won; keep it short and capitalised."
     },
     "Your pet can't eat right now." : {
       "comment" : "Feed refusal: the pet is asleep or gone."
@@ -331,9 +431,7 @@
     "Your real steps grow me. Walk daily!" : {
       "comment" : "Onboarding tip spoken by Dotkin."
     },
-    "Your steps grow your pet. With Steps off it grows with time instead. If you declined Health access, switch Steps off." : {
-
-    },
+    "Your steps grow your pet. With Steps off it grows with time instead. If you declined Health access, switch Steps off." : {},
     "battle" : {
       "comment" : "Spoken menu entry name."
     },
@@ -393,17 +491,15 @@
       }
     },
     "tap to start ›" : {
-
+      "comment" : "Hint under the last onboarding tip; the arrow points forward."
     },
     "tap ›" : {
-
+      "comment" : "Hint under an onboarding tip; the arrow points forward."
     },
     "train" : {
       "comment" : "Spoken menu entry name."
     },
-    "|" : {
-
-    }
+    "|" : {}
   },
   "version" : "1.0"
 }

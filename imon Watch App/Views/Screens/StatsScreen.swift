@@ -37,23 +37,47 @@ struct StatsScreen: View {
     private var coreStats: some View {
         VStack(alignment: .leading, spacing: 4) {
             statRow(
-                label: "AGE",
-                value: "\(presenter.viewModel.ageDays)d"
+                label: String(
+                    localized: "AGE",
+                    comment: "Stats row label: the pet's age in days; keep it short and capitalised."
+                ),
+                value: String(
+                    localized: "\(presenter.viewModel.ageDays)d",
+                    comment: "Age in days on the LCD; the argument is a whole number and d is an abbreviation of days."
+                )
             )
             statRow(
-                label: "WEIGHT",
-                value: "\(presenter.viewModel.weightGrams)G"
+                label: String(
+                    localized: "WEIGHT",
+                    comment: "Stats row label: the pet's weight; keep it short and capitalised."
+                ),
+                value: String(
+                    localized: "\(presenter.viewModel.weightGrams)G",
+                    comment: "Weight on the LCD; the argument is a whole number and G is an abbreviation of grams."
+                )
             )
             statRow(
-                label: "TODAY",
+                label: String(
+                    localized: "TODAY",
+                    comment: "Stats row label: today's step activity; keep it short and capitalised."
+                ),
                 value: presenter.viewModel.activityLabel
             )
             statRow(
-                label: "EVOLVE",
+                label: String(
+                    localized: "EVOLVE",
+                    comment: "Stats row label: progress toward the next evolution; keep it short and capitalised."
+                ),
                 value: presenter.viewModel.evolveProgress
             )
             if let battleGate = presenter.viewModel.battleGate {
-                statRow(label: "NEXT", value: battleGate)
+                statRow(
+                    label: String(
+                        localized: "NEXT",
+                        comment: "Stats row label: what the next evolution still needs from battles; keep it short and capitalised."
+                    ),
+                    value: battleGate
+                )
             }
         }
     }
@@ -61,12 +85,18 @@ struct StatsScreen: View {
     private var heartMeters: some View {
         VStack(alignment: .leading, spacing: 4) {
             HeartMeter(
-                label: "HUNGER",
+                label: String(
+                    localized: "HUNGER",
+                    comment: "Stats row label for the hunger hearts; keep it short and capitalised."
+                ),
                 filledCount: presenter.viewModel.hungerHearts,
                 maxCount: presenter.viewModel.maxHunger
             )
             HeartMeter(
-                label: "STR",
+                label: String(
+                    localized: "STR",
+                    comment: "Stats row label for strength on a 16-cell LCD; an abbreviation of strength, a translator may keep it."
+                ),
                 filledCount: presenter.viewModel.strengthHearts,
                 maxCount: presenter.viewModel.maxStrength
             )
@@ -76,23 +106,38 @@ struct StatsScreen: View {
     private var battleStats: some View {
         VStack(alignment: .leading, spacing: 4) {
             statRow(
-                label: "HP",
+                label: String(
+                    localized: "HP",
+                    comment: "Stats row label for hit points; a translator may keep the abbreviation."
+                ),
                 value: presenter.viewModel.hpDisplay
             )
             statRow(
-                label: "POW",
+                label: String(
+                    localized: "POW",
+                    comment: "Stats row label for power bonus on a 16-cell LCD; an abbreviation of power, a translator may keep it."
+                ),
                 value: presenter.viewModel.powerBonus
             )
             statRow(
-                label: "WIN",
+                label: String(
+                    localized: "WIN",
+                    comment: "Stats row label for battles won; keep it short and capitalised."
+                ),
                 value: "\(presenter.viewModel.battleWins)"
             )
             statRow(
-                label: "LOSE",
+                label: String(
+                    localized: "LOSE",
+                    comment: "Stats row label for battles lost, and LCD caption for a lost game; keep it short and capitalised."
+                ),
                 value: "\(presenter.viewModel.battleLosses)"
             )
             statRow(
-                label: "RATE",
+                label: String(
+                    localized: "RATE",
+                    comment: "Stats row label for the win rate; keep it short and capitalised."
+                ),
                 value: presenter.viewModel.winRate
             )
         }

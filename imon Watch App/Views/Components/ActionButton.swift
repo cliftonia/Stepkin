@@ -19,6 +19,13 @@ struct ActionButton: View {
     let action: () -> Void
     @Environment(\.lcdTheme) private var theme
 
+    private var spokenLabel: String {
+        accessibilityLabel ?? String(
+            localized: "\(label) button",
+            comment: "VoiceOver fallback for a button with no stated action; the argument is the printed button letter."
+        )
+    }
+
     var body: some View {
         Button {
             WKInterfaceDevice.buttonHaptic()
@@ -33,7 +40,7 @@ struct ActionButton: View {
         .buttonStyle(.bordered)
         // Only override the fill under battery-saver; classic keeps the default.
         .tint(theme == .nightRed ? theme.chromeTint : nil)
-        .accessibilityLabel(accessibilityLabel ?? "\(label) button")
+        .accessibilityLabel(spokenLabel)
         .simultaneousGesture(
             LongPressGesture(minimumDuration: 0.5).onEnded { _ in
                 guard let longPressAction else { return }

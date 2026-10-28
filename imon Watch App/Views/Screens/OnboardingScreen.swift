@@ -36,11 +36,26 @@ struct OnboardingScreen: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: presenter.advanceAction)
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(
-            "\(presenter.viewModel.currentTip.message). "
-                + (presenter.viewModel.isLastStep
-                    ? "Tap to start." : "Tap to continue.")
-        )
+        .accessibilityLabel(spokenLabel)
+    }
+
+    private var spokenLabel: String {
+        let message = presenter.viewModel.currentTip.message
+        return presenter.viewModel.isLastStep
+            ? String(
+                localized: "\(message). Tap to start.",
+                comment: "VoiceOver: the tip text, then the instruction on the last onboarding step."
+            )
+            : String(
+                localized: "\(message). Tap to continue.",
+                comment: "VoiceOver: the tip text, then the instruction on an onboarding step."
+            )
+    }
+
+    private var footerHint: String {
+        presenter.viewModel.isLastStep
+            ? String(localized: "tap to start ›", comment: "Hint under the last onboarding tip; the arrow points forward.")
+            : String(localized: "tap ›", comment: "Hint under an onboarding tip; the arrow points forward.")
     }
 
     private var lcd: some View {
@@ -57,7 +72,7 @@ struct OnboardingScreen: View {
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(presenter.viewModel.isLastStep ? "tap to start ›" : "tap ›")
+            Text(footerHint)
                 .font(.lcd(9))
                 .foregroundStyle(Color.gray)
         }

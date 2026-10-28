@@ -50,13 +50,22 @@ extension PetScreen {
 
             ZStack {
                 HStack(spacing: 4) {
-                    ActionButton(label: "HIGH", accessibilityLabel: "Attack high") {
+                    ActionButton(
+                        label: String(localized: "HIGH", comment: "Printed face of a button on the LCD screen; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Attack high", comment: "VoiceOver label: attack the opponent's upper body.")
+                    ) {
                         battle.pickAction(.high)
                     }
-                    ActionButton(label: "MED", accessibilityLabel: "Attack medium") {
+                    ActionButton(
+                        label: String(localized: "MED", comment: "Printed face of a button on the LCD screen; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Attack medium", comment: "VoiceOver label: attack the opponent's middle.")
+                    ) {
                         battle.pickAction(.medium)
                     }
-                    ActionButton(label: "LOW", accessibilityLabel: "Attack low") {
+                    ActionButton(
+                        label: String(localized: "LOW", comment: "Printed face of a button on the LCD screen; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Attack low", comment: "VoiceOver label: attack the opponent's lower body.")
+                    ) {
                         battle.pickAction(.low)
                     }
                 }
@@ -65,7 +74,10 @@ extension PetScreen {
                 .accessibilityHidden(!showsAttackButtons)
 
                 HStack(spacing: 4) {
-                    ActionButton(label: "DONE", accessibilityLabel: "Finish battle") {
+                    ActionButton(
+                        label: String(localized: "DONE", comment: "Printed face of the button that leaves a finished game; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Finish battle", comment: "VoiceOver label: leave the battle.")
+                    ) {
                         presenter.dismissBattle()
                     }
                 }
@@ -110,8 +122,7 @@ extension PetScreen {
         .minimumScaleFactor(0.7)
         .lineLimit(1)
         .accessibilityLabel(
-            "\(petName) \(battle.viewModel.petHP) HP,"
-                + " \(oppName) \(battle.viewModel.opponentHP) HP"
+            "\(petName) \(battle.viewModel.petHP) HP, \(oppName) \(battle.viewModel.opponentHP) HP"
         )
     }
 
@@ -123,12 +134,12 @@ extension PetScreen {
         case .introVS: ""
         case .introEnemy: battle.viewModel.opponentSpecies.displayName
         case .choosing: ""
-        case .attacking, .projectile: "ATTACK!"
-        case .opponentAttacking: "COUNTER!"
-        case .opponentProjectile: "INCOMING!"
+        case .attacking, .projectile: String(localized: "ATTACK!", comment: "LCD caption while your monster attacks; keep it short and capitalised.")
+        case .opponentAttacking: String(localized: "COUNTER!", comment: "LCD caption while the opponent strikes back; keep it short and capitalised.")
+        case .opponentProjectile: String(localized: "INCOMING!", comment: "LCD caption while the opponent's shot flies in; keep it short and capitalised.")
         case .impact: impactText(battle)
         case .victory: victoryText(battle)
-        case .defeat: "YOU LOSE"
+        case .defeat: String(localized: "YOU LOSE", comment: "LCD caption when the battle is lost; keep it short and capitalised.")
         }
     }
 
@@ -136,9 +147,9 @@ extension PetScreen {
         _ battle: BattlePresenter
     ) -> String {
         switch battle.viewModel.lastRoundOutcome {
-        case .playerHit: "HIT!"
-        case .opponentHit: "MISS!"
-        case .clash: "CLASH!"
+        case .playerHit: String(localized: "HIT!", comment: "LCD caption when an attack or guess lands; keep it short and capitalised.")
+        case .opponentHit: String(localized: "MISS!", comment: "LCD caption when your attack misses; keep it short and capitalised.")
+        case .clash: String(localized: "CLASH!", comment: "LCD caption when both attacks collide; keep it short and capitalised.")
         case .none: ""
         }
     }
@@ -147,8 +158,8 @@ extension PetScreen {
         _ battle: BattlePresenter
     ) -> String {
         switch battle.viewModel.result {
-        case .win: "YOU WIN!"
-        case .draw: "DRAW"
+        case .win: String(localized: "YOU WIN!", comment: "LCD caption when the battle is won; keep it short and capitalised.")
+        case .draw: String(localized: "DRAW", comment: "LCD caption when the battle ends level; keep it short and capitalised.")
         case .lose, .none: ""
         }
     }

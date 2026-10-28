@@ -19,10 +19,13 @@ struct WeatherOverlay: View {
         .lineLimit(1)
         .minimumScaleFactor(0.7)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-            "\(snapshot.condition.displayName), "
-                + WeatherTemperatureFormatter.string(for: snapshot.temperature)
-                + ", humidity \(humidityText)"
+        .accessibilityLabel(spokenLabel)
+    }
+
+    private var spokenLabel: String {
+        String(
+            localized: "\(snapshot.condition.displayName), \(WeatherTemperatureFormatter.string(for: snapshot.temperature)), humidity \(humidityText)",
+            comment: "VoiceOver: weather condition, temperature, then humidity; the arguments are already localized or numeric."
         )
     }
 

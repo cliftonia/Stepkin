@@ -42,10 +42,38 @@ struct ComplicationEntryTests {
         #expect(entry.moodKey == "hurt")
     }
 
-    @Test(arguments: ComplicationEntry.Mood.allCases)
-    func `the mood key is the raw identifier and the status word`(mood: ComplicationEntry.Mood) {
-        #expect(mood.rawValue.isEmpty == false)
-        #expect(Set(ComplicationEntry.Mood.allCases.map(\.rawValue)).count == 8)
+    /// One fixture per mood; each also trips every later check, so a wrong precedence would pick another mood.
+    private static let precedenceTable: [(mood: ComplicationEntry.Mood, state: PetState)] = ComplicationEntry.Mood.allCases.map {
+        var state = makeTestState(species: .emberkin, hunger: 0, strength: 0)
+        state.poopCount = 1
+        state.isSleeping = true
+        switch $0 {
+        case .gone: state.isDead = true
+        case .egg: state.isEgg = true
+        case .hurt: state.isInjured = true
+        case .hungry: break
+        case .weak: state.hungerHearts = StatHearts(4)
+        case .messy:
+            state.hungerHearts = StatHearts(4)
+            state.strengthHearts = StatHearts(4)
+        case .asleep:
+            state.hungerHearts = StatHearts(4)
+            state.strengthHearts = StatHearts(4)
+            state.poopCount = 0
+        case .happy:
+            state.hungerHearts = StatHearts(4)
+            state.strengthHearts = StatHearts(4)
+            state.poopCount = 0
+            state.isSleeping = false
+        }
+        return ($0, state)
+    }
+
+    @Test(arguments: precedenceTable)
+    func `each mood is the first match in the precedence order`(row: (mood: ComplicationEntry.Mood, state: PetState)) {
+        let entry = ComplicationEntry(date: date, state: row.state)
+        #expect(entry.moodKey == row.mood.rawValue)
+        #expect(entry.statusText == row.mood.rawValue)
     }
 
     @Test

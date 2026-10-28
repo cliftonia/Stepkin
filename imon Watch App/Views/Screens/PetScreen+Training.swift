@@ -65,10 +65,16 @@ extension PetScreen {
 
             ZStack {
                 HStack(spacing: 4) {
-                    ActionButton(label: "HIGH", accessibilityLabel: "Guess high") {
+                    ActionButton(
+                        label: String(localized: "HIGH", comment: "Printed face of a button on the LCD screen; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Guess high", comment: "VoiceOver label: guess that the next number is higher.")
+                    ) {
                         training.guessAction(.high)
                     }
-                    ActionButton(label: "LOW", accessibilityLabel: "Guess low") {
+                    ActionButton(
+                        label: String(localized: "LOW", comment: "Printed face of a button on the LCD screen; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Guess low", comment: "VoiceOver label: guess that the next number is lower.")
+                    ) {
                         training.guessAction(.low)
                     }
                 }
@@ -77,7 +83,10 @@ extension PetScreen {
                 .accessibilityHidden(!showsGuessButtons)
 
                 HStack(spacing: 4) {
-                    ActionButton(label: "DONE", accessibilityLabel: "Finish training") {
+                    ActionButton(
+                        label: String(localized: "DONE", comment: "Printed face of the button that leaves a finished game; keep it short and capitalised."),
+                        accessibilityLabel: String(localized: "Finish training", comment: "VoiceOver label: leave the training game.")
+                    ) {
                         presenter.dismissTraining()
                     }
                 }
@@ -137,17 +146,20 @@ extension PetScreen {
         let wins = training.viewModel.roundResults
             .filter(\.won).count
         let total = training.viewModel.roundResults.count
-        return "Score: \(wins) of \(total) correct"
+        return String(
+            localized: "Score: \(wins) of \(total) correct",
+            comment: "VoiceOver: training rounds won of rounds played; the arguments are two whole numbers."
+        )
     }
 
     private func trainingPhaseLabelText(
         _ training: TrainingPresenter
     ) -> String {
         switch training.viewModel.phase {
-        case .hit: "HIT!"
-        case .miss: "MISS"
-        case .victory: "WIN!"
-        case .defeat: "LOSE"
+        case .hit: String(localized: "HIT!", comment: "LCD caption when an attack or guess lands; keep it short and capitalised.")
+        case .miss: String(localized: "MISS", comment: "LCD caption when a training guess is wrong; keep it short and capitalised.")
+        case .victory: String(localized: "WIN!", comment: "LCD caption when a training game is won; keep it short and capitalised.")
+        case .defeat: String(localized: "LOSE", comment: "Stats row label for battles lost, and LCD caption for a lost game; keep it short and capitalised.")
         case .attacking, .projectile: "..."
         case .ready, .challenge: ""
         }
