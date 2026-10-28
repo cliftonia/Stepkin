@@ -18,8 +18,6 @@ nonisolated struct Weight: Codable, Sendable, Hashable {
         self.grams = max(Self.minGrams, min(Self.maxGrams, grams))
     }
 
-    var isOverweight: Bool { grams >= Self.maxGrams }
-
     /// Adds grams, saturating at `maxGrams`.
     mutating func add(_ amount: Int) {
         grams = min(Self.maxGrams, grams + amount)

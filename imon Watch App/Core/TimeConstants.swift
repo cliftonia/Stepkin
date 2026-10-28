@@ -109,15 +109,6 @@ nonisolated enum TimeConstants {
     /// Neglect this long (no training / no battling) drops one trained point.
     static let conditioningDecayInterval: TimeInterval = 43_200
 
-    /// Battle-power added per point of trained POW.
-    static let trainedPowerWeight: Double = 8.0
-
-    /// Battle-power added per strength heart.
-    static let strengthPowerWeight: Double = 5.0
-
-    /// Multiplier applied to battle power while the pet is overweight.
-    static let overweightPowerPenalty: Double = 0.5
-
     /// Activity factor at or above this grants the active HP bonus.
     static let activeHPFactorThreshold: Double = 0.5
 
