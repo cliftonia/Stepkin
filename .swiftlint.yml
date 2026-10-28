@@ -7,7 +7,6 @@ included:
   - Packages/StepkinKit/Tests
 
 excluded:
-  - imon Watch AppUITests
   - Packages/StepkinKit/.build
   # Per-species bitmap data + 14-way dispatch — data, not logic.
   - Packages/StepkinKit/Sources/StepkinSprites/Pets
