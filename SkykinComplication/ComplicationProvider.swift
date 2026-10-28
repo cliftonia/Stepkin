@@ -1,4 +1,5 @@
 import WidgetKit
+import AppIntents
 import Foundation
 
 /// The complication's view of one timeline snapshot. A deliberate mirror of the
@@ -22,6 +23,12 @@ struct WidgetEntry: TimelineEntry, Codable {
     let needsAttention: Bool
     /// A short state word the views show as text, e.g. `"happy"`.
     let statusText: String
+    /// Whether the pet is injured; absent in a timeline baked by an older app.
+    let isInjured: Bool?
+    /// Whether the pet is dead; absent in a timeline baked by an older app.
+    let isDead: Bool?
+    /// Whether the pet is still an egg; absent in a timeline baked by an older app.
+    let isEgg: Bool?
 }
 
 extension WidgetEntry {
@@ -39,7 +46,10 @@ extension WidgetEntry {
         hungerValue: 2,
         hungerMax: 4,
         needsAttention: false,
-        statusText: "happy"
+        statusText: "happy",
+        isInjured: nil,
+        isDead: nil,
+        isEgg: nil
     )
 }
 
@@ -70,6 +80,15 @@ struct ComplicationProvider: TimelineProvider {
         let last = entries.last ?? .placeholder
         let next = last.date.addingTimeInterval(3_600)
         completion(Timeline(entries: entries, policy: .after(next)))
+    }
+
+    /// Tells the Smart Stack when to raise the widget: while the baked timeline shows the
+    /// pet calling for care.
+    func relevance() async -> WidgetRelevance<Void> {
+        let attributes = RelevanceWindows.windows(in: loadEntries()).map {
+            WidgetRelevanceAttribute(context: RelevantContext.date(interval: $0, kind: .scheduled))
+        }
+        return WidgetRelevance(attributes)
     }
 
     private func loadEntries() -> [WidgetEntry] {
