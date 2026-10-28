@@ -206,8 +206,6 @@ struct PetScreen: View {
                 normalButtons
                 debugNameOverlay
             }
-            // The shared layout insets the buttons by 4 points; home keeps full width.
-            .padding(.horizontal, -4)
         }
     }
 
