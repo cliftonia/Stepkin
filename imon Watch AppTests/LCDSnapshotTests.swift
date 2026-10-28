@@ -50,7 +50,7 @@ struct LCDSnapshotTests {
             configuration: LCDDisplayConfiguration(leftSprite: pet, rightSprite: SharedSprites.meatServing.frames[0], moonPhase: .full)
         )
     ] + WeatherIconCondition.allCases.map { condition in
-        LCDSnapshotCase("weather-\(condition)", weatherPhase: 3, configuration: scene(weather: condition))
+        LCDSnapshotCase("weather-\(condition)", weatherPhase: condition == .storm ? 0 : 3, configuration: scene(weather: condition))
     }
 
     /// A Dotkin idling in the left slot under a full moon.

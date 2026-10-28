@@ -47,8 +47,8 @@ import WatchKit
         #expect(WKInterfaceDevice.hapticsEnabled)
     }
 
-    @Test func `the version label is not empty`() throws {
+    @Test func `the version label carries a real version`() throws {
         let (presenter, _) = try makeTestSubject()
-        #expect(!presenter.versionLabel.isEmpty)
+        #expect(!presenter.versionLabel.contains("—"))
     }
 }

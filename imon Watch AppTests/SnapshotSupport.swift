@@ -116,6 +116,13 @@ struct SnapshotBitmap: Equatable {
     private static let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
     private static let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
 
+    /// Wraps raw RGBA bytes, for building small fixtures.
+    init(width: Int, height: Int, bytes: [UInt8]) {
+        self.width = width
+        self.height = height
+        self.bytes = bytes
+    }
+
     /// Redraws `image` into an sRGB RGBA8 buffer; nil if the context fails.
     init?(_ image: CGImage) {
         let width = image.width
