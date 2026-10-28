@@ -65,10 +65,4 @@ final class StepActivityStore {
             throttle.record(now: now, success: false)
         }
     }
-
-    /// Creates the store with the default live step-count provider.
-    static func makeDefault() -> StepActivityStore {
-        StepActivityStore()
-    }
-
 }

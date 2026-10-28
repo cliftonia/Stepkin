@@ -63,7 +63,7 @@ final class AppPresenter {
     init(
         store: PetStateStore = JSONPetStateStore.live(),
         weatherStore: WeatherStore = .makeDefault(),
-        stepActivityStore: StepActivityStore = .makeDefault(),
+        stepActivityStore: StepActivityStore = StepActivityStore(),
         settings: SettingsStore = SettingsStore(),
         permissions: PermissionRequester = .live()
     ) {
@@ -224,7 +224,7 @@ final class AppPresenter {
         guard let petPresenter else { return }
         let presenter = StatsPresenter()
         presenter.update(
-            from: petPresenter.getCurrentState(),
+            from: petPresenter.state,
             steps: settings.stepsEnabled ? stepActivityStore.todaySteps : nil,
             stepsEnabled: settings.stepsEnabled
         )
@@ -261,7 +261,7 @@ final class AppPresenter {
     /// flips to the death phase if the pet has died.
     func checkDeath() {
         guard let petPresenter else { return }
-        let state = petPresenter.getCurrentState()
+        let state = petPresenter.state
         if state.isDead {
             startDeath(state: state)
         }
@@ -272,7 +272,7 @@ final class AppPresenter {
         #if DEBUG
         // Kill instead of reset in DEBUG so the Death screen is verifiable on demand.
         if let petPresenter {
-            var state = petPresenter.getCurrentState()
+            var state = petPresenter.state
             state.isDead = true
             persist(state)
             petPresenter.stopGameLoop()

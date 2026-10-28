@@ -5,16 +5,9 @@ import Foundation
 @Suite("JSONPetStateStore")
 struct JSONPetStateStoreTests {
 
-    private func makeDefaults() throws -> UserDefaults {
-        let name = "JSONPetStateStoreTests-" + UUID().uuidString
-        let defaults = try #require(UserDefaults(suiteName: name))
-        defaults.removePersistentDomain(forName: name)
-        return defaults
-    }
-
     @Test
     func `a save round-trips through the store`() throws {
-        let defaults = try makeDefaults()
+        let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")
         let store = JSONPetStateStore.live(defaults: defaults)
         var state = makeTestState(species: .hopkin)
         state.lifetimeActiveSteps = 4_321
@@ -28,7 +21,7 @@ struct JSONPetStateStoreTests {
 
     @Test
     func `an undecodable save falls back to the previous good one`() throws {
-        let defaults = try makeDefaults()
+        let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")
         let store = JSONPetStateStore.live(defaults: defaults)
         try store.save(makeTestState(species: .dotkin))
         try store.save(makeTestState(species: .hopkin))
@@ -42,7 +35,7 @@ struct JSONPetStateStoreTests {
 
     @Test
     func `an undecodable save with no backup still throws`() throws {
-        let defaults = try makeDefaults()
+        let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")
         let store = JSONPetStateStore.live(defaults: defaults)
         defaults.set(Data("not json".utf8), forKey: JSONPetStateStore.key)
 
@@ -51,7 +44,7 @@ struct JSONPetStateStoreTests {
 
     @Test
     func `delete clears the backup too`() throws {
-        let defaults = try makeDefaults()
+        let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")
         let store = JSONPetStateStore.live(defaults: defaults)
         try store.save(makeTestState())
         try store.save(makeTestState())

@@ -88,7 +88,7 @@ struct OnboardingScreen: View {
 
     private var pageDots: some View {
         HStack(spacing: 4) {
-            ForEach(presenter.viewModel.tips) { tip in
+            ForEach(OnboardingTip.walkthrough) { tip in
                 Circle()
                     .fill(
                         tip.id == presenter.viewModel.index

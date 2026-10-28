@@ -29,22 +29,18 @@ struct PetPresenterTests {
         steps: Int? = nil,
         finalSteps: Int? = nil
     ) -> PetPresenter {
-        let store = PetStateStore(
-            save: { box.saved.append($0) }, load: { nil }, delete: {}
-        )
-        return PetPresenter(
+        makePetPresenter(
             state: state,
-            store: store,
-            currentSteps: { steps },
-            finalSteps: { _ in finalSteps },
-            onDeath: onDeath,
-            notificationScheduler: NotificationScheduler(
+            store: PetStateStore(save: { box.saved.append($0) }, load: { nil }, delete: {}),
+            scheduler: NotificationScheduler(
                 schedule: { scheduler.scheduled = $0 },
                 notify: { _, _, _ in },
                 cancelAll: { scheduler.cancelCount += 1 },
                 requestAuthorization: { true }
             ),
-            complicationReloader: ComplicationReloader(reload: {})
+            steps: steps,
+            finalSteps: finalSteps,
+            onDeath: onDeath
         )
     }
 
@@ -68,7 +64,7 @@ struct PetPresenterTests {
 
         presenter.applyBattleResult(.win)
 
-        #expect(presenter.getCurrentState().battleWins == 3)
+        #expect(presenter.state.battleWins == 3)
         #expect(box.saved.last?.battleWins == 3)
     }
 
@@ -79,7 +75,7 @@ struct PetPresenterTests {
 
         presenter.applyTrainingResult(won: true)
 
-        let strength = presenter.getCurrentState().strengthHearts.value
+        let strength = presenter.state.strengthHearts.value
         #expect(strength > 1)
         #expect(box.saved.last?.strengthHearts.value == strength)
     }
@@ -96,7 +92,7 @@ struct PetPresenterTests {
 
         presenter.environmentDidChange()
 
-        #expect(presenter.getCurrentState().isDead)
+        #expect(presenter.state.isDead)
         #expect(deaths.count == 1)
         #expect(box.saved.last?.isDead == true)
 
@@ -123,8 +119,8 @@ struct PetPresenterTests {
         presenter.stopGameLoop()
 
         // 1,500 already credited + the 1,500 tail recovered + today's 200.
-        #expect(presenter.getCurrentState().lifetimeActiveSteps == 3_200)
-        #expect(presenter.getCurrentState().stepsCreditedToday == 200)
+        #expect(presenter.state.lifetimeActiveSteps == 3_200)
+        #expect(presenter.state.stepsCreditedToday == 200)
     }
 
     /// The recovered tail must also decide the lazy-day penalty: a day that
@@ -140,7 +136,7 @@ struct PetPresenterTests {
         await presenter.dayRecoveryTask?.value
         presenter.stopGameLoop()
 
-        #expect(presenter.getCurrentState().evolutionGoalPenalty == 0)
+        #expect(presenter.state.evolutionGoalPenalty == 0)
     }
 
     /// A missing tail must delay the rollover, never stall it.
@@ -155,8 +151,8 @@ struct PetPresenterTests {
         await presenter.dayRecoveryTask?.value
         presenter.stopGameLoop()
 
-        #expect(presenter.getCurrentState().stepsCreditedToday == 120)
-        #expect(presenter.getCurrentState().stepTrackedDay?.isSameDay(as: .now) == true)
+        #expect(presenter.state.stepsCreditedToday == 120)
+        #expect(presenter.state.stepTrackedDay?.isSameDay(as: .now) == true)
     }
 
     // MARK: - Scene Phase
@@ -297,7 +293,7 @@ struct PetPresenterTests {
 
         presenter.performEvolution(to: .hopkin)
 
-        #expect(presenter.getCurrentState().species == .hopkin)
+        #expect(presenter.state.species == .hopkin)
         #expect(presenter.viewModel.activity == .idle)
         #expect(box.saved.last?.species == .hopkin)
     }

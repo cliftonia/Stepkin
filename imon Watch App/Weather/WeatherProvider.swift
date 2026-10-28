@@ -4,7 +4,7 @@ import WeatherKit
 /// Fetches the current weather for the device's location. A witness so the
 /// WeatherKit/CoreLocation dependency can be mocked in tests and previews.
 nonisolated struct WeatherProvider: Sendable {
-    /// The fetch closure, supplied by the factory (`.live`, `.mock`, `.mockFailing`).
+    /// The fetch closure, supplied by the factory (`.live`, `.mock`).
     let fetchCurrent: @Sendable () async throws -> WeatherSnapshot
 }
 
@@ -30,13 +30,6 @@ nonisolated extension WeatherProvider {
     /// Creates a provider that answers every fetch with the given snapshot.
     static func mock(_ snapshot: WeatherSnapshot) -> WeatherProvider {
         WeatherProvider { snapshot }
-    }
-
-    /// Creates a provider that fails every fetch with the given error.
-    static func mockFailing(
-        _ error: WeatherError = .weatherUnavailable
-    ) -> WeatherProvider {
-        WeatherProvider { throw error }
     }
 }
 

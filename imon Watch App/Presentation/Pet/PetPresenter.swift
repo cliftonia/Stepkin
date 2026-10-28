@@ -254,11 +254,6 @@ final class PetPresenter {
         save()
     }
 
-    // MARK: - State Access
-
-    /// Returns the current pet state.
-    func getCurrentState() -> PetState { state }
-
     // MARK: - Menu Navigation
 
     /// Crown rotation maps straight onto the menu ring (ignored mid-activity).

@@ -12,13 +12,16 @@ nonisolated extension LocationProvider {
 
     /// Builds the witness backed by CoreLocation: its `currentLocation`
     /// requests authorization, then returns the first good fix, throwing
-    /// `WeatherError.locationUnavailable` on denial or when `timeout` elapses.
-    static func live(timeout: Duration = .seconds(10)) -> LocationProvider {
+    /// `WeatherError.locationUnavailable` on denial or after ten seconds.
+    static func live() -> LocationProvider {
         LocationProvider {
             await LocationAuthorizer.shared.requestIfNeeded()
             return try await firstFix(timeout: timeout)
         }
     }
+
+    /// How long to wait for a fix before giving up.
+    private static let timeout: Duration = .seconds(10)
 
     /// Returns the first good fix from a live updates session, throwing
     /// `WeatherError.locationUnavailable` on timeout or denial.

@@ -17,24 +17,16 @@ struct PetNotificationsTests {
         _ capture: Capture,
         reloader: ComplicationReloader = ComplicationReloader(reload: {})
     ) -> PetPresenter {
-        let store = PetStateStore(save: { _ in }, load: { nil }, delete: {})
-        return PetPresenter(
+        makePetPresenter(
             state: state,
-            store: store,
-            notificationScheduler: NotificationScheduler(
+            scheduler: NotificationScheduler(
                 schedule: { capture.scheduled = $0 },
                 notify: { _, _, _ in },
                 cancelAll: {},
                 requestAuthorization: { true }
             ),
-            complicationReloader: reloader
+            reloader: reloader
         )
-    }
-
-    private func today(at hour: Int) -> Date {
-        let calendar = Calendar.current
-        let midnight = calendar.startOfDay(for: Date(timeIntervalSince1970: 1_700_000_000))
-        return calendar.date(byAdding: .hour, value: hour, to: midnight) ?? midnight
     }
 
     @Test

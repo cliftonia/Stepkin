@@ -6,37 +6,19 @@ import SwiftUI
 /// something on screen animates.
 struct LCDDisplay: View {
 
-    /// Everything a frame draws — sprites, poop, weather, and the call sign; the accessors
-    /// below read directly off it.
+    /// Everything a frame draws — sprites, poop, weather, and the call sign.
     let configuration: LCDDisplayConfiguration
 
     /// The active palette - `nightRed` in battery-saver mode, else `classic`.
     @Environment(\.lcdTheme) private var theme
 
-    // Field accessors so the drawing code (and the +Weather/+Inside extensions)
-    // read directly off the configuration.
-    var leftSprite: SpriteFrame { configuration.leftSprite }
-    var rightSprite: SpriteFrame? { configuration.rightSprite }
-    var poopCount: Int { configuration.poopCount }
-    var stinkPhase: Int { configuration.stinkPhase }
-    var lightsOn: Bool { configuration.lightsOn }
-    var leftSpriteOffsetX: Int { configuration.leftSpriteOffsetX }
-    var leftSpriteOffsetY: Int { configuration.leftSpriteOffsetY }
-    var rightSpriteOffsetY: Int { configuration.rightSpriteOffsetY }
-    var weatherCondition: WeatherIconCondition? { configuration.weatherCondition }
-    var moonPhase: MoonPhase { configuration.moonPhase }
-    var dayPhase: DayPhase { configuration.dayPhase }
-    var stormFlash: Bool { configuration.stormFlash }
-    var evolveFlash: Bool { configuration.evolveFlash }
-    var showCallSign: Bool { configuration.showCallSign }
-
     private var isAnimated: Bool {
-        weatherCondition != nil || stormFlash || evolveFlash || showCallSign
+        configuration.weatherCondition != nil || configuration.stormFlash || configuration.evolveFlash || configuration.showCallSign
     }
 
     /// Lit at night - the weather plays in a window inside a room.
     private var isIndoor: Bool {
-        dayPhase == .inside
+        configuration.dayPhase == .inside
     }
 
     private static let weatherFrameInterval: TimeInterval = 0.18
@@ -44,12 +26,12 @@ struct LCDDisplay: View {
     // MARK: - Colors
 
     private var backgroundColor: Color {
-        theme.backgroundColor(lightsOn: lightsOn)
+        theme.backgroundColor(lightsOn: configuration.lightsOn)
     }
 
     /// The "lit pixel" colour. Not private - the weather extension draws with it.
     var basePixelColor: Color {
-        theme.pixelColor(lightsOn: lightsOn)
+        theme.pixelColor(lightsOn: configuration.lightsOn)
     }
 
     /// True when the screen background is dark - the lights-off night scene or the
@@ -57,7 +39,7 @@ struct LCDDisplay: View {
     /// lift the faint grid and ground, since a bright line at low opacity is all
     /// but invisible on black. On the lit green day screen the low opacity reads.
     var isDarkScreen: Bool {
-        theme == .nightRed || !lightsOn
+        theme == .nightRed || !configuration.lightsOn
     }
 
     /// The room's ambient shade, away from the lamp's bright pool. Shared by the
@@ -146,8 +128,8 @@ struct LCDDisplay: View {
             // Re-stamp the eyes over the front weather; skipped on flash frames.
             if !isFlashFrame(phase: weatherPhase) {
                 fillInteriorHoles(
-                    leftSprite, in: context,
-                    offsetX: leftSpriteOffsetX, offsetY: leftSpriteOffsetY,
+                    configuration.leftSprite, in: context,
+                    offsetX: configuration.leftSpriteOffsetX, offsetY: configuration.leftSpriteOffsetY,
                     pixelWidth: pixelWidth, pixelHeight: pixelHeight
                 )
             }
@@ -170,7 +152,7 @@ struct LCDDisplay: View {
         pixelWidth: CGFloat,
         pixelHeight: CGFloat
     ) {
-        guard showCallSign, (phase / 3) % 2 == 0 else { return }
+        guard configuration.showCallSign, (phase / 3) % 2 == 0 else { return }
 
         context.fillLCDCells(
             [
@@ -191,19 +173,19 @@ struct LCDDisplay: View {
         pixelHeight: CGFloat
     ) {
         drawSprite(
-            leftSprite,
+            configuration.leftSprite,
             in: context,
-            offsetX: leftSpriteOffsetX,
-            offsetY: leftSpriteOffsetY,
+            offsetX: configuration.leftSpriteOffsetX,
+            offsetY: configuration.leftSpriteOffsetY,
             pixelWidth: pixelWidth,
             pixelHeight: pixelHeight
         )
-        if let rightSprite {
+        if let rightSprite = configuration.rightSprite {
             drawSprite(
                 rightSprite,
                 in: context,
                 offsetX: 20,
-                offsetY: rightSpriteOffsetY,
+                offsetY: configuration.rightSpriteOffsetY,
                 pixelWidth: pixelWidth,
                 pixelHeight: pixelHeight
             )
@@ -276,7 +258,7 @@ struct LCDDisplay: View {
         pixelWidth: CGFloat,
         pixelHeight: CGFloat
     ) {
-        guard poopCount > 0 else { return }
+        guard configuration.poopCount > 0 else { return }
         let color = basePixelColor
 
         // Poop pile positions on the 32x20 LCD (ground at row 19)
@@ -292,7 +274,7 @@ struct LCDDisplay: View {
             (0, 2), (1, 2), (2, 2)
         ]
 
-        for i in 0..<min(poopCount, 4) {
+        for i in 0..<min(configuration.poopCount, 4) {
             let base = bases[i]
             for p in pilePixels {
                 context.fillCell(
@@ -305,7 +287,7 @@ struct LCDDisplay: View {
 
         let stinkColor = basePixelColor.opacity(0.7)
         let stinkPixels: [(x: Int, y: Int)]
-        if stinkPhase % 2 == 0 {
+        if configuration.stinkPhase % 2 == 0 {
             stinkPixels = [(26, 12), (28, 11), (30, 12)]
         } else {
             stinkPixels = [(25, 11), (27, 12), (31, 11)]

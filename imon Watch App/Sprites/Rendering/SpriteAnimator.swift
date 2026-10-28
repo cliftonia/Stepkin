@@ -25,6 +25,12 @@ final class SpriteAnimator {
         timer?.invalidate()
     }
 
+    /// Plays a catalog animation; shared by every presenter so the
+    /// `SpriteCatalog.animation(for:kind:)` lookup lives in one place.
+    func play(_ kind: SpriteCatalog.AnimationKind, for species: PetSpecies) {
+        play(SpriteCatalog.animation(for: species, kind: kind))
+    }
+
     /// Replaces whatever is playing and starts from frame 0. Single-frame
     /// animations just display their frame — no timer is scheduled.
     func play(_ animation: SpriteAnimation) {

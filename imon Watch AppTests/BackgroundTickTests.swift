@@ -30,12 +30,6 @@ struct BackgroundTickTests {
         )
     }
 
-    private func today(at hour: Int) -> Date {
-        let calendar = Calendar.current
-        let midnight = calendar.startOfDay(for: Date(timeIntervalSince1970: 1_700_000_000))
-        return calendar.date(byAdding: .hour, value: hour, to: midnight) ?? midnight
-    }
-
     // MARK: - Tests
 
     @Test

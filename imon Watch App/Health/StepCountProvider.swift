@@ -65,11 +65,6 @@ extension StepCountProvider {
         return Int(result?.sumQuantity()?.doubleValue(for: .count()) ?? 0)
     }
 
-    /// Builds a test witness reporting `steps` for any day, past days included.
-    static func mock(steps: Int = 0) -> StepCountProvider {
-        StepCountProvider(fetchTodaySteps: { steps })
-    }
-
     /// Requests read access to step count. Safe to call at every launch;
     /// HealthKit only prompts once. No-op if HealthKit is unavailable.
     static func requestAuthorization() async {

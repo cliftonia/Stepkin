@@ -33,9 +33,9 @@ nonisolated extension NotificationScheduler {
         return content
     }
 
-    /// Creates the witness backed by `UNUserNotificationCenter`; `now` is the
-    /// clock the scheduled delays are measured from.
-    static func live(now: @escaping @Sendable () -> Date = { Date() }) -> NotificationScheduler {
+    /// Creates the witness backed by `UNUserNotificationCenter`; scheduled
+    /// delays are measured from the moment each batch is scheduled.
+    static func live() -> NotificationScheduler {
         NotificationScheduler(
             schedule: { notifications in
                 let center = UNUserNotificationCenter.current()
@@ -47,7 +47,7 @@ nonisolated extension NotificationScheduler {
                     )
                     // Floor of one second so a past fire date cannot yield a
                     // non-positive interval.
-                    let interval = max(1, notification.fireDate.timeIntervalSince(now()))
+                    let interval = max(1, notification.fireDate.timeIntervalSince(Date()))
                     let trigger = UNTimeIntervalNotificationTrigger(
                         timeInterval: interval, repeats: false
                     )
@@ -58,7 +58,7 @@ nonisolated extension NotificationScheduler {
                 }
             },
             notify: { title, body, species in
-                let content = makeContent(title: title, body: body, species: species, fireDate: now())
+                let content = makeContent(title: title, body: body, species: species, fireDate: Date())
                 let request = UNNotificationRequest(
                     identifier: "event-\(title)", content: content, trigger: nil
                 )

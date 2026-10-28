@@ -19,7 +19,7 @@ extension LCDDisplay {
         pixelHeight: CGFloat
     ) {
         // Indoors the weather is clipped to the window, white on the dark pane.
-        let indoor = dayPhase == .inside
+        let indoor = configuration.dayPhase == .inside
         /// Paints the given cells at the given opacity: white clipped to the
         /// window when indoors, the base pixel colour unclipped otherwise.
         func fill(_ cells: [(x: Int, y: Int)], _ opacity: Double) {
@@ -54,7 +54,7 @@ extension LCDDisplay {
         phase: Int,
         fill: ([(x: Int, y: Int)], Double) -> Void
     ) {
-        switch weatherCondition {
+        switch configuration.weatherCondition {
         case .rain, .storm:
             // Storm's lightning flash is drawn over the whole scene afterwards.
             fill(Self.rainBackCells(phase: phase), 0.4)
@@ -69,11 +69,11 @@ extension LCDDisplay {
             fill(Self.fogBackCells(phase: phase), 0.25)
             fill(Self.fogFrontCells(phase: phase), 0.45)
         case .clear:
-            if dayPhase == .day {
+            if configuration.dayPhase == .day {
                 fill(Self.sunCells(phase: phase), 0.4)
             } else {
                 fill(Self.moonDiscCells(), 0.3)
-                fill(Self.moonLitCells(moonPhase), 1)
+                fill(Self.moonLitCells(configuration.moonPhase), 1)
                 fill(Self.starCells(phase: phase), 1)
                 fill(Self.shootingStarCells(phase: phase), 1)
             }
@@ -88,7 +88,7 @@ extension LCDDisplay {
     /// flash, or the evolution flash. Indoors the storm shows only as rain
     /// through the window.
     private var isLightningActive: Bool {
-        (weatherCondition == .storm && dayPhase != .inside) || stormFlash || evolveFlash
+        (configuration.weatherCondition == .storm && configuration.dayPhase != .inside) || configuration.stormFlash || configuration.evolveFlash
     }
 
     /// Whether the current phase is a lightning white-out: the whole screen is
@@ -100,7 +100,7 @@ extension LCDDisplay {
         }
         // Storm and evolution both strobe on the steady VS cadence; weather
         // lightning uses its own irregular timing.
-        return stormFlash || evolveFlash
+        return configuration.stormFlash || configuration.evolveFlash
             ? Self.isVSFlash(phase)
             : Self.isLightningFlash(phase)
     }
@@ -128,20 +128,20 @@ extension LCDDisplay {
         }
 
         // The "VS" sits under the flash, so each lightning pop washes over it.
-        if stormFlash {
+        if configuration.stormFlash {
             fillCells(Self.vsShadowCells(), basePixelColor.opacity(0.3))
             fillCells(Self.vsTextCells(), basePixelColor)
         }
 
         guard isFlashFrame(phase: phase) else { return }
 
-        let flashColor = lightsOn ? Self.lightningFlashColor : Color(white: 0.35)
+        let flashColor = configuration.lightsOn ? Self.lightningFlashColor : Color(white: 0.35)
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
             with: .color(flashColor.opacity(0.9))
         )
         // The evolution flash is a clean white-out; only storms throw bolts.
-        guard !evolveFlash else { return }
+        guard !configuration.evolveFlash else { return }
         // Bolts in the LCD pixel colour, dark against the lit screen.
         fillCells(Self.lightningBoltCells(), basePixelColor)
     }
