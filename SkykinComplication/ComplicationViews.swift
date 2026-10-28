@@ -74,7 +74,7 @@ struct CircularView: View {
             AccessoryWidgetBackground()
             SpriteCanvas(rows: entry.spriteRows).padding(5)
         }
-        .accessibilityLabel("Stepkin, \(entry.statusText)")
+        .accessibilityLabel("Stepkin, \(entry.moodText)")
     }
 }
 
@@ -93,13 +93,15 @@ struct RectangularView: View {
                     .font(.headline)
                     .widgetAccentable()
                 HeartsRow(value: entry.hungerValue, max: entry.hungerMax)
-                Text(entry.needsAttention ? "needs \(entry.statusText)" : entry.statusText)
+                Text(entry.needsAttention
+                    ? String(localized: "needs \(entry.moodText)", comment: "Rectangular complication: a care call, e.g. needs hungry.")
+                    : entry.moodText)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
             Spacer(minLength: 0)
         }
-        .accessibilityLabel("\(entry.speciesName), \(entry.statusText)")
+        .accessibilityLabel("\(entry.speciesName), \(entry.moodText)")
     }
 }
 
@@ -111,7 +113,7 @@ struct InlineView: View {
 
     var body: some View {
         Label(
-            "Stepkin \u{00b7} \(entry.statusText)",
+            "Stepkin \u{00b7} \(entry.moodText)",
             systemImage: entry.needsAttention ? "exclamationmark.circle" : "pawprint"
         )
     }
@@ -127,9 +129,9 @@ struct CornerView: View {
         SpriteCanvas(rows: entry.spriteRows)
             .widgetLabel {
                 Gauge(value: Double(entry.hungerValue), in: 0...Double(Swift.max(1, entry.hungerMax))) {
-                    Text(entry.statusText)
+                    Text(entry.moodText)
                 }
             }
-            .accessibilityLabel("Stepkin, \(entry.statusText)")
+            .accessibilityLabel("Stepkin, \(entry.moodText)")
     }
 }

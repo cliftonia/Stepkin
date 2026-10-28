@@ -18,6 +18,7 @@ struct ComplicationEntryTests {
         #expect(entry.hungerMax == PetSpecies.emberkin.maxHunger)
         #expect(entry.needsAttention == false)
         #expect(entry.statusText == "happy")
+        #expect(entry.moodKey == "happy")
         #expect(entry.spriteRows.count == 16)
     }
 
@@ -27,6 +28,7 @@ struct ComplicationEntryTests {
         let entry = ComplicationEntry(date: date, state: state)
         #expect(entry.needsAttention)
         #expect(entry.statusText == "hungry")
+        #expect(entry.moodKey == "hungry")
     }
 
     @Test
@@ -37,5 +39,22 @@ struct ComplicationEntryTests {
         #expect(entry.isInjured)
         #expect(entry.needsAttention)
         #expect(entry.statusText == "hurt")
+        #expect(entry.moodKey == "hurt")
+    }
+
+    @Test(arguments: ComplicationEntry.Mood.allCases)
+    func `the mood key is the raw identifier and the status word`(mood: ComplicationEntry.Mood) {
+        #expect(mood.rawValue.isEmpty == false)
+        #expect(Set(ComplicationEntry.Mood.allCases.map(\.rawValue)).count == 8)
+    }
+
+    @Test
+    func `a dead pet reads as gone and an egg as egg`() {
+        var dead = makeTestState(species: .emberkin)
+        dead.isDead = true
+        #expect(ComplicationEntry(date: date, state: dead).moodKey == "gone")
+        var egg = makeTestState(species: .emberkin)
+        egg.isEgg = true
+        #expect(ComplicationEntry(date: date, state: egg).moodKey == "egg")
     }
 }

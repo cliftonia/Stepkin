@@ -22,6 +22,8 @@ struct WidgetEntry: TimelineEntry, Codable, Sendable {
     let needsAttention: Bool
     /// A short state word the views show as text, e.g. `"happy"`.
     let statusText: String
+    /// The mood identifier to localize; absent in a timeline baked by an older app.
+    let moodKey: String?
     /// Whether the pet is injured; absent in a timeline baked by an older app.
     let isInjured: Bool?
     /// Whether the pet is dead; absent in a timeline baked by an older app.
@@ -46,8 +48,27 @@ extension WidgetEntry {
         hungerMax: 4,
         needsAttention: false,
         statusText: "happy",
+        moodKey: "happy",
         isInjured: nil,
         isDead: nil,
         isEgg: nil
     )
+}
+
+extension WidgetEntry {
+    /// The mood word in the viewer's language. A known `moodKey` resolves through
+    /// the catalog; a missing or unknown key falls back to the baked `statusText`.
+    var moodText: String {
+        switch moodKey {
+        case "gone": String(localized: "gone", comment: "Complication mood: the pet has died.")
+        case "egg": String(localized: "egg", comment: "Complication mood: the pet is still an egg.")
+        case "hurt": String(localized: "hurt", comment: "Complication mood: the pet is injured.")
+        case "hungry": String(localized: "hungry", comment: "Complication mood: the pet's hunger hearts are empty.")
+        case "weak": String(localized: "weak", comment: "Complication mood: the pet's strength hearts are empty.")
+        case "messy": String(localized: "messy", comment: "Complication mood: the pet has left a mess to clean.")
+        case "asleep": String(localized: "asleep", comment: "Complication mood: the pet is sleeping.")
+        case "happy": String(localized: "happy", comment: "Complication mood: the pet needs nothing.")
+        case .some, .none: statusText
+        }
+    }
 }

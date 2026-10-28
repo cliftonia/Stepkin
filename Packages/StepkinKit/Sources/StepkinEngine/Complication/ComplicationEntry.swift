@@ -28,6 +28,9 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
     public let isEgg: Bool
     /// A one-word mood for the inline complication ("happy", "hungry", …).
     public let statusText: String
+    /// The mood as a stable identifier (a `Mood` raw value) the widget localizes;
+    /// `statusText` stays alongside it so a stale timeline still renders.
+    public let moodKey: String
 
     /// Creates an entry from its baked values; the serialised keys are the
     /// widget's decoding contract.
@@ -41,7 +44,8 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
         isInjured: Bool,
         isDead: Bool,
         isEgg: Bool,
-        statusText: String
+        statusText: String,
+        moodKey: String
     ) {
         self.date = date
         self.speciesName = speciesName
@@ -53,12 +57,14 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
         self.isDead = isDead
         self.isEgg = isEgg
         self.statusText = statusText
+        self.moodKey = moodKey
     }
 
     /// Creates an entry from a state snapshot and the sprite rows to bake,
     /// deriving the display values and the mood word from the pet's status.
     public init(date: Date, state: PetState, spriteRows: [UInt16]) {
         let status = PetStatus(from: state)
+        let mood = Mood(for: status)
         self.init(
             date: date,
             speciesName: status.species.displayName,
@@ -69,21 +75,27 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
             isInjured: status.isInjured,
             isDead: status.isDead,
             isEgg: status.isEgg,
-            statusText: Self.mood(for: status)
+            statusText: mood.rawValue,
+            moodKey: mood.rawValue
         )
     }
 
-    /// Status word for the complication face. The check order is the
-    /// precedence: first match wins, so `asleep` and `happy` appear only when
-    /// every earlier state is false.
-    private static func mood(for status: PetStatus) -> String {
-        if status.isDead { return "gone" }
-        if status.isEgg { return "egg" }
-        if status.isInjured { return "hurt" }
-        if status.hungerHearts.isEmpty { return "hungry" }
-        if status.strengthHearts.isEmpty { return "weak" }
-        if status.poopCount > 0 { return "messy" }
-        if status.isSleeping { return "asleep" }
-        return "happy"
+    /// The pet's mood for the complication face; the raw value is the identifier
+    /// baked as `moodKey`, which the widget turns into a localized word.
+    public enum Mood: String, Sendable, CaseIterable {
+        case gone, egg, hurt, hungry, weak, messy, asleep, happy
+
+        /// Picks the mood for a status. The check order is the precedence: first
+        /// match wins, so `asleep` and `happy` appear only when every earlier
+        /// state is false.
+        init(for status: PetStatus) {
+            if status.isDead { self = .gone; return }
+            if status.isEgg { self = .egg; return }
+            if status.isInjured { self = .hurt; return }
+            if status.hungerHearts.isEmpty { self = .hungry; return }
+            if status.strengthHearts.isEmpty { self = .weak; return }
+            if status.poopCount > 0 { self = .messy; return }
+            self = status.isSleeping ? .asleep : .happy
+        }
     }
 }

@@ -22,6 +22,33 @@
     },
     "Your pet at a glance." : {
 
+    },
+    "asleep" : {
+      "comment" : "Complication mood: the pet is sleeping."
+    },
+    "egg" : {
+      "comment" : "Complication mood: the pet is still an egg."
+    },
+    "gone" : {
+      "comment" : "Complication mood: the pet has died."
+    },
+    "happy" : {
+      "comment" : "Complication mood: the pet needs nothing."
+    },
+    "hungry" : {
+      "comment" : "Complication mood: the pet's hunger hearts are empty."
+    },
+    "hurt" : {
+      "comment" : "Complication mood: the pet is injured."
+    },
+    "messy" : {
+      "comment" : "Complication mood: the pet has left a mess to clean."
+    },
+    "needs %@" : {
+      "comment" : "Rectangular complication: a care call, e.g. needs hungry."
+    },
+    "weak" : {
+      "comment" : "Complication mood: the pet's strength hearts are empty."
     }
   },
   "version" : "1.0"

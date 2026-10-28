@@ -82,6 +82,7 @@ struct RelevanceWindowsTests {
             hungerMax: 4,
             needsAttention: calling,
             statusText: calling ? "hungry" : "happy",
+            moodKey: calling ? "hungry" : "happy",
             isInjured: nil,
             isDead: isDead,
             isEgg: isEgg
