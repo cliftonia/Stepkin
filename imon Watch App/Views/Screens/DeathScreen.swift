@@ -22,12 +22,12 @@ struct DeathScreen: View {
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
-                Text(presenter.viewModel.speciesName)
+                Text(presenter.configuration.speciesName)
                     .font(.lcd(11))
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
 
-                Text("Age: \(presenter.viewModel.ageDays) days")
+                Text("Age: \(presenter.configuration.ageDays) days")
                     .font(.lcd(10))
                     .foregroundStyle(Color.gray)
                     .minimumScaleFactor(0.7)
