@@ -49,3 +49,6 @@ Tools/comments/
 # Sprite tooling generated artifacts
 Tools/__pycache__/
 Tools/sprites_png/
+
+# Snapshot test failures
+*.actual.png

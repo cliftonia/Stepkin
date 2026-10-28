@@ -9,6 +9,25 @@ struct LCDDisplay: View {
     /// Everything a frame draws — sprites, poop, weather, and the call sign.
     let configuration: LCDDisplayConfiguration
 
+    /// A frozen animation phase, set only by the test-only initialiser so a
+    /// render is reproducible; nil in production, where the clock drives it.
+    private let fixedWeatherPhase: Int?
+
+    /// Creates the live LCD, animated by a `TimelineView` whenever something on
+    /// screen moves.
+    init(configuration: LCDDisplayConfiguration) {
+        self.configuration = configuration
+        self.fixedWeatherPhase = nil
+    }
+
+    /// Test-only seam: creates an LCD frozen at `fixedWeatherPhase`, drawn
+    /// without the `TimelineView`, so snapshot tests render one exact frame.
+    /// Production code never calls this.
+    init(configuration: LCDDisplayConfiguration, fixedWeatherPhase: Int) {
+        self.configuration = configuration
+        self.fixedWeatherPhase = fixedWeatherPhase
+    }
+
     /// The active palette - `nightRed` in battery-saver mode, else `classic`.
     @Environment(\.lcdTheme) private var theme
 
@@ -62,7 +81,9 @@ struct LCDDisplay: View {
     }
 
     var body: some View {
-        if isAnimated {
+        if let fixedWeatherPhase {
+            styledCanvas(weatherPhase: fixedWeatherPhase)
+        } else if isAnimated {
             TimelineView(.periodic(from: .now, by: Self.weatherFrameInterval)) { timeline in
                 // Wrap the tick count well within 32-bit Int range (watchOS is
                 // arm64_32) - the effects all cycle on `% n` so a slow wrap is fine.
