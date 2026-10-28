@@ -25,17 +25,17 @@ xcodebuild build -project imon.xcodeproj -scheme "imon Watch App" \
 
 # Unit tests
 xcodebuild test -project imon.xcodeproj -scheme "imon Watch App" \
-  -destination "platform=watchOS Simulator,name=Apple Watch Ultra 3 (49mm)" \
+  -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)" \
   -only-testing "imon Watch AppTests"
 ```
 
 The simulator builds and runs everything, but two integrations only produce
 real data on a physical watch: HealthKit step counts and WeatherKit (which
 also needs the WeatherKit capability provisioned; in DEBUG a sample snapshot
-stands in). SwiftLint is not a build phase; run `swiftlint lint` from the repo root —
+stands in). SwiftLint is not a build phase; run `swiftlint lint --strict` from the repo root —
 the codebase holds a zero-warning bar. `python3 Tools/doc_lint.py` checks
 every comment against `docs/DOCUMENTATION.md` and must report nothing.
-The same four commands run on every push and pull request through GitHub Actions
+The same commands run, quietly, on every push and pull request through GitHub Actions
 (`.github/workflows/ci.yml`).
 
 ## How the game works
