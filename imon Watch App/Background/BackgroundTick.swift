@@ -47,16 +47,12 @@ nonisolated enum BackgroundTick {
             }
         }
 
-        do {
-            try store.save(advanced)
-        } catch {
-            Log.background.error("Background save failed: \(error, privacy: .public)")
-        }
+        store.save(advanced, loggingTo: Log.background)
 
         // Re-arm before the task completes — the chain survives if work below is cut short.
         refresh.scheduleNext(from: now)
 
-        // Toggle handling matches the foreground contract in `PetPresenter.handleScenePhase`.
+        // The foreground path also hands off through `CareHandoff`, sharing the toggle handling.
         CareHandoff.perform(
             state: advanced, now: now, steps: steps, notificationsEnabled: notificationsEnabled,
             witnesses: CareHandoff.Witnesses(notifications: notifications, complications: complications)

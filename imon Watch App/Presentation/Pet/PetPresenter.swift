@@ -307,12 +307,6 @@ final class PetPresenter {
 
     /// Persists the state through the store; a failure is logged, not thrown.
     func save() {
-        do {
-            try store.save(state)
-        } catch {
-            Log.presentation.error(
-                "Failed to save: \(error.localizedDescription)"
-            )
-        }
+        store.save(state, loggingTo: Log.presentation)
     }
 }

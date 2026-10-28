@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 /// The persistence boundary as a witness. Three closures a test can stub
 /// individually, with the production wiring supplied by
@@ -12,4 +13,16 @@ nonisolated struct PetStateStore: Sendable {
     let load: @Sendable () throws -> PetState?
     /// Removes the saved pet state.
     let delete: @Sendable () throws -> Void
+}
+
+nonisolated extension PetStateStore {
+    /// Saves the pet, logging a failure to `logger` instead of throwing, so a
+    /// failed save never takes the caller down with it.
+    func save(_ state: PetState, loggingTo logger: Logger) {
+        do {
+            try save(state)
+        } catch {
+            logger.error("Save failed: \(error, privacy: .public)")
+        }
+    }
 }

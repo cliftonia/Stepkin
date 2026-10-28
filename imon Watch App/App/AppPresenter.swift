@@ -100,7 +100,7 @@ final class AppPresenter {
                 isNight: weatherStore.nightSignal(),
                 steps: stepActivityStore.todaySteps
             )
-            persist(advanced)
+            store.save(advanced, loggingTo: Log.presentation)
 
             if advanced.isDead {
                 startDeath(state: advanced)
@@ -110,16 +110,6 @@ final class AppPresenter {
         } catch {
             Log.presentation.error("Failed to load state: \(error, privacy: .public)")
             startHatching()
-        }
-    }
-
-    /// Saves the pet; errors are logged, never thrown — otherwise a failed
-    /// save would silently lose the pet (or its catch-up).
-    private func persist(_ state: PetState) {
-        do {
-            try store.save(state)
-        } catch {
-            Log.presentation.error("Failed to save state: \(error, privacy: .public)")
         }
     }
 
@@ -135,7 +125,7 @@ final class AppPresenter {
     private func onHatchComplete() {
         // Persist before onboarding — quitting mid-onboarding must not lose the pet.
         let state = PetState.hatched(at: .now)
-        persist(state)
+        store.save(state, loggingTo: Log.presentation)
         hatchedState = state
         startOnboarding()
     }
@@ -237,20 +227,7 @@ final class AppPresenter {
     /// builds additionally wire a `SettingsDebugActions` set.
     func navigateToSettings() {
         #if DEBUG
-        // Debug actions pop to the pet screen first so their effect is visible at once.
-        let presenter = SettingsPresenter(settings: settings, debug: SettingsDebugActions(
-            setWeather: { [weak self, weatherStore] condition in
-                self?.router.popToRoot()
-                weatherStore.setDebugCondition(condition)
-            },
-            forceEvolve: { [weak self] in self?.router.popToRoot(); self?.petPresenter?.debugEvolve() },
-            careTest: { [weak self] in self?.router.popToRoot(); self?.petPresenter?.debugCareTest() },
-            killPet: { [weak self] in self?.restartPet() },
-            morph: { [weak self] species in
-                self?.router.popToRoot()
-                self?.petPresenter?.debugMorph(into: species)
-            }
-        ))
+        let presenter = SettingsPresenter(settings: settings, debug: makeDebugActions())
         #else
         let presenter = SettingsPresenter(settings: settings)
         #endif
@@ -275,9 +252,7 @@ final class AppPresenter {
         if let petPresenter {
             var state = petPresenter.state
             state.isDead = true
-            persist(state)
-            petPresenter.stopGameLoop()
-            self.petPresenter = nil
+            store.save(state, loggingTo: Log.presentation)
             startDeath(state: state)
             return
         }
