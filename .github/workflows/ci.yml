@@ -28,6 +28,8 @@ jobs:
         run: swiftlint lint --strict --quiet
       - name: Doc checker
         run: python3 Tools/doc_lint.py
+      - name: Package imports
+        run: "! grep -rnE \"^import (SwiftUI|WatchKit|UIKit|HealthKit|WeatherKit|WidgetKit|UserNotifications)\" Packages/StepkinKit/Sources"
 
   watch:
     runs-on: xcode-27
@@ -91,5 +93,7 @@ jobs:
       - uses: actions/checkout@v5
       - name: Select Xcode 27.1
         run: sudo xcode-select -s /Applications/Xcode_27.1.app && xcodebuild -version
+      - name: Package build, warnings as errors
+        run: swift build --package-path Packages/StepkinKit --build-tests -Xswiftc -warnings-as-errors
       - name: Package tests
         run: swift test --package-path Packages/StepkinKit

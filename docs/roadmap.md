@@ -15,7 +15,7 @@ the steps are counted and the wrist is raised.
 
 - **Fresh repository, no history**, founded early rather than last — the
   rename is now also a restructure, so it happens once.
-- **Architecture**: MVVMP retained; layers become compiler-enforced by moving
+- **Architecture**: MVVMP retained; layers become package-enforced by moving
   to a workspace of thin app shells over local Swift packages (below).
 - **Watch launch is not gated** on the iPhone/iPad work. Ship the wrist,
   then annex the pocket.
@@ -70,9 +70,10 @@ imon.xcodeproj
 └── docs/                  this file, DOCUMENTATION.md
 ```
 
-Why: the package cannot import WatchKit or SwiftUI (layer purity by the
-compiler); package tests run via bare `swift test` with no simulator; the
-package skips MainActor default isolation so the explicit `nonisolated`
+Why: the package cannot import the app (layer purity by the build), WatchKit
+is unavailable on the macOS test host so `swift test` rejects it, and SwiftUI
+is kept out by a CI grep over the package sources; package tests run via
+bare `swift test` with no simulator; the package skips MainActor default isolation so the explicit `nonisolated`
 markings disappear. The UI package was dropped: a package's platforms are
 declared once and the UI imports WatchKit, so the presentation layer stays
 in the app until a second platform needs it (Epic 6).
@@ -94,18 +95,12 @@ data arrives via iCloud Health sync, so the loop works there too.
 | 0 | ✅ **Done 2026-07-19** — name locked, USPTO clear, ids + App Group registered, ASC record created (iOS record, *Prepare for Submission*, no build) | — | Blocks package naming; the name can be taken while we wait |
 | 1 | ✅ **Done 2026-07-19** — rollover tail recovered, collapse countdown dated from the true emptying (schema v3), v2-save migration proved, night reminders deferred not dropped, STEPS row relabelled TODAY. The "5k vs 75" report resolved as a label misreading: the app's own arithmetic checks out (today 4,015 − lifetime 2,537 = the 1,478 baseline at first credit); pending a Health-app cross-check | old repo | These change the persisted schema — settle it **before** the migration so the save format moves once |
 | 2 | ✅ **Done 2026-10-28** — in place, no fresh repository; `StepkinKit` with Core, Engine, Sprites and a test-support target; presentation stays in the app | this repo | Everything after lands in the new home |
-| 3 | Deferred polish: defer-night-notifications, lifecycle items, debug-only items | new repo | No schema impact; benefits from the fast package test loop |
-| 4 | Sprite treatment for Hopkin, Dotkin, Orbkin, Marshkin | new repo | Zero dependencies — runs parallel to Epic 3 |
-| 5 | Watch submission: WeatherKit provisioning on the new App ID, privacy strings, icon, screenshots, TestFlight, App Review. **Code side done 2026-09-08** (privacy manifests, attribution, permission timing, sleep-pause and save-backup fixes — see `release-checklist.md`); the identifier swap and the App Store Connect work remain | new repo | Last, because every prior epic changes what the reviewer sees |
-| 6 | Sync + iPhone/iPad shells: transport decision, `iOSApp` target, platform shims (haptics, `BGTaskScheduler`), home-screen widget | new repo | Post-launch (v1.x); the packages make it thin-shell work |
+| 3 | Deferred polish: defer-night-notifications, lifecycle items, debug-only items | this repo | No schema impact; benefits from the fast package test loop |
+| 4 | Sprite treatment for Hopkin, Dotkin, Orbkin, Marshkin | this repo | Zero dependencies — runs parallel to Epic 3 |
+| 5 | Watch submission: WeatherKit provisioning on the new App ID, privacy strings, icon, screenshots, TestFlight, App Review. **Code side done 2026-09-08** (privacy manifests, attribution, permission timing, sleep-pause and save-backup fixes — see `release-checklist.md`); the identifier swap and the App Store Connect work remain | this repo | Last, because every prior epic changes what the reviewer sees |
+| 6 | Sync + iPhone/iPad shells: transport decision, `iOSApp` target, platform shims (haptics, `BGTaskScheduler`), home-screen widget | this repo | Post-launch (v1.x); the packages make it thin-shell work |
 
 Epics 3 and 4 run in parallel; everything else is a chain.
-
-**Shortcut taken 2026-09-08:** the release audit was done in this repository
-rather than after Epic 2. If shipping soon matters more than the package
-restructure, Epic 2 can shrink to the identity rename alone (migration-plan
-§ 1–3) and the package extraction can follow the launch — the code does not
-need it to pass review.
 
 ## Standing risks
 

@@ -9,7 +9,7 @@ import Foundation
 public final class DelayedTask {
 
     /// Whether a run is waiting on its delay; clears when the run starts.
-    public private(set) var isPending = false
+    package private(set) var isPending = false
 
     private var task: Task<Void, Never>?
 

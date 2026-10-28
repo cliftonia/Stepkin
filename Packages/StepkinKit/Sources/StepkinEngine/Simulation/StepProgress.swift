@@ -24,7 +24,7 @@ public enum StepProgress {
         /// the day rolls over.
         var creditedToday: Int
         /// The calendar day `creditedToday` belongs to; `nil` until first credit.
-        public var trackedDay: Date?
+        public internal(set) var trackedDay: Date?
         /// Extra steps the lazy-day penalties have added to the evolution goal.
         var goalPenalty: Int
     }

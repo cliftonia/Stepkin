@@ -12,19 +12,19 @@ public enum TimeConstants {
     public static let hungerDepletionInterval: TimeInterval = 4_200
 
     /// One strength heart per interval.
-    public static let strengthDepletionInterval: TimeInterval = 3_600
+    package static let strengthDepletionInterval: TimeInterval = 3_600
 
     // MARK: - Lifecycle Events
 
     /// One poop pile per interval.
-    public static let poopInterval: TimeInterval = 7_200
+    package static let poopInterval: TimeInterval = 7_200
 
     /// A care call unanswered for this long becomes a care mistake.
-    public static let careMistakeWindow: TimeInterval = 1_200
+    package static let careMistakeWindow: TimeInterval = 1_200
 
     /// A light left on at night accrues one care mistake per interval, so one
     /// forgetful night nudges evolution toward neglect without hard-locking it.
-    public static let lightsMistakeWindow: TimeInterval = 10_800
+    package static let lightsMistakeWindow: TimeInterval = 10_800
 
     // MARK: - Game Loop
 
@@ -36,12 +36,12 @@ public enum TimeConstants {
 
     /// The pet's bedtime: it only settles to sleep from 9pm until the morning
     /// wake hour, so an early winter dusk doesn't send it to bed at 5pm.
-    public static let sleepHour: Int = 21
+    package static let sleepHour: Int = 21
 
     /// The fallback night window (24h clock), used only when weather is unavailable.
-    public static let nightStartHour: Int = 18
+    package static let nightStartHour: Int = 18
     /// The morning wake hour: the end of the night window begun at `nightStartHour`.
-    public static let nightEndHour: Int = 6
+    package static let nightEndHour: Int = 6
 
     // MARK: - Limits
 
@@ -54,27 +54,27 @@ public enum TimeConstants {
     public static let maxInjuriesBeforeDeath: Int = 20
 
     /// An untreated injury becomes fatal after this long.
-    public static let untreatedInjuryDeathTime: TimeInterval = 21_600
+    package static let untreatedInjuryDeathTime: TimeInterval = 21_600
 
     /// The languishing countdown toward collapse: once hunger and strength
     /// are both empty, the pet dies if this interval elapses without recovery.
     /// Care mistakes steer evolution but never kill, so this is the sole
     /// neglect death.
-    public static let collapseDeathTime: TimeInterval = 172_800
+    package static let collapseDeathTime: TimeInterval = 172_800
 
     // MARK: - Notifications
 
     /// Local hour (24h) from which a low step count earns an exercise nudge.
-    public static let exerciseHour: Int = 15
+    package static let exerciseHour: Int = 15
 
     /// Today's steps below this after `exerciseHour` earn an exercise nudge.
-    public static let exerciseStepTarget: Int = 5_000
+    package static let exerciseStepTarget: Int = 5_000
 
     /// Small lead before the exercise nudge fires, so it's prompt but not instant.
-    public static let exerciseNudgeLead: TimeInterval = 600
+    package static let exerciseNudgeLead: TimeInterval = 600
 
     /// How long before a collapse death to warn that the pet is fading.
-    public static let nearingDeathLead: TimeInterval = 21_600
+    package static let nearingDeathLead: TimeInterval = 21_600
 
     // MARK: - Background Refresh
 
@@ -85,32 +85,32 @@ public enum TimeConstants {
     // MARK: - Feeding
 
     /// Weight gained from one serving of meat (grams).
-    public static let meatWeightGain: Int = 1
+    package static let meatWeightGain: Int = 1
 
     /// Weight gained from one vitamin (grams).
-    public static let vitaminWeightGain: Int = 2
+    package static let vitaminWeightGain: Int = 2
 
     // MARK: - Training
 
     /// Weight lost per completed training session (grams).
-    public static let trainWeightLoss: Int = 2
+    package static let trainWeightLoss: Int = 2
 
     /// Rounds in one training session.
     public static let trainRounds: Int = 5
 
     /// Wins needed in training to count as a successful session.
-    public static let trainWinsNeeded: Int = 3
+    package static let trainWinsNeeded: Int = 3
 
     // MARK: - Conditioning (trained HP / POW)
 
     /// Maximum trained bonus for HP and POW.
-    public static let maxConditioning: Int = 3
+    package static let maxConditioning: Int = 3
 
     /// Neglect this long (no training / no battling) drops one trained point.
-    public static let conditioningDecayInterval: TimeInterval = 43_200
+    package static let conditioningDecayInterval: TimeInterval = 43_200
 
     /// Activity factor at or above this grants the active HP bonus.
-    public static let activeHPFactorThreshold: Double = 0.5
+    package static let activeHPFactorThreshold: Double = 0.5
 
     // MARK: - Weather
 

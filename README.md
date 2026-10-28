@@ -89,9 +89,10 @@ View (SwiftUI)  →  Presenter (@MainActor, owns ViewModel)  →  Engine (pure, 
   isolation, so its types need no marking; app-side engine-adjacent types
   still carry `nonisolated` (extensions too — isolation does not inherit).
 - The pure layers (Core, Engine, Sprites) live in the `StepkinKit` package,
-  so the boundary is enforced by the compiler: the package cannot import the
-  app, WatchKit or SwiftUI, and the app re-exports it from one file
-  (`KitImports.swift`).
+  so the package cannot import the app, which the build enforces. WatchKit is
+  unavailable on the macOS test host, so `swift test` rejects it; SwiftUI is
+  kept out by a CI grep over the package sources (the `lint` job). The app
+  re-exports the package from one file (`KitImports.swift`).
 - Presenters are plain `@Observable`-adjacent classes on the main actor.
   They own their ViewModel, catch errors, and talk to the engine.
 - Stores (`WeatherStore`, `StepActivityStore`, `SettingsStore`) hold shared,
