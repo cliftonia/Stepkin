@@ -97,13 +97,15 @@ data arrives via iCloud Health sync, so the loop works there too.
 | 2 | ✅ **Done 2026-10-28** — in place, no fresh repository; `StepkinKit` with Core, Engine, Sprites and a test-support target; presentation stays in the app | this repo | Everything after lands in the new home |
 | 3 | Deferred polish: defer-night-notifications, lifecycle items, debug-only items | this repo | No schema impact; benefits from the fast package test loop |
 | 4 | Sprite treatment for Hopkin, Dotkin, Orbkin, Marshkin | this repo | Zero dependencies — runs parallel to Epic 3 |
-| 5 | Watch submission: WeatherKit provisioning on the new App ID, privacy strings, icon, screenshots, TestFlight, App Review. **Code side done 2026-09-08** (privacy manifests, attribution, permission timing, sleep-pause and save-backup fixes — see `release-checklist.md`); the identifier swap and the App Store Connect work remain | this repo | Last, because every prior epic changes what the reviewer sees |
+| 5 | Watch submission: WeatherKit provisioning on the new App ID, privacy strings (plus the HealthKit background-delivery entitlement and its App ID capability), icon, screenshots, TestFlight, App Review. **Code side done 2026-09-08** (privacy manifests, attribution, permission timing, sleep-pause and save-backup fixes — see `release-checklist.md`); the identifier swap and the App Store Connect work remain | this repo | Last, because every prior epic changes what the reviewer sees |
 | 6 | Sync + iPhone/iPad shells: transport decision, `iOSApp` target, platform shims (haptics, `BGTaskScheduler`), home-screen widget | this repo | Post-launch (v1.x); the packages make it thin-shell work |
 
 Epics 3 and 4 run in parallel; everything else is a chain.
 
 ## Standing risks
 
+- **HealthKit background delivery on watchOS 26** has a regression reported on Apple's
+  forums (unconfirmed); the hourly refresh chain remains the fallback.
 - **WeatherKit** needs the capability provisioned on the new App ID before
   release builds show live weather.
 - **App Review**: HealthKit and notification usage strings must honestly

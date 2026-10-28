@@ -1,5 +1,6 @@
 import Foundation
 import HealthKit
+import os
 
 /// Fetches step totals, injected as a protocol witness so everything built on
 /// steps can be tested without HealthKit. Days are anchored to local midnight —
@@ -74,5 +75,47 @@ extension StepCountProvider {
             toShare: [],
             read: [HKQuantityType(.stepCount)]
         )
+    }
+}
+
+extension StepCountProvider {
+    /// The store that owns the observer query for the app's lifetime.
+    private static let backgroundStore = HKHealthStore()
+    /// Guards against starting delivery twice in one process.
+    private static let started = OSAllocatedUnfairLock(initialState: false)
+
+    /// Asks HealthKit to wake the app in the background, at most hourly, when
+    /// new step samples arrive, and runs `onUpdate` for each wake. Needs the
+    /// background-delivery entitlement; the simulator cannot exercise it.
+    /// Idempotent: a second call does nothing. The caller starts it at launch
+    /// when Steps is on, so switching Steps on takes effect at the next launch.
+    static func startBackgroundDelivery(onUpdate: @escaping @Sendable () async -> Void) {
+        guard HKHealthStore.isHealthDataAvailable() else { return }
+        let alreadyStarted = started.withLock { flag -> Bool in
+            defer { flag = true }
+            return flag
+        }
+        guard !alreadyStarted else { return }
+
+        let stepType = HKQuantityType(.stepCount)
+        let query = HKObserverQuery(sampleType: stepType, predicate: nil) { _, completionHandler, error in
+            if let error {
+                Log.health.error("Step observer failed: \(error, privacy: .public)")
+            }
+            // The completion must always run, or HealthKit stops delivering after three misses.
+            nonisolated(unsafe) let complete = completionHandler
+            Task {
+                await onUpdate()
+                complete()
+            }
+        }
+        backgroundStore.execute(query)
+        backgroundStore.enableBackgroundDelivery(for: stepType, frequency: .hourly) { success, error in
+            if let error {
+                Log.health.error("Background delivery failed: \(error, privacy: .public)")
+            } else {
+                Log.health.info("Background delivery enabled: \(success, privacy: .public)")
+            }
+        }
     }
 }

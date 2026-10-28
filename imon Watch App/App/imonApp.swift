@@ -34,6 +34,11 @@ final class AppDelegate: NSObject, WKApplicationDelegate {
         Log.presentation.info("App launched")
         UNUserNotificationCenter.current().delegate = self
         // Permission prompts wait until the pet is alive — see `PermissionRequester`.
+        if SettingsStore().stepsEnabled {
+            StepCountProvider.startBackgroundDelivery { [self] in
+                await tickFromBackground(refresh: nil)
+            }
+        }
     }
 
     /// Logs the app becoming active.
@@ -76,13 +81,21 @@ final class AppDelegate: NSObject, WKApplicationDelegate {
     /// foreground honours.
     private func handleRefresh(_ task: WKApplicationRefreshBackgroundTask) {
         Task { @MainActor in
-            let offline = appPresenter.offlineDependencies(
-                witnesses: CareHandoff.Witnesses(notifications: .live(), complications: .live()),
-                refresh: .live()
-            )
-            _ = await PetActionRouter.perform(.tick, app: appPresenter, offline: offline, now: Date())
+            await tickFromBackground(refresh: .live())
             task.setTaskCompletedWithSnapshot(false)
         }
+    }
+
+    /// The one background tick both wakes share, so they cannot drift: the
+    /// refresh task passes its scheduler to re-arm the chain, while a HealthKit
+    /// delivery passes none.
+    @MainActor
+    private func tickFromBackground(refresh: BackgroundRefreshScheduler?) async {
+        let offline = appPresenter.offlineDependencies(
+            witnesses: CareHandoff.Witnesses(notifications: .live(), complications: .live()),
+            refresh: refresh
+        )
+        _ = await PetActionRouter.perform(.tick, app: appPresenter, offline: offline, now: Date())
     }
 }
 

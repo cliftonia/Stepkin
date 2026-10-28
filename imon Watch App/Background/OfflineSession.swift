@@ -7,6 +7,10 @@ import os
 /// Self-contained: it reads and writes `PetStateStore` directly, so it is only
 /// ever reached through `PetActionRouter`, which prefers the live presenter
 /// whenever one exists. That keeps a single writer for the save at any time.
+///
+/// Runs on the caller's actor (nonisolated nonsending); the router calls it
+/// on the main actor, so the hand-off check before the save and the save
+/// itself are one synchronous stretch.
 nonisolated enum OfflineSession {
 
     /// Everything a session reads and writes through, gathered so `run` stays

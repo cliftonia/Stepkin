@@ -44,10 +44,14 @@ developer's.
    identifiers stays on the wrist until the old app is deleted. The
    UserDefaults keys (`com.cliftonia.imon.petState`, `.backup`,
    `.complicationTimeline`) were deliberately kept.
-2. **Provisioning on the new App ID.** HealthKit, WeatherKit, App Groups and
-   the notification capability must be ticked on `cliftonia.stepkin.watchkitapp`
-   in the developer portal; WeatherKit takes time to propagate, so the first
-   TestFlight build may show no weather.
+2. **Provisioning on the new App ID.** HealthKit, HealthKit Background
+   Delivery, WeatherKit, App Groups and the notification capability must be
+   ticked on `cliftonia.stepkin.watchkitapp` in the developer portal;
+   WeatherKit takes time to propagate, so the first TestFlight build may show
+   no weather. The simulator cannot exercise background delivery, so test it
+   on the watch; it shares the four-wakes-per-hour budget with the refresh
+   chain. Delivery starts at launch when Steps is on, so switching Steps on
+   takes effect at the next launch.
 3. **Export compliance.** The app uses only Apple's TLS. Set the
    "App Encryption Documentation" answer once in App Store Connect (or add
    `ITSAppUsesNonExemptEncryption = NO` to the Info tab of both targets) so
