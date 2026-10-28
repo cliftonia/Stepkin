@@ -30,6 +30,7 @@ jobs:
 
   watch:
     runs-on: xcode-27
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - name: Select Xcode 27.1
