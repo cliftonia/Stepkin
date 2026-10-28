@@ -11,12 +11,13 @@ import Testing
         #expect(!timer.isRunning)
     }
 
-    @Test func `a one-shot fires once and is no longer running`() async {
+    @Test func `a one-shot fires once and is no longer running`() async throws {
         let timer = MainActorTimer()
-        await confirmation(expectedCount: 1) { fired in
-            timer.start(interval: 0.02, repeats: false) { fired() }
-            try? await Task.sleep(for: .milliseconds(120))
-        }
+        var fires = 0
+        timer.start(interval: 0.02, repeats: false) { fires += 1 }
+        #expect(await waitUntil { fires == 1 })
+        try await Task.sleep(for: .milliseconds(100))
+        #expect(fires == 1)
         #expect(!timer.isRunning)
     }
 
@@ -26,7 +27,7 @@ import Testing
         var second = 0
         timer.start(interval: 0.02, repeats: false) { first += 1 }
         timer.start(interval: 0.02, repeats: false) { second += 1 }
-        try? await Task.sleep(for: .milliseconds(120))
-        #expect(first == 0 && second == 1)
+        #expect(await waitUntil { second == 1 })
+        #expect(first == 0)
     }
 }

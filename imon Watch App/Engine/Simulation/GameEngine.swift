@@ -18,9 +18,9 @@ nonisolated enum GameEngine {
     /// is the weather's daylight reading; `nil` resolves night from the
     /// 18:00–06:00 clock window in `SleepSchedule.isNight`. `steps` is
     /// today's running count; `nil` (steps disabled or unavailable) disables
-    /// activity scaling, leaving every simulator at its base interval. `calendar`
-    /// supplies the age, night and bedtime hours. For a
-    /// dead or egg pet only `lastAdvancedAt` moves; no simulator runs.
+    /// activity scaling, leaving every simulator at its base interval.
+    /// `calendar` supplies the age, night and bedtime hours. For a dead or
+    /// egg pet only `lastAdvancedAt` moves; no simulator runs.
     static func advance(
         _ state: PetState,
         to now: Date,

@@ -14,16 +14,20 @@ final class DelayedTask {
     private var task: Task<Void, Never>?
 
     /// Runs `run` on the main actor after `delay`, replacing any run already pending.
-    func schedule(after delay: Duration, _ run: @escaping @MainActor () -> Void) {
+    /// Returns the pending run, for callers that need to await it; production callers ignore it.
+    @discardableResult
+    func schedule(after delay: Duration, _ run: @escaping @MainActor () -> Void) -> Task<Void, Never> {
         task?.cancel()
         isPending = true
-        task = Task { [weak self] in
+        let pending = Task { [weak self] in
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled, let self else { return }
             self.task = nil
             self.isPending = false
             run()
         }
+        task = pending
+        return pending
     }
 
     /// Cancels the pending run, if any.

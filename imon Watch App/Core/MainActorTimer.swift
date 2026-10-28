@@ -7,7 +7,7 @@ import Foundation
 @MainActor
 final class MainActorTimer {
 
-    /// Whether a timer is pending; a one-shot clears it after firing.
+    /// Whether a timer is pending; a one-shot clears it when it fires, before the callback runs.
     private(set) var isRunning = false
 
     private var timer: Timer?

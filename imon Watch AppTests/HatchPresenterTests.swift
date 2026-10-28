@@ -26,14 +26,16 @@ import Testing
         #expect(hatches == 0)
     }
 
-    @Test func `cancel stops a running ceremony before it hatches`() {
+    @Test func `cancel stops a running ceremony before it hatches`() async {
         var hatches = 0
         let presenter = HatchPresenter(onHatched: { hatches += 1 }, beat: { _ in
             try? await Task.sleep(for: .seconds(10))
             return !Task.isCancelled
         })
         presenter.startHatching()
+        let task = presenter.ceremonyTask
         presenter.cancel()
+        await task?.value
         #expect(hatches == 0)
         #expect(presenter.viewModel.phase == .egg)
         #expect(presenter.ceremonyTask == nil)

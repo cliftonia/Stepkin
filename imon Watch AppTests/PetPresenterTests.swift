@@ -45,13 +45,18 @@ struct PetPresenterTests {
     }
 
     @Test
-    func `stopping the game loop resets the wander`() {
+    func `stopping the game loop mid-walk leaves no wander timer armed and resets the offset`() {
         let presenter = makePresenter(makeTestState(), SaveBox())
         presenter.startGameLoop()
+        for _ in 0..<50 where !presenter.wander.isWalking {
+            presenter.wander.tryStartWalking()
+        }
+        #expect(presenter.wander.isWalking)
 
         presenter.stopGameLoop()
 
         #expect(!presenter.wander.isWalking)
+        #expect(!presenter.wander.isScheduled)
         #expect(presenter.wander.offsetX == 8)
         #expect(presenter.spriteAnimator.isPlaying == false)
     }
