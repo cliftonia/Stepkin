@@ -95,6 +95,13 @@
 			);
 			target = 7E5C0B012FF1A00000000001 /* SkykinComplicationTests */;
 		};
+		1CACAD9A2FE9A00000000001 /* Exceptions for "imon Watch App" folder in "imon Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1CACAD2F2F4889AD00C99F7E /* imon Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -109,6 +116,9 @@
 		};
 		1CACAD342F4889AD00C99F7E /* imon Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1CACAD9A2FE9A00000000001 /* Exceptions for "imon Watch App" folder in "imon Watch App" target */,
+			);
 			path = "imon Watch App";
 			sourceTree = "<group>";
 		};
@@ -661,6 +671,7 @@
 				DEVELOPMENT_TEAM = SRT47ZQ7D8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "imon Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Used to read your daily steps so your activity shapes your pet.";
@@ -698,6 +709,7 @@
 				DEVELOPMENT_TEAM = SRT47ZQ7D8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "imon Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Used to read your daily steps so your activity shapes your pet.";
