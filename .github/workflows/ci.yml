@@ -37,6 +37,9 @@ jobs:
     timeout-minutes: 30
     env:
       SIM_DEVICE_TYPE: Apple Watch Ultra 4 (49mm)
+      # The LCD snapshot references were recorded on watchOS 27.0; newer runtimes on the image
+      # render a few glyph pixels differently, so the test watch is pinned to the same runtime.
+      SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.watchOS-27-0
     steps:
       - uses: actions/checkout@v5
       - name: Select Xcode 27.1
@@ -57,7 +60,7 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl runtime list
           for attempt in $(seq 1 36); do
-            if udid=$(xcrun simctl create "CI Watch" "$SIM_DEVICE_TYPE") \
+            if udid=$(xcrun simctl create "CI Watch" "$SIM_DEVICE_TYPE" "$SIM_RUNTIME") \
               && xcrun simctl boot "$udid" && xcrun simctl bootstatus "$udid" -b; then
               break
             fi
