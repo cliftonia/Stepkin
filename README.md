@@ -9,6 +9,15 @@ battles, evolves — and dies if you neglect it. Real-world signals feed the
 simulation: your **step count** drives evolution and **live weather** drives
 the scene and day/night cycle.
 
+<p align="center">
+  <img src="docs/images/hatched.png" alt="Apple Watch showing a newly hatched pixel pet: Dotkin is born" width="24%">
+  <img src="docs/images/intro.png" alt="The pet introduces itself: Hi! I'm Dotkin. Look after me and I'll grow" width="24%">
+  <img src="docs/images/rip.png" alt="A neglected pet's gravestone, R.I.P. Dotkin, age 1 day, with a New Egg button" width="24%">
+</p>
+<p align="center">
+  <img src="docs/images/lcd.gif" alt="The 32 by 20 pixel LCD cycling through day, rain, snow, storm, night, lights off, an evolution flash and the red theme" width="49%">
+</p>
+
 - **Platform**: watchOS 26+, Swift 6 (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)
 - **Dependencies**: none — SwiftUI, HealthKit, WeatherKit, UserNotifications only
 - **Rendering**: SwiftUI `Canvas` drawing a 32×20 1-bit LCD; sprites are 16×16
