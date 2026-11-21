@@ -10,9 +10,10 @@ simulation: your **step count** drives evolution and **live weather** drives
 the scene and day/night cycle.
 
 <p align="center">
-  <img src="docs/images/hatched.png" alt="Apple Watch showing a newly hatched pixel pet: Dotkin is born" width="24%">
-  <img src="docs/images/intro.png" alt="The pet introduces itself: Hi! I'm Dotkin. Look after me and I'll grow" width="24%">
-  <img src="docs/images/rip.png" alt="A neglected pet's gravestone, R.I.P. Dotkin, age 1 day, with a New Egg button" width="24%">
+  <img src="docs/images/screens/pet.png" alt="Rexkin, a champion-stage pet, on the LCD on a clear 18 degree day, with the care icons and A B C buttons below" width="24%">
+  <img src="docs/images/screens/feed.png" alt="The feed menu offering meat or vitamins" width="24%">
+  <img src="docs/images/screens/battle-moves.png" alt="A battle against Galekin, choosing a high, medium or low attack" width="24%">
+  <img src="docs/images/screens/stats.png" alt="Rexkin's stats: champion, 9 days old, 7,342 steps today, evolution progress, hunger and strength hearts" width="24%">
 </p>
 <p align="center">
   <img src="docs/images/lcd.gif" alt="The 32 by 20 pixel LCD cycling through day, rain, snow, storm, night, lights off, an evolution flash and the red theme" width="49%">
@@ -22,6 +23,16 @@ the scene and day/night cycle.
 - **Dependencies**: none — SwiftUI, HealthKit, WeatherKit, UserNotifications only
 - **Rendering**: SwiftUI `Canvas` drawing a 32×20 1-bit LCD; sprites are 16×16
   bitmaps stored as `[UInt16]` rows
+
+## Screenshots
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="docs/images/screens/battle-vs.png" width="220" alt="The VS screen that opens a battle"><br>A battle begins | <img src="docs/images/screens/battle-hit.png" width="220" alt="An attack landing with a burst on the LCD"><br>A hit lands | <img src="docs/images/screens/training.png" width="220" alt="Training round 3 of 5 won, with a score of 8"><br>Training |
+| <img src="docs/images/screens/hatch.png" width="220" alt="A new pet introduces itself: look after me and I'll grow"><br>Hatching | <img src="docs/images/screens/onboarding.png" width="220" alt="Onboarding: your real steps grow me, walk daily"><br>Onboarding | <img src="docs/images/screens/night.png" width="220" alt="Night on the LCD with the moon and the pet awake"><br>Night |
+| <img src="docs/images/screens/rain.png" width="220" alt="Live rain falling across the LCD"><br>Rain | <img src="docs/images/screens/snow.png" width="220" alt="Snow at minus 2 degrees"><br>Snow | <img src="docs/images/screens/storm.png" width="220" alt="A storm on the LCD"><br>Storm |
+| <img src="docs/images/screens/mess.png" width="220" alt="A mess on the LCD that needs cleaning up"><br>A mess to clean | <img src="docs/images/screens/sick.png" width="220" alt="A sick pet with a skull beside it"><br>Sick | <img src="docs/images/screens/battery-saver.png" width="220" alt="The red battery saver theme on a cloudy day"><br>Battery saver theme |
+| <img src="docs/images/screens/settings.png" width="220" alt="Settings with battery saver and notifications"><br>Settings | <img src="docs/images/screens/grave.png" width="220" alt="R.I.P. Steelkin, aged 23 days, with a New Egg button"><br>Neglect has consequences | |
 
 ## Building & running
 
