@@ -16,15 +16,15 @@ the scene and day/night cycle.
 
 ## Building & running
 
-Open `imon.xcodeproj` and run the **imon Watch App** scheme.
+Open `Stepkin.xcodeproj` and run the **Stepkin Watch App** scheme.
 
 ```sh
 # Compile gate (CI-equivalent)
-xcodebuild build -project imon.xcodeproj -scheme "imon Watch App" \
+xcodebuild build -project Stepkin.xcodeproj -scheme "Stepkin Watch App" \
   -destination "generic/platform=watchOS Simulator"
 
 # Unit tests
-xcodebuild test -project imon.xcodeproj -scheme "imon Watch App" \
+xcodebuild test -project Stepkin.xcodeproj -scheme "Stepkin Watch App" \
   -destination "platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)"
 
 # Package tests (fast path, no simulator)
@@ -33,7 +33,7 @@ swift test --package-path Packages/StepkinKit
 
 `swift test --package-path Packages/StepkinKit` runs the pure layers (Core, Engine and Sprites) on the host in seconds;
 the watch scheme's `xcodebuild test` runs the app bundle (presenters, stores and the LCD snapshots in
-`imon Watch AppTests/Snapshots/`) and the host-less complication bundle `SkykinComplicationTests`.
+`Stepkin Watch AppTests/Snapshots/`) and the host-less complication bundle `StepkinComplicationTests`.
 To re-record the snapshots, run `TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test …` (xcodebuild forwards only
 `TEST_RUNNER_`-prefixed variables to the test process); in Xcode, set `RECORD_SNAPSHOTS=1` in the scheme's environment.
 The simulator builds and runs everything, but two integrations only produce
@@ -133,8 +133,8 @@ Packages/StepkinKit/
 │   └── StepkinTestSupport/   Shared test fixtures and the polling wait
 └── Tests/                    StepkinCoreTests, StepkinEngineTests, StepkinSpritesTests
 
-imon Watch App/
-├── App/            imonApp, ContentView, AppPresenter (phase machine), Navigation
+Stepkin Watch App/
+├── App/            StepkinApp, ContentView, AppPresenter (phase machine), Navigation
 ├── Core/           Extensions/ holds the WatchKit haptics wrapper
 ├── Presentation/   One folder per screen: Presenter + ViewModel; Scene/ holds
 │                   the LCD scene resolver shared by the home and arena views;
@@ -150,15 +150,15 @@ imon Watch App/
 │                   clears the reminders and refreshes the complication on background
 ├── Background/     Background refresh so the pet advances while closed
 └── Complication/   App-side timeline store and reloader for the watch-face
-                    complication; the widget itself is the SkykinComplication
+                    complication; the widget itself is the StepkinComplication
                     extension target
 ```
 
 ## Localization
 
 User-facing strings live in two String Catalogs: the watch app's
-`imon Watch App/Resources/Localizable.xcstrings` and the complication's
-`SkykinComplication/Localizable.xcstrings`. Code resolves them with
+`Stepkin Watch App/Resources/Localizable.xcstrings` and the complication's
+`StepkinComplication/Localizable.xcstrings`. Code resolves them with
 `String(localized:comment:)` or a SwiftUI initialiser; the engine package carries
 no user-facing English beyond the species names (the mood words are also written
 to `statusText` for one release only). After adding or changing a string, build and run

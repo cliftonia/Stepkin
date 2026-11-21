@@ -1,8 +1,8 @@
 included:
-  - imon Watch App
-  - imon Watch AppTests
-  - SkykinComplication
-  - SkykinComplicationTests
+  - Stepkin Watch App
+  - Stepkin Watch AppTests
+  - StepkinComplication
+  - StepkinComplicationTests
   - Packages/StepkinKit/Sources
   - Packages/StepkinKit/Tests
 
@@ -31,10 +31,6 @@ type_body_length:
 function_parameter_count:
   warning: 5
   error: 8
-
-type_name:
-  excluded:
-    - imon_Watch_AppApp
 
 identifier_name:
   min_length:

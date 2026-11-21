@@ -11,7 +11,7 @@ extension UserDefaults {
     /// The shared container, or `.standard` until the App Group entitlement is
     /// present — so persistence keeps working before the capability is enabled
     /// and upgrades to the shared suite automatically once it is.
-    public static var skykinShared: UserDefaults {
+    public static var stepkinShared: UserDefaults {
         UserDefaults(suiteName: AppGroup.identifier) ?? .standard
     }
 }

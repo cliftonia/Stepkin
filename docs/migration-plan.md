@@ -2,7 +2,10 @@
 
 > Steps 4–6 are superseded by `docs/packages-and-polish-plan.md`: the package
 > split was done in place on 2026-10-28 with no fresh history. The providers
-> stayed in the app, as this plan said.
+> stayed in the app, as this plan said. Steps 1–2 are done in place too: the
+> project, targets, schemes and folders carry the Stepkin names, while the
+> bundle ids, the widget kind and the UserDefaults keys keep their shipped
+> spellings so installs, entitlements and watch faces carry over.
 
 The one-time move from this repository to **Stepkin**: renamed, restructured
 into packages, and re-homed in a fresh history. Written before the work so the

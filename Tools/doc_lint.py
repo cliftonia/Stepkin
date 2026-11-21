@@ -17,7 +17,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SOURCES = [ROOT / "imon Watch App", ROOT / "SkykinComplication", ROOT / "Packages/StepkinKit/Sources"]
+SOURCES = [ROOT / "Stepkin Watch App", ROOT / "StepkinComplication", ROOT / "Packages/StepkinKit/Sources"]
 SKIP = ("Sprites/Pets/", "Sprites/Catalog/")
 TYPE = re.compile(
     r"^(\s*)(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:nonisolated|final|private|fileprivate|public|package|internal|indirect)\s+)*"

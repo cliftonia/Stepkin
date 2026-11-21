@@ -180,7 +180,7 @@ Packages/StepkinKit/
     ├── StepkinEngineTests/
     └── StepkinSpritesTests/
 
-imon Watch App/                presenters, view models, scene resolver, LCD
+Stepkin Watch App/             presenters, view models, scene resolver, LCD
                                canvas, screens, components, stores, the
                                HealthKit, WeatherKit and location providers,
                                the sprite animator, background tick and

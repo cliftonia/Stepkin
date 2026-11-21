@@ -26,8 +26,9 @@ the steps are counted and the wrist is raised.
   assessed and accepted. Bundle id root `cliftonia.stepkin`, App Group
   `group.cliftonia.stepkin`, watch app `cliftonia.stepkin.watchkitapp`,
   complication `cliftonia.stepkin.watchkitapp.StepkinComplication` (the
-  extension's suffix is its **target name** — today's is
-  `…watchkitapp.SkykinComplication`). Verified against the current project:
+  extension's suffix was its **target name**; the shipped id keeps
+  `…watchkitapp.SkykinComplication`, set explicitly, although the target is
+  now `StepkinComplicationExtension`). Verified against the current project:
   the root id belongs to the `watchapp2-container` stub, which carries no
   entitlements and is the id the App Store Connect record uses; the watch
   app holds HealthKit + WeatherKit + App Groups; the complication holds App
@@ -56,10 +57,10 @@ the steps are counted and the wrist is raised.
 Decided 2026-10-28: one local package beside the app, done in place.
 
 ```
-imon.xcodeproj
-├── imon Watch App/        presentation, stores, providers, the sprite
+Stepkin.xcodeproj
+├── Stepkin Watch App/     presentation, stores, providers, the sprite
 │                          animator, CareHandoff, complication store, tick
-├── SkykinComplication/    complication extension
+├── StepkinComplication/   complication extension
 ├── Packages/StepkinKit/
 │   ├── StepkinCore        Tagged, TickMath, TimeConstants, logging → deps: none
 │   ├── StepkinEngine      models, simulation, actions, evolution,

@@ -1,0 +1,967 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1CAA70332FE9429000377A61 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAA70322FE9429000377A61 /* WidgetKit.framework */; };
+		1CAA70352FE9429000377A61 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CAA70342FE9429000377A61 /* SwiftUI.framework */; };
+		1CAA70422FE9429100377A61 /* StepkinComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1CAA70302FE9429000377A61 /* StepkinComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1CACAD312F4889AD00C99F7E /* Stepkin Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1CACAD302F4889AD00C99F7E /* Stepkin Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A022FF1A00000000001 /* StepkinCore */; };
+		7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A042FF1A00000000001 /* StepkinEngine */; };
+		7E5C0A0D2FF1A00000000001 /* StepkinSprites in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A0C2FF1A00000000001 /* StepkinSprites */; };
+		7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A062FF1A00000000001 /* StepkinTestSupport */; };
+		7E5C0A092FF1A00000000001 /* StepkinCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A082FF1A00000000001 /* StepkinCore */; };
+		7E5C0A0B2FF1A00000000001 /* StepkinEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5C0A0A2FF1A00000000001 /* StepkinEngine */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1CAA70402FE9429100377A61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CACAD242F4889AD00C99F7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CAA702F2FE9429000377A61;
+			remoteInfo = StepkinComplicationExtension;
+		};
+		1CACAD322F4889AD00C99F7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CACAD242F4889AD00C99F7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CACAD2F2F4889AD00C99F7E;
+			remoteInfo = "Stepkin Watch App";
+		};
+		1CACAD402F4889AE00C99F7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CACAD242F4889AD00C99F7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CACAD2F2F4889AD00C99F7E;
+			remoteInfo = "Stepkin Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1CAA70472FE9429100377A61 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1CAA70422FE9429100377A61 /* StepkinComplicationExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD562F4889AE00C99F7E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				1CACAD312F4889AD00C99F7E /* Stepkin Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1CAA70302FE9429000377A61 /* StepkinComplicationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StepkinComplicationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CAA70322FE9429000377A61 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		1CAA70342FE9429000377A61 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		1CAA70502FE9468C00377A61 /* StepkinComplicationExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StepkinComplicationExtension.entitlements; sourceTree = "<group>"; };
+		1CACAD2A2F4889AD00C99F7E /* Stepkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stepkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CACAD302F4889AD00C99F7E /* Stepkin Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stepkin Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CACAD3F2F4889AE00C99F7E /* Stepkin Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stepkin Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E5C0B022FF1A00000000001 /* StepkinComplicationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StepkinComplicationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1CAA70432FE9429100377A61 /* Exceptions for "StepkinComplication" folder in "StepkinComplicationExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1CAA702F2FE9429000377A61 /* StepkinComplicationExtension */;
+		};
+		7E5C0B0A2FF1A00000000001 /* Exceptions for "StepkinComplication" folder in "StepkinComplicationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RelevanceWindows.swift,
+				WidgetEntry.swift,
+			);
+			target = 7E5C0B012FF1A00000000001 /* StepkinComplicationTests */;
+		};
+		1CACAD9A2FE9A00000000001 /* Exceptions for "Stepkin Watch App" folder in "Stepkin Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1CACAD2F2F4889AD00C99F7E /* Stepkin Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1CAA70362FE9429000377A61 /* StepkinComplication */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1CAA70432FE9429100377A61 /* Exceptions for "StepkinComplication" folder in "StepkinComplicationExtension" target */,
+				7E5C0B0A2FF1A00000000001 /* Exceptions for "StepkinComplication" folder in "StepkinComplicationTests" target */,
+			);
+			path = StepkinComplication;
+			sourceTree = "<group>";
+		};
+		1CACAD342F4889AD00C99F7E /* Stepkin Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1CACAD9A2FE9A00000000001 /* Exceptions for "Stepkin Watch App" folder in "Stepkin Watch App" target */,
+			);
+			path = "Stepkin Watch App";
+			sourceTree = "<group>";
+		};
+		1CACAD422F4889AE00C99F7E /* Stepkin Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Stepkin Watch AppTests";
+			sourceTree = "<group>";
+		};
+		7E5C0B092FF1A00000000001 /* StepkinComplicationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StepkinComplicationTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1CAA702D2FE9429000377A61 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CAA70352FE9429000377A61 /* SwiftUI.framework in Frameworks */,
+				1CAA70332FE9429000377A61 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD2D2F4889AD00C99F7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E5C0A032FF1A00000000001 /* StepkinCore in Frameworks */,
+				7E5C0A052FF1A00000000001 /* StepkinEngine in Frameworks */,
+				7E5C0A0D2FF1A00000000001 /* StepkinSprites in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD3C2F4889AE00C99F7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E5C0A092FF1A00000000001 /* StepkinCore in Frameworks */,
+				7E5C0A0B2FF1A00000000001 /* StepkinEngine in Frameworks */,
+				7E5C0A072FF1A00000000001 /* StepkinTestSupport in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E5C0B042FF1A00000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1CAA70312FE9429000377A61 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1CAA70322FE9429000377A61 /* WidgetKit.framework */,
+				1CAA70342FE9429000377A61 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1CACAD232F4889AD00C99F7E = {
+			isa = PBXGroup;
+			children = (
+				1CAA70502FE9468C00377A61 /* StepkinComplicationExtension.entitlements */,
+				1CACAD342F4889AD00C99F7E /* Stepkin Watch App */,
+				1CACAD422F4889AE00C99F7E /* Stepkin Watch AppTests */,
+				1CAA70362FE9429000377A61 /* StepkinComplication */,
+				7E5C0B092FF1A00000000001 /* StepkinComplicationTests */,
+				1CAA70312FE9429000377A61 /* Frameworks */,
+				1CACAD2B2F4889AD00C99F7E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1CACAD2B2F4889AD00C99F7E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1CACAD2A2F4889AD00C99F7E /* Stepkin.app */,
+				1CACAD302F4889AD00C99F7E /* Stepkin Watch App.app */,
+				1CACAD3F2F4889AE00C99F7E /* Stepkin Watch AppTests.xctest */,
+				1CAA70302FE9429000377A61 /* StepkinComplicationExtension.appex */,
+				7E5C0B022FF1A00000000001 /* StepkinComplicationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1CAA702F2FE9429000377A61 /* StepkinComplicationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CAA70442FE9429100377A61 /* Build configuration list for PBXNativeTarget "StepkinComplicationExtension" */;
+			buildPhases = (
+				1CAA702C2FE9429000377A61 /* Sources */,
+				1CAA702D2FE9429000377A61 /* Frameworks */,
+				1CAA702E2FE9429000377A61 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1CAA70362FE9429000377A61 /* StepkinComplication */,
+			);
+			name = StepkinComplicationExtension;
+			packageProductDependencies = (
+			);
+			productName = StepkinComplicationExtension;
+			productReference = 1CAA70302FE9429000377A61 /* StepkinComplicationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		1CACAD292F4889AD00C99F7E /* Stepkin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CACAD572F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin" */;
+			buildPhases = (
+				1CACAD282F4889AD00C99F7E /* Resources */,
+				1CACAD562F4889AE00C99F7E /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1CACAD332F4889AD00C99F7E /* PBXTargetDependency */,
+			);
+			name = Stepkin;
+			packageProductDependencies = (
+			);
+			productName = Stepkin;
+			productReference = 1CACAD2A2F4889AD00C99F7E /* Stepkin.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		1CACAD2F2F4889AD00C99F7E /* Stepkin Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CACAD532F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin Watch App" */;
+			buildPhases = (
+				1CACAD2C2F4889AD00C99F7E /* Sources */,
+				1CACAD2D2F4889AD00C99F7E /* Frameworks */,
+				1CACAD2E2F4889AD00C99F7E /* Resources */,
+				1CAA70472FE9429100377A61 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1CAA70412FE9429100377A61 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1CACAD342F4889AD00C99F7E /* Stepkin Watch App */,
+			);
+			name = "Stepkin Watch App";
+			packageProductDependencies = (
+				7E5C0A022FF1A00000000001 /* StepkinCore */,
+				7E5C0A042FF1A00000000001 /* StepkinEngine */,
+				7E5C0A0C2FF1A00000000001 /* StepkinSprites */,
+			);
+			productName = "Stepkin Watch App";
+			productReference = 1CACAD302F4889AD00C99F7E /* Stepkin Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1CACAD3E2F4889AE00C99F7E /* Stepkin Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CACAD5A2F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin Watch AppTests" */;
+			buildPhases = (
+				1CACAD3B2F4889AE00C99F7E /* Sources */,
+				1CACAD3C2F4889AE00C99F7E /* Frameworks */,
+				1CACAD3D2F4889AE00C99F7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1CACAD412F4889AE00C99F7E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1CACAD422F4889AE00C99F7E /* Stepkin Watch AppTests */,
+			);
+			name = "Stepkin Watch AppTests";
+			packageProductDependencies = (
+				7E5C0A082FF1A00000000001 /* StepkinCore */,
+				7E5C0A0A2FF1A00000000001 /* StepkinEngine */,
+				7E5C0A062FF1A00000000001 /* StepkinTestSupport */,
+			);
+			productName = "Stepkin Watch AppTests";
+			productReference = 1CACAD3F2F4889AE00C99F7E /* Stepkin Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7E5C0B012FF1A00000000001 /* StepkinComplicationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E5C0B062FF1A00000000001 /* Build configuration list for PBXNativeTarget "StepkinComplicationTests" */;
+			buildPhases = (
+				7E5C0B032FF1A00000000001 /* Sources */,
+				7E5C0B042FF1A00000000001 /* Frameworks */,
+				7E5C0B052FF1A00000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7E5C0B092FF1A00000000001 /* StepkinComplicationTests */,
+			);
+			name = StepkinComplicationTests;
+			packageProductDependencies = (
+			);
+			productName = StepkinComplicationTests;
+			productReference = 7E5C0B022FF1A00000000001 /* StepkinComplicationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1CACAD242F4889AD00C99F7E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					1CAA702F2FE9429000377A61 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					1CACAD292F4889AD00C99F7E = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					1CACAD2F2F4889AD00C99F7E = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					1CACAD3E2F4889AE00C99F7E = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 1CACAD2F2F4889AD00C99F7E;
+					};
+					7E5C0B012FF1A00000000001 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 1CACAD272F4889AD00C99F7E /* Build configuration list for PBXProject "Stepkin" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1CACAD232F4889AD00C99F7E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7E5C0A012FF1A00000000001 /* XCLocalSwiftPackageReference "Packages/StepkinKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1CACAD2B2F4889AD00C99F7E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1CACAD292F4889AD00C99F7E /* Stepkin */,
+				1CACAD2F2F4889AD00C99F7E /* Stepkin Watch App */,
+				1CACAD3E2F4889AE00C99F7E /* Stepkin Watch AppTests */,
+				1CAA702F2FE9429000377A61 /* StepkinComplicationExtension */,
+				7E5C0B012FF1A00000000001 /* StepkinComplicationTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1CAA702E2FE9429000377A61 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD282F4889AD00C99F7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD2E2F4889AD00C99F7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD3D2F4889AE00C99F7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E5C0B052FF1A00000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1CAA702C2FE9429000377A61 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD2C2F4889AD00C99F7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CACAD3B2F4889AE00C99F7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E5C0B032FF1A00000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1CAA70412FE9429100377A61 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CAA702F2FE9429000377A61 /* StepkinComplicationExtension */;
+			targetProxy = 1CAA70402FE9429100377A61 /* PBXContainerItemProxy */;
+		};
+		1CACAD332F4889AD00C99F7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CACAD2F2F4889AD00C99F7E /* Stepkin Watch App */;
+			targetProxy = 1CACAD322F4889AD00C99F7E /* PBXContainerItemProxy */;
+		};
+		1CACAD412F4889AE00C99F7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CACAD2F2F4889AD00C99F7E /* Stepkin Watch App */;
+			targetProxy = 1CACAD402F4889AE00C99F7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1CAA70452FE9429100377A61 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = StepkinComplicationExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StepkinComplication/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.watchkitapp.SkykinComplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		1CAA70462FE9429100377A61 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = StepkinComplicationExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StepkinComplication/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.watchkitapp.SkykinComplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		1CACAD512F4889AE00C99F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1CACAD522F4889AE00C99F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		1CACAD542F4889AE00C99F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Stepkin Watch App/Stepkin Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stepkin Watch App/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Used to read your daily steps so your activity shapes your pet.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Used to show local weather next to your creature.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		1CACAD552F4889AE00C99F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Stepkin Watch App/Stepkin Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stepkin Watch App/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Used to read your daily steps so your activity shapes your pet.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Used to show local weather next to your creature.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		1CACAD582F4889AE00C99F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		1CACAD592F4889AE00C99F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				INFOPLIST_KEY_CFBundleDisplayName = Stepkin;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1CACAD5B2F4889AE00C99F7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cliftonia.stepkin-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stepkin Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stepkin Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		1CACAD5C2F4889AE00C99F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cliftonia.stepkin-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stepkin Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stepkin Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		7E5C0B072FF1A00000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.SkykinComplicationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		7E5C0B082FF1A00000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SRT47ZQ7D8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cliftonia.stepkin.SkykinComplicationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1CAA70442FE9429100377A61 /* Build configuration list for PBXNativeTarget "StepkinComplicationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CAA70452FE9429100377A61 /* Debug */,
+				1CAA70462FE9429100377A61 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CACAD272F4889AD00C99F7E /* Build configuration list for PBXProject "Stepkin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CACAD512F4889AE00C99F7E /* Debug */,
+				1CACAD522F4889AE00C99F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CACAD532F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CACAD542F4889AE00C99F7E /* Debug */,
+				1CACAD552F4889AE00C99F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CACAD572F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CACAD582F4889AE00C99F7E /* Debug */,
+				1CACAD592F4889AE00C99F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CACAD5A2F4889AE00C99F7E /* Build configuration list for PBXNativeTarget "Stepkin Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CACAD5B2F4889AE00C99F7E /* Debug */,
+				1CACAD5C2F4889AE00C99F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E5C0B062FF1A00000000001 /* Build configuration list for PBXNativeTarget "StepkinComplicationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E5C0B072FF1A00000000001 /* Debug */,
+				7E5C0B082FF1A00000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7E5C0A012FF1A00000000001 /* XCLocalSwiftPackageReference "Packages/StepkinKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/StepkinKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7E5C0A022FF1A00000000001 /* StepkinCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinCore;
+		};
+		7E5C0A042FF1A00000000001 /* StepkinEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinEngine;
+		};
+		7E5C0A062FF1A00000000001 /* StepkinTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinTestSupport;
+		};
+		7E5C0A082FF1A00000000001 /* StepkinCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinCore;
+		};
+		7E5C0A0A2FF1A00000000001 /* StepkinEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinEngine;
+		};
+		7E5C0A0C2FF1A00000000001 /* StepkinSprites */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StepkinSprites;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1CACAD242F4889AD00C99F7E /* Project object */;
+}
