@@ -33,9 +33,10 @@ jobs:
 
   watch:
     runs-on: xcode-27
-    timeout-minutes: 25
+    # A lost runner (no steps, no log) is only reaped at this limit plus about five minutes.
+    timeout-minutes: 30
     env:
-      SIM_DEVICE: Apple Watch Ultra 4 (49mm)
+      SIM_DEVICE_TYPE: Apple Watch Ultra 4 (49mm)
     steps:
       - uses: actions/checkout@v5
       - name: Select Xcode 27.1
@@ -49,36 +50,58 @@ jobs:
         run: >
           xcodebuild build -project Stepkin.xcodeproj -scheme "Stepkin Watch App"
           -destination "generic/platform=watchOS Simulator" -quiet
+      # The image's watches are paired with iPhones, and xcodebuild then waits on the
+      # phone's instruments service; a fresh, unpaired watch has no phone to wait on.
       - name: Boot simulator
         run: |
           xcrun simctl list runtimes
           xcrun simctl runtime list
           for attempt in $(seq 1 36); do
-            xcrun simctl boot "$SIM_DEVICE" && xcrun simctl bootstatus "$SIM_DEVICE" -b && break
+            if udid=$(xcrun simctl create "CI Watch" "$SIM_DEVICE_TYPE") \
+              && xcrun simctl boot "$udid" && xcrun simctl bootstatus "$udid" -b; then
+              break
+            fi
             if [ "$attempt" = 36 ]; then
               xcrun simctl runtime list
               exit 1
             fi
             echo "runtime not ready (attempt $attempt); waiting"
-            xcrun simctl shutdown "$SIM_DEVICE" || true
+            if [ -n "$udid" ]; then xcrun simctl delete "$udid" || true; fi
             sleep 10
           done
-          echo "Booted after $attempt attempts"
+          echo "Booted $udid after $attempt attempts"
+          echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+      # One retry, and only when the test runner never started; a failing test fails at once.
       - name: Test
-        timeout-minutes: 15
-        run: >
-          xcodebuild test -project Stepkin.xcodeproj -scheme "Stepkin Watch App"
-          -destination "platform=watchOS Simulator,name=$SIM_DEVICE"
-          -resultBundlePath "$RUNNER_TEMP/tests.xcresult"
-          -test-timeouts-enabled YES -default-test-execution-time-allowance 60
-          -maximum-test-execution-time-allowance 120
-          -collect-test-diagnostics never
+        timeout-minutes: 20
+        run: |
+          for attempt in 1 2; do
+            result="$RUNNER_TEMP/tests-$attempt.xcresult"
+            set +e
+            xcodebuild test -project Stepkin.xcodeproj -scheme "Stepkin Watch App" \
+              -destination "platform=watchOS Simulator,id=$SIM_UDID" \
+              -resultBundlePath "$result" \
+              -test-timeouts-enabled YES -default-test-execution-time-allowance 60 \
+              -maximum-test-execution-time-allowance 120 \
+              -collect-test-diagnostics never 2>&1 | tee "$RUNNER_TEMP/test-$attempt.log"
+            status=${PIPESTATUS[0]}
+            set -e
+            if [ "$status" = 0 ]; then exit 0; fi
+            if ! grep -qE "never finished bootstrapping|Early unexpected exit|failed to establish communication|Lost connection to test process" \
+              "$RUNNER_TEMP/test-$attempt.log"; then
+              exit "$status"
+            fi
+            echo "::warning::the test runner failed to launch (attempt $attempt)"
+            xcrun simctl shutdown "$SIM_UDID" || true
+            xcrun simctl boot "$SIM_UDID" && xcrun simctl bootstatus "$SIM_UDID" -b
+          done
+          exit 1
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: tests-xcresult
-          path: ${{ runner.temp }}/tests.xcresult
+          path: ${{ runner.temp }}/tests-*.xcresult
           if-no-files-found: ignore
           retention-days: 7
       - name: List simulators on failure
