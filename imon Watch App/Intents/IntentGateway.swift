@@ -1,5 +1,6 @@
 import Foundation
 import WatchKit
+import os
 
 /// The seam between the app's intents and the pet. Intents for a watch-only
 /// app run in the app process, so the defaults reach the `AppDelegate` that
@@ -10,8 +11,12 @@ enum IntentGateway {
     /// Routes an action to the pet and reports the outcome; defaults to the
     /// delegate's `PetActionRouter` path with no refresh scheduler.
     static var route: @MainActor (PetAction) async -> PetActionOutcome = { action in
-        guard let delegate = WKApplication.shared().delegate as? AppDelegate else { return .noPet }
+        guard let delegate = WKApplication.shared().delegate as? AppDelegate else {
+            Log.presentation.error("Intent ran without the app delegate")
+            return .noPet
+        }
         let app = delegate.appPresenter
+        Log.presentation.info("Intent routed; live presenter: \(app.petPresenter != nil, privacy: .public)")
         let offline = app.offlineDependencies(
             witnesses: CareHandoff.Witnesses(notifications: .live(), complications: .live()),
             refresh: nil

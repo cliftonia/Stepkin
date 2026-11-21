@@ -59,7 +59,10 @@ nonisolated enum OfflineSession {
             dependencies.refresh?.scheduleNext(from: now)
             return .noPet
         }
-        guard let saved = loaded, !saved.isEgg else { return .noPet }
+        guard let saved = loaded, !saved.isEgg else {
+            Log.background.info("Offline session found no pet; save present: \(loaded != nil, privacy: .public)")
+            return .noPet
+        }
 
         var state = GameEngine.advance(saved, to: now, isNight: readings.night, steps: readings.steps, calendar: .current)
         state = await StepCrediting.settle(
