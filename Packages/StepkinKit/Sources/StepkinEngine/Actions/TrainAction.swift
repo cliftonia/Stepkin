@@ -83,6 +83,7 @@ public enum TrainAction {
 
         if won {
             state.strengthHearts.increment(upTo: state.species.maxStrength)
+            state.settleRefilledHearts()
             state.weight.subtract(TimeConstants.trainWeightLoss)
             if state.canCondition {
                 state.trainedHP = min(

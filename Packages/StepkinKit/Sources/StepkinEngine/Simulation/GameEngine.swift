@@ -18,8 +18,9 @@ public enum GameEngine {
     /// night is slept through rather than charged as waking hours. `isNight`
     /// is the weather's daylight reading; `nil` resolves night from the
     /// 18:00–06:00 clock window in `SleepSchedule.isNight`. `steps` is
-    /// today's reading; `.off` and `.unavailable` (no count) disable activity
-    /// scaling, leaving every simulator at its base interval.
+    /// today's reading, applied only to the part of the span that is today;
+    /// `.off` and `.unavailable` (no count) disable activity scaling, leaving
+    /// every simulator at its base interval.
     /// `calendar` supplies the age, night and bedtime hours. For a dead or
     /// egg pet only `lastAdvancedAt` moves; no simulator runs.
     public static func advance(
@@ -36,14 +37,25 @@ public enum GameEngine {
             return state
         }
 
+        // A clock set back leaves every anchor in the future and the pet frozen
+        // until the clock catches up, so the pet's whole history moves back
+        // with it. Less than a tick behind is a stale `now`, not a clock change.
+        let behind = state.timestamps.lastAdvancedAt.timeIntervalSince(now)
+        if behind > TimeConstants.gameTickInterval {
+            state.timestamps.shift(by: -behind)
+        }
+
         // Replayed boundaries predate the weather reading, so they resolve
         // night from the clock (isNight: nil); only the final step sees the
         // live signal.
         let boundaries = SleepSchedule.replayBoundaries(
-            from: state.timestamps.lastAdvancedAt, to: now, calendar: calendar
+            from: state.timestamps.lastAdvancedAt, to: now, startsInDaylight: !state.wasNight, daylightAtEnd: isNight == false, calendar: calendar
         )
         for boundary in boundaries {
-            state = step(state, to: boundary, isNight: nil, steps: steps, calendar: calendar)
+            // The count is today's: on an earlier day it would replay an
+            // active evening as a sedentary one.
+            let known = calendar.isDate(boundary, inSameDayAs: now) || steps == .off ? steps : .unavailable
+            state = step(state, to: boundary, isNight: nil, steps: known, calendar: calendar)
             if state.isDead { return state }
         }
         return step(state, to: now, isNight: isNight, steps: steps, calendar: calendar)
@@ -72,17 +84,20 @@ public enum GameEngine {
         state.age = max(0, days)
 
         // Resolve night and bedtime once so every simulator in the step sees
-        // the same signal.
+        // the same signal. Bedtime is read where the step starts: the step
+        // that lands on dawn spans the end of the night, and must still count
+        // the lit hours behind it.
         let night = SleepSchedule.isNight(weatherNight: isNight, at: now, calendar: calendar)
-        let bedtime = SleepSchedule.isBedtime(at: now, calendar: calendar)
+        let bedtime = SleepSchedule.isBedtime(at: state.timestamps.lastAdvancedAt, calendar: calendar)
 
         state = SleepSchedule.apply(to: state, at: now, night: night, calendar: calendar)
         state = HungerSimulator.apply(to: state, at: now, steps: steps.count)
         state = StrengthSimulator.apply(to: state, at: now, steps: steps.count)
         state = TimeCreditSimulator.apply(to: state, at: now, steps: steps)
         state = ConditioningSimulator.apply(to: state, at: now)
+        let messBefore = InjurySimulator.MessBefore(piles: state.poopCount, lastPoopAt: state.timestamps.lastPoopAt)
         state = PoopSimulator.apply(to: state, at: now)
-        state = InjurySimulator.apply(to: state, at: now, steps: steps.count)
+        state = InjurySimulator.apply(to: state, at: now, steps: steps.count, before: messBefore)
         state = CareMistakeTracker.apply(to: state, at: now, bedtime: bedtime)
         state = CollapseTracker.apply(to: state, at: now)
 

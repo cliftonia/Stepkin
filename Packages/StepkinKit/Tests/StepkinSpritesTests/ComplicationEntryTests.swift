@@ -36,7 +36,6 @@ struct ComplicationEntryTests {
         var state = makeTestState(species: .emberkin)
         state.isInjured = true
         let entry = ComplicationEntry(date: date, state: state)
-        #expect(entry.isInjured)
         #expect(entry.needsAttention)
         #expect(entry.statusText == "hurt")
         #expect(entry.moodKey == "hurt")

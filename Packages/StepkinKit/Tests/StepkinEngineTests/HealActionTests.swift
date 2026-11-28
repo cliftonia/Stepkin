@@ -1,4 +1,5 @@
 import Testing
+import StepkinCore
 @testable import StepkinEngine
 import StepkinTestSupport
 
@@ -32,5 +33,18 @@ struct HealActionTests {
         state.isInjured = true
         state = HealAction.apply(to: state)
         #expect(!state.isInjured)
+    }
+
+    /// Mess at an injuring height would wound the pet again on the next tick,
+    /// burning a lifetime injury; the mess has to go first.
+    @Test
+    func `canHeal returns false while the mess could injure again`() {
+        var state = makeTestState()
+        state.isInjured = true
+        state.poopCount = TimeConstants.maxPoopPiles - 1
+        #expect(!HealAction.canHeal(state))
+
+        state.poopCount = TimeConstants.maxPoopPiles - 2
+        #expect(HealAction.canHeal(state))
     }
 }

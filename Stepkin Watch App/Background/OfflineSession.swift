@@ -11,7 +11,9 @@ import os
 /// Runs on the caller's actor (nonisolated nonsending); the router calls it
 /// on the main actor, so the hand-off check before the save and the save
 /// itself are one stretch: with no presenter the hand-off returns nil before
-/// any await of its own, so nothing can interleave between them.
+/// any await of its own, so nothing can interleave between them. The router
+/// also runs one action at a time, so no second session can load the pet
+/// while this one is between its load and its save.
 nonisolated enum OfflineSession {
 
     /// Everything a session reads and writes through, gathered so `run` stays

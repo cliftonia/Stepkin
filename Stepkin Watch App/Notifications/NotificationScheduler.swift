@@ -40,6 +40,7 @@ nonisolated extension NotificationScheduler {
             schedule: { notifications in
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
+                NotificationSpriteRenderer.removeLeftovers()
                 for notification in notifications {
                     let name = notification.species.displayName
                     let content = makeContent(

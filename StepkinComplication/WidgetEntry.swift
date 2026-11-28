@@ -24,8 +24,6 @@ struct WidgetEntry: TimelineEntry, Codable, Sendable {
     let statusText: String
     /// The mood identifier to localize; absent in a timeline baked by an older app.
     let moodKey: String?
-    /// Whether the pet is injured; absent in a timeline baked by an older app.
-    let isInjured: Bool?
     /// Whether the pet is dead; absent in a timeline baked by an older app.
     let isDead: Bool?
     /// Whether the pet is still an egg; absent in a timeline baked by an older app.
@@ -49,7 +47,6 @@ extension WidgetEntry {
         needsAttention: false,
         statusText: "happy",
         moodKey: "happy",
-        isInjured: nil,
         isDead: nil,
         isEgg: nil
     )

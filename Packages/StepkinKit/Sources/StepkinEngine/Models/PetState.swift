@@ -209,6 +209,27 @@ extension PetState {
             self.strengthEmptiedAt = strengthEmptiedAt
             self.lastTimeCreditAt = lastTimeCreditAt ?? lastAdvancedAt
         }
+
+        /// Moves every timestamp by `interval`, keeping the gaps between them.
+        mutating func shift(by interval: TimeInterval) {
+            bornAt += interval
+            lastFedAt += interval
+            lastTrainedAt += interval
+            lastPoopAt += interval
+            lastHungerDecayAt += interval
+            lastStrengthDecayAt += interval
+            evolvedAt += interval
+            lastAdvancedAt += interval
+            lastBattledAt += interval
+            injuredAt? += interval
+            pendingCareMistakeAt? += interval
+            pendingLightsMistakeAt? += interval
+            lightsOffAt? += interval
+            collapsingAt? += interval
+            hungerEmptiedAt? += interval
+            strengthEmptiedAt? += interval
+            lastTimeCreditAt += interval
+        }
     }
 }
 
@@ -239,6 +260,19 @@ extension PetState {
     /// Hatched, alive, and awake — the gate for interactions and the waking
     /// simulators (hunger, strength, poop, injury).
     var isAwakeAndAlive: Bool { !isDead && !isEgg && !isSleeping }
+
+    /// Ends the neglect clocks a refilled heart has stopped: the emptied
+    /// stamp of each heart that holds something, the collapse countdown
+    /// unless the pet languishes, and the care-call clock unless a heart is
+    /// empty. Every action that raises a heart calls this, because the heart
+    /// may empty again before a tick sees it full, and the clocks would then
+    /// run on as if it had never been filled.
+    mutating func settleRefilledHearts() {
+        if !hungerHearts.isEmpty { timestamps.hungerEmptiedAt = nil }
+        if !strengthHearts.isEmpty { timestamps.strengthEmptiedAt = nil }
+        if !isLanguishing { timestamps.collapsingAt = nil }
+        if !hungerHearts.isEmpty, !strengthHearts.isEmpty { timestamps.pendingCareMistakeAt = nil }
+    }
 
     /// Both stats are empty — the pet is languishing and the collapse countdown
     /// toward death is running. Drives the on-screen weak look and Call sign.

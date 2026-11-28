@@ -74,26 +74,34 @@ struct CareNotificationPlannerTests {
     }
 
     @Test
-    func `a lazy afternoon earns an exercise nudge`() {
-        let afternoon = today(at: 16)   // after 3pm
-        let state = makeTestState(at: afternoon)
-
-        // Lazy after 3pm → nudge; active → none; no step data → none.
-        #expect(notification(
-            CareNotificationPlanner.plan(for: state, now: afternoon, steps: 1_000), .exercise
-        ) != nil)
-        #expect(notification(
-            CareNotificationPlanner.plan(for: state, now: afternoon, steps: 9_000), .exercise
-        ) == nil)
-        #expect(notification(
-            CareNotificationPlanner.plan(for: state, now: afternoon, steps: nil), .exercise
-        ) == nil)
-
-        // Before 3pm, no nudge even when lazy.
+    func `a lazy day earns one exercise nudge at ten past three`() {
         let morning = today(at: 9)
+        let state = makeTestState(at: morning)
+        let due = today(at: TimeConstants.exerciseHour).addingTimeInterval(TimeConstants.exerciseNudgeLead)
+
+        // Lazy → nudge at the fixed time; active → none; no step data → none.
         #expect(notification(
             CareNotificationPlanner.plan(for: state, now: morning, steps: 1_000), .exercise
+        )?.fireDate == due)
+        #expect(notification(
+            CareNotificationPlanner.plan(for: state, now: morning, steps: 9_000), .exercise
         ) == nil)
+        #expect(notification(
+            CareNotificationPlanner.plan(for: state, now: morning, steps: nil), .exercise
+        ) == nil)
+    }
+
+    /// The nudge has one fixed moment a day, so a plan made after it (every
+    /// later visit and hourly wake) cannot schedule another.
+    @Test
+    func `a plan made after the nudge time does not nudge again`() {
+        let state = makeTestState(at: today(at: 7))
+
+        for hour in [16, 18, 22] {
+            #expect(notification(
+                CareNotificationPlanner.plan(for: state, now: today(at: hour), steps: 0), .exercise
+            ) == nil)
+        }
     }
 
     @Test
@@ -111,8 +119,7 @@ struct CareNotificationPlannerTests {
 
     @Test
     func `a collapsing pet is warned before it fades`() {
-        // The fading warning is exempt from the night drop, so it fires whenever due.
-        let now = today(at: 18)   // 6pm — already "night" for the drop filter
+        let now = today(at: 18)
         var state = makeTestState(hunger: 0, strength: 0, at: now)
         state.timestamps.collapsingAt = now
 
@@ -125,11 +132,11 @@ struct CareNotificationPlannerTests {
         #expect(fading?.fireDate == expected)
     }
 
-    /// A need that survives the night is held until the owner wakes rather
-    /// than dropped — the pet is just as hungry at 6am.
+    /// The pet is awake and draining until bedtime, so an evening call is
+    /// made in the evening, while the owner can still answer it.
     @Test
-    func `a night-bound hunger call is held until morning`() throws {
-        // One heart left at 5pm empties after dark.
+    func `an evening hunger call fires in the evening`() throws {
+        // One heart left at 5pm empties at ten past six.
         let now = today(at: 17)
         let state = makeTestState(species: .emberkin, hunger: 1, at: now)
 
@@ -137,9 +144,7 @@ struct CareNotificationPlannerTests {
             notification(CareNotificationPlanner.plan(for: state, now: now, steps: nil), .hunger)
         )
 
-        #expect(Calendar.current.component(.hour, from: hunger.fireDate)
-            == TimeConstants.nightEndHour)
-        #expect(hunger.fireDate > now)
+        #expect(hunger.fireDate == now.addingTimeInterval(TimeConstants.hungerDepletionInterval))
     }
 
     /// A sleeping pet's clocks are frozen and restart at dawn, so its hunger
@@ -175,37 +180,89 @@ struct CareNotificationPlannerTests {
         #expect(hunger.fireDate == dawn.addingTimeInterval(18 * 60))
     }
 
-    /// The exercise nudge is about a step total the owner can no longer
-    /// influence by morning, so it is dropped rather than held.
-    @Test
-    func `a night-bound exercise nudge is dropped, not deferred`() {
-        let state = makeTestState(at: today(at: 7))
-        let afterDark = today(at: 18)
-
-        #expect(notification(
-            CareNotificationPlanner.plan(for: state, now: afterDark, steps: 0), .exercise
-        ) == nil)
-
-        // Daytime keeps its own hour.
-        let daytime = today(at: 16)
-        let kept = notification(
-            CareNotificationPlanner.plan(for: state, now: daytime, steps: 0), .exercise
-        )
-        #expect(kept?.fireDate == daytime.addingTimeInterval(TimeConstants.exerciseNudgeLead))
-    }
-
-    /// An injury reminder held past the untreated-injury death window would
-    /// arrive after the grave, so it is dropped instead.
-    @Test
-    func `an injury reminder is dropped when morning falls past the death window`() {
-        let now = today(at: 16)
+    /// The injury clock does not stop for the night, so its reminder is never
+    /// held or dropped: silence here costs the pet its life.
+    @Test(arguments: [16, 22])
+    func `an injury reminder fires when due, evening or night`(hour: Int) {
+        let now = today(at: hour)
         var state = makeTestState(at: now)
         state.isInjured = true
-        state.timestamps.injuredAt = now   // dies at 22:00; reminder due 19:00
+        state.timestamps.injuredAt = now
 
         #expect(notification(
             CareNotificationPlanner.plan(for: state, now: now, steps: nil), .injury
-        ) == nil)
+        )?.fireDate == now.addingTimeInterval(TimeConstants.untreatedInjuryDeathTime / 2))
+    }
+
+    /// A pet kept up by a light the player switched on does not pause at
+    /// bedtime, so neither may its hunger call.
+    @Test
+    func `a pet kept up by the light is called for when it empties, not at dawn`() throws {
+        let now = today(at: 22)
+        var state = makeTestState(species: .emberkin, hunger: 2, at: now)
+        state.wasNight = true
+        state.lightsOn = true
+
+        let hunger = try #require(
+            notification(CareNotificationPlanner.plan(for: state, now: now, steps: nil), .hunger)
+        )
+
+        #expect(hunger.fireDate == now.addingTimeInterval(2 * TimeConstants.hungerDepletionInterval))
+    }
+
+    /// A catch-up can find an injury already hours old. Its half-way reminder
+    /// is then behind it, and the pet must not count down to death in silence.
+    @Test
+    func `an injury found past its half-way mark still gets a last call an hour before death`() {
+        let now = today(at: 13)
+        var state = makeTestState(at: now)
+        state.isInjured = true
+        state.timestamps.injuredAt = now.addingTimeInterval(-4 * 3_600)
+
+        let injury = notification(CareNotificationPlanner.plan(for: state, now: now, steps: nil), .injury)
+
+        #expect(injury?.fireDate == now.addingTimeInterval(3_600))
+    }
+
+    @Test
+    func `an injury found in its last hour is called at once`() {
+        let now = today(at: 13)
+        var state = makeTestState(at: now)
+        state.isInjured = true
+        state.timestamps.injuredAt = now.addingTimeInterval(-5.5 * 3_600)
+
+        let injury = notification(CareNotificationPlanner.plan(for: state, now: now, steps: nil), .injury)
+
+        #expect(injury?.fireDate == now.addingTimeInterval(60))
+    }
+
+    /// The mess that will injure can be foreseen, and with no wake in between
+    /// nothing replans: the injury's reminder has to be laid down in advance.
+    @Test
+    func `a mess heading for injury has its injury reminder planned ahead`() {
+        let now = today(at: 8)
+        var state = makeTestState(at: now)
+        state.poopCount = TimeConstants.maxPoopPiles - 2
+        state.timestamps.lastPoopAt = now.addingTimeInterval(-3_600)
+
+        let injury = notification(CareNotificationPlanner.plan(for: state, now: now, steps: nil), .injury)
+
+        // Piles at 09:00 and 11:00; the fourth injures, and the reminder is half-way to death.
+        let injuredAt = now.addingTimeInterval(3 * 3_600)
+        #expect(injury?.fireDate == injuredAt.addingTimeInterval(TimeConstants.untreatedInjuryDeathTime / 2))
+    }
+
+    @Test
+    func `a sedentary day brings the foreseen injury a pile sooner`() {
+        let now = today(at: 8)
+        var state = makeTestState(at: now)
+        state.poopCount = TimeConstants.maxPoopPiles - 2
+        state.timestamps.lastPoopAt = now.addingTimeInterval(-3_600)
+
+        let injury = notification(CareNotificationPlanner.plan(for: state, now: now, steps: 0), .injury)
+
+        let injuredAt = now.addingTimeInterval(3_600)
+        #expect(injury?.fireDate == injuredAt.addingTimeInterval(TimeConstants.untreatedInjuryDeathTime / 2))
     }
 
     @Test

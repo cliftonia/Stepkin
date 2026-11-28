@@ -90,4 +90,23 @@ struct EvolutionEngineTests {
         state.lifetimeActiveSteps = 5_000_000
         #expect(EvolutionEngine.checkEvolution(for: state) == nil)
     }
+
+    /// Evolution fills the hearts, so the neglect of the old stage ends there
+    /// and none of it is billed to the new one.
+    @Test
+    func `evolving ends the neglect clocks of the stage before`() {
+        let now = Date.now
+        var state = makeTestState(species: .dotkin, hunger: 0, strength: 0, at: now)
+        state.timestamps.hungerEmptiedAt = now
+        state.timestamps.strengthEmptiedAt = now
+        state.timestamps.pendingCareMistakeAt = now
+        state.timestamps.collapsingAt = now
+
+        let evolved = EvolutionEngine.evolve(state, to: .hopkin, at: now)
+
+        #expect(evolved.timestamps.hungerEmptiedAt == nil)
+        #expect(evolved.timestamps.strengthEmptiedAt == nil)
+        #expect(evolved.timestamps.pendingCareMistakeAt == nil)
+        #expect(evolved.timestamps.collapsingAt == nil)
+    }
 }

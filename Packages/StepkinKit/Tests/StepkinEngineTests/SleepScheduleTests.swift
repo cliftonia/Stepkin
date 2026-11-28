@@ -185,12 +185,26 @@ struct SleepScheduleTests {
     // MARK: - Guards
 
     @Test
+    func `under a light evening sky the replay leaves out that evening`() {
+        let calendar = Calendar.current
+        let start = calendar.date(bySettingHour: 17, minute: 0, second: 0, of: .now) ?? .now
+        let nextEvening = calendar.date(byAdding: .hour, value: 28, to: start) ?? start
+
+        let overnight = SleepSchedule.replayBoundaries(from: start, to: nextEvening, startsInDaylight: false, daylightAtEnd: true, calendar: calendar)
+            .map { calendar.component(.hour, from: $0) * 100 + calendar.component(.minute, from: $0) }
+        #expect(overnight == [1800, 2100, 2102, 600, 1200])
+
+        let sameEvening = calendar.date(byAdding: .hour, value: 5, to: start) ?? start
+        #expect(SleepSchedule.replayBoundaries(from: start, to: sameEvening, startsInDaylight: false, daylightAtEnd: true, calendar: calendar).isEmpty)
+    }
+
+    @Test
     func `replay boundaries name dawn, dusk, bedtime and the settle in order`() {
         let calendar = Calendar.current
         let start = calendar.date(bySettingHour: 17, minute: 0, second: 0, of: .now) ?? .now
         let end = calendar.date(byAdding: .hour, value: 14, to: start) ?? start
 
-        let hours = SleepSchedule.replayBoundaries(from: start, to: end, calendar: .current)
+        let hours = SleepSchedule.replayBoundaries(from: start, to: end, startsInDaylight: false, daylightAtEnd: false, calendar: .current)
             .map { calendar.component(.hour, from: $0) * 100 + calendar.component(.minute, from: $0) }
 
         #expect(hours == [1800, 2100, 2102, 600])
@@ -199,11 +213,11 @@ struct SleepScheduleTests {
     @Test
     func `replay boundaries are empty within a single waking stretch`() {
         let calendar = Calendar.current
-        let start = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: .now) ?? .now
-        let end = calendar.date(byAdding: .hour, value: 5, to: start) ?? start
+        let start = calendar.date(bySettingHour: 13, minute: 0, second: 0, of: .now) ?? .now
+        let end = calendar.date(byAdding: .hour, value: 4, to: start) ?? start
 
-        #expect(SleepSchedule.replayBoundaries(from: start, to: end, calendar: .current).isEmpty)
-        #expect(SleepSchedule.replayBoundaries(from: end, to: start, calendar: .current).isEmpty)
+        #expect(SleepSchedule.replayBoundaries(from: start, to: end, startsInDaylight: false, daylightAtEnd: false, calendar: .current).isEmpty)
+        #expect(SleepSchedule.replayBoundaries(from: end, to: start, startsInDaylight: false, daylightAtEnd: false, calendar: .current).isEmpty)
     }
 
     @Test

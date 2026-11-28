@@ -25,6 +25,8 @@ developer's.
   clocks, so the pet no longer wakes starved and injured after every night.
 - The save keeps one backup copy; a torn or undecodable write falls back to
   the previous good save instead of hatching a new egg over a months-old pet.
+  A save neither copy can decode is set aside under `.unreadable`, which no
+  save or delete touches, so a later fix can still restore it.
 - A dead pet can no longer evolve on the grave tick; leaving the pet screen
   stops the wander and sprite timers; the multi-day step catch-up is bounded
   by days rather than by successful fetches.

@@ -60,6 +60,32 @@ struct WeatherStoreTests {
         await store.refreshIfStale(now: base.addingTimeInterval(beyond))?.value
         #expect(counter.count == 2)
     }
+
+    private var nightReading: WeatherSnapshot {
+        WeatherSnapshot(
+            temperature: Measurement(value: 10, unit: .celsius), condition: .clear, isDaylight: false, humidity: 0.5
+        )
+    }
+
+    /// The refetch starts when the cache window ends; the old reading must
+    /// keep speaking until it lands, or the scene flips to the clock between.
+    @Test
+    func `the night signal outlives the cache window while the refetch runs`() async {
+        let store = WeatherStore(provider: .mock(nightReading))
+        let base = Date(timeIntervalSinceReferenceDate: 0)
+        await store.refresh(now: base)
+
+        #expect(store.nightSignal(now: base.addingTimeInterval(TimeConstants.weatherCacheInterval + 60)) == true)
+    }
+
+    @Test
+    func `a reading two cache windows old gives no night signal`() async {
+        let store = WeatherStore(provider: .mock(nightReading))
+        let base = Date(timeIntervalSinceReferenceDate: 0)
+        await store.refresh(now: base)
+
+        #expect(store.nightSignal(now: base.addingTimeInterval(TimeConstants.weatherCacheInterval * 2)) == nil)
+    }
 }
 
 private final class Counter: @unchecked Sendable {

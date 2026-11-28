@@ -76,4 +76,18 @@ struct LightsActionTests {
 
         #expect(result == .blocked)
     }
+
+    /// The lights clock is the light's own: putting the light out ends it at
+    /// once, so a later catch-up cannot bill a dark night as a lit one.
+    @Test
+    func `putting the light out ends the lights-mistake clock`() {
+        let now = Date.now
+        var state = makeTestState(at: now)
+        state.timestamps.pendingLightsMistakeAt = now.addingTimeInterval(-600)
+
+        let dark = LightsAction.apply(to: state, night: true, at: now).state
+
+        #expect(!dark.lightsOn)
+        #expect(dark.timestamps.pendingLightsMistakeAt == nil)
+    }
 }

@@ -39,16 +39,20 @@ struct PetScreen: View {
             }
             .task {
                 presenter.startGameLoop()
-                refreshEnabledIntegrations()
+            }
+            .task(id: scenePhase) {
+                // Throttled by each store, so a long look keeps its readings
+                // fresh without a fetch per pass.
+                while scenePhase == .active, !Task.isCancelled {
+                    refreshEnabledIntegrations()
+                    try? await Task.sleep(for: .seconds(TimeConstants.gameTickInterval))
+                }
             }
             .onChange(of: scenePhase) { _, newPhase in
                 presenter.handleScenePhase(
                     isActive: newPhase == .active,
                     notificationsEnabled: appPresenter.settings.notificationsEnabled
                 )
-                if newPhase == .active {
-                    refreshEnabledIntegrations()
-                }
             }
             .onChange(of: appPresenter.weatherStore.snapshot) { _, _ in
                 presenter.environmentDidChange()

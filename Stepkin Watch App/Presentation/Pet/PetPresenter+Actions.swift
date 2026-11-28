@@ -7,8 +7,9 @@ import Foundation
 extension PetPresenter {
 
     /// Performs an action routed by `PetActionRouter` while this presenter is
-    /// the save's writer. A tick runs one game-loop tick; a feed refuses with
-    /// the shared `FeedRefusal` reason when the pet is busy, cannot eat or is sated,
+    /// the save's writer. A tick runs one game-loop tick; a feed ticks first, so a
+    /// suspended app's stale pet is brought to now, then refuses with the shared
+    /// `FeedRefusal` reason when the pet is busy, cannot eat or is sated,
     /// else runs the same feeding ceremony the home screen's menu does and
     /// returns once it has finished, so `.done` means the feed was applied and
     /// saved. A ceremony cancelled before it fed (the screen went away) is
@@ -20,6 +21,9 @@ extension PetPresenter {
             return .done
         case .feed(let food):
             // A running ceremony is never cancelled by a routed feed.
+            if viewModel.isBusy { return .refused(reason: FeedRefusal.busy) }
+            // A suspended app's timer has not fired: judge the pet as it is now.
+            tick()
             if viewModel.isBusy { return .refused(reason: FeedRefusal.busy) }
             if let reason = FeedRefusal.reason(for: state, food: food) {
                 return .refused(reason: reason)

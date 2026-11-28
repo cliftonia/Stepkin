@@ -4,7 +4,7 @@ import Foundation
 nonisolated extension WeatherProvider {
     /// Creates a provider that fails every fetch with the given error.
     static func mockFailing(
-        _ error: WeatherError = .weatherUnavailable
+        _ error: WeatherError = .locationUnavailable
     ) -> WeatherProvider {
         WeatherProvider { throw error }
     }

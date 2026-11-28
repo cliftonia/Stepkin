@@ -15,7 +15,6 @@ struct WidgetEntryDecodingTests {
         #expect(entry.speciesName == "Dotkin")
         #expect(entry.spriteRows == [960, 4080])
         #expect(entry.needsAttention)
-        #expect(entry.isInjured == nil)
         #expect(entry.isDead == nil)
         #expect(entry.isEgg == nil)
     }
@@ -28,7 +27,6 @@ struct WidgetEntryDecodingTests {
         """
         let entry = try JSONDecoder().decode(WidgetEntry.self, from: Data(json.utf8))
 
-        #expect(entry.isInjured == true)
         #expect(entry.isDead == false)
         #expect(entry.isEgg == true)
     }

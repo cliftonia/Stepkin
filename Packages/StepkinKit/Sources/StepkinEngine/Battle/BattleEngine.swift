@@ -1,8 +1,9 @@
 import Foundation
 import StepkinCore
 
-/// The result of one arena round, resolved from the `AttackHeight` triangle:
-/// a hit on either side, or a `.clash` when neither height beats the other.
+/// The result of one arena round, resolved from the `AttackHeight` triangle
+/// and, on matched heights, from power: a hit on either side, or a `.clash`
+/// when neither the heights nor the powers separate them.
 public enum RoundOutcome: Equatable, Sendable {
     case playerHit
     case opponentHit
@@ -10,7 +11,8 @@ public enum RoundOutcome: Equatable, Sendable {
 }
 
 /// The arena rules as pure, stateless functions: each round is an
-/// attack-height duel resolved by the `AttackHeight` triangle, and applying
+/// attack-height duel resolved by the `AttackHeight` triangle, with power
+/// deciding matched heights, and applying
 /// the result mutates a caller-owned `PetState` — the win/loss record and
 /// conditioning the evolution gates read.
 public enum BattleEngine {
@@ -26,17 +28,32 @@ public enum BattleEngine {
         state.isAwakeAndAlive
     }
 
-    /// Resolves one round by the height triangle. Matching heights are a
-    /// `.clash` — nobody is hit; a level session ends on
-    /// `judge` instead.
+    /// The pet's battle power: its species' base plus
+    /// `TimeConstants.powerPerTrainedPoint` for each trained point.
+    public static func power(of state: PetState) -> Double {
+        Double(state.species.basePower) + Double(state.trainedPower) * TimeConstants.powerPerTrainedPoint
+    }
+
+    /// Resolves one round by the height triangle. Matching heights go to a
+    /// side stronger by more than `TimeConstants.clashPowerMargin`; between
+    /// closer powers they are a `.clash` and nobody is hit. A level session
+    /// ends on `judge` instead.
     public static func resolveRound(
         playerHeight: AttackHeight,
-        opponentHeight: AttackHeight
+        opponentHeight: AttackHeight,
+        playerPower: Double,
+        opponentPower: Double
     ) -> RoundOutcome {
         if playerHeight.beats(opponentHeight) {
             return .playerHit
         }
         if opponentHeight.beats(playerHeight) {
+            return .opponentHit
+        }
+        if playerPower > opponentPower * TimeConstants.clashPowerMargin {
+            return .playerHit
+        }
+        if opponentPower > playerPower * TimeConstants.clashPowerMargin {
             return .opponentHit
         }
         return .clash

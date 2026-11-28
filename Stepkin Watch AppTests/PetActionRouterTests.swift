@@ -103,9 +103,10 @@ struct PetActionRouterTests {
             .feed(.meat), app: app, offline: makeOffline(store: makeStore(offlineBox)), now: .now
         )
 
-        // "Fed." is only true once the ceremony has applied the feed and saved.
+        // "Fed." is only true once the ceremony has applied the feed and saved;
+        // the tick that brings the pet to now saves before it.
         #expect(outcome == .done)
-        #expect(appBox.saveCount == savesBefore + 1)
+        #expect(appBox.saveCount > savesBefore)
         #expect(appBox.state?.hungerHearts.value == 2)
         #expect(offlineBox.saveCount == 0)
         app.petPresenter?.stopGameLoop()
@@ -212,5 +213,64 @@ struct PetActionRouterTests {
         #expect(appBox.state?.species == .hopkin)
         #expect(app.petPresenter?.viewModel.activity == .idle)
         app.petPresenter?.stopGameLoop()
+    }
+
+    /// Holds every caller until opened, so a test can park a session mid-flight.
+    @MainActor
+    private final class Gate {
+        private(set) var waiting = 0
+        private var isOpen = false
+        private var parked: [CheckedContinuation<Void, Never>] = []
+
+        func wait() async {
+            guard !isOpen else { return }
+            waiting += 1
+            await withCheckedContinuation { parked.append($0) }
+        }
+
+        func open() {
+            isOpen = true
+            parked.forEach { $0.resume() }
+            parked = []
+        }
+    }
+
+    /// Two wakes can overlap while the first awaits HealthKit (a Siri feed and
+    /// a background tick just after midnight); each must build on the other's
+    /// save, or the later save silently undoes a feed already reported done.
+    @Test
+    func `a tick that overlaps an offline feed does not undo it`() async throws {
+        let box = StoreBox()
+        var saved = makeTestState(species: .emberkin, hunger: 1)
+        saved.stepTrackedDay = Date.now.addingTimeInterval(-86_400)
+        box.state = saved
+        let app = try makeApp(store: makeStore(StoreBox()))
+        let gate = Gate()
+        let offline = OfflineSession.Dependencies(
+            store: makeStore(box),
+            finalSteps: { _ in
+                await gate.wait()
+                return 0
+            },
+            witnesses: CareHandoff.Witnesses(
+                notifications: NotificationScheduler(
+                    schedule: { _ in }, notify: { _, _, _ in }, cancelAll: {}, requestAuthorization: { true }
+                ),
+                complications: ComplicationReloader(reload: {})
+            ),
+            refresh: nil,
+            notificationsEnabled: false
+        )
+
+        let feed = Task { await PetActionRouter.perform(.feed(.meat), app: app, offline: offline, now: .now) }
+        let tick = Task { await PetActionRouter.perform(.tick, app: app, offline: offline, now: .now) }
+        #expect(await waitUntil { gate.waiting >= 1 })
+        // Let a second session, if one is allowed in, reach the gate too.
+        for _ in 0..<20 { await Task.yield() }
+        gate.open()
+
+        #expect(await feed.value == .done)
+        _ = await tick.value
+        #expect(box.state?.hungerHearts.value == 2)
     }
 }

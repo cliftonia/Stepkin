@@ -40,18 +40,41 @@ public enum SleepSchedule {
 
     /// Returns the scheduled state-change moments strictly between `start` and
     /// `end`, ascending, over at most `maxReplayDays` days: dusk (light off),
-    /// bedtime (the settle begins), the settle completing (the pet sleeps) and
-    /// dawn (wake). A catch-up steps through them so a night the app never saw
+    /// bedtime (the settle begins), the settle completing (the pet sleeps),
+    /// dawn (wake) and noon. A catch-up steps through them so a night the app never saw
     /// is slept through, not charged as waking hours. Dawn without a preceding
     /// settle still matters: it is where a pet asleep at `start` wakes.
+    ///
+    /// The clock is only a stand-in for the sky, and the two ends of the span
+    /// may know better:
+    /// - A `start` inside bedtime adds two moments of its own, so a pet still
+    ///   awake then (the light just put out, or an evening sky still light)
+    ///   settles although that evening's boundaries are behind it. They are
+    ///   left out for a pet up before six with `startsInDaylight`: its day has
+    ///   begun, and the clock's last hour of night must not put it back to bed.
+    /// - With `daylightAtEnd` a live reading says the sky at `end` is light, so
+    ///   that evening has not begun whatever the clock says: every moment from
+    ///   the dusk of `end`'s own day is left out. Replayed, they would put the
+    ///   pet to bed by the clock only for the live step to wake it, and each
+    ///   such wake restarts its hunger, strength and mess clocks.
     static func replayBoundaries(
         from start: Date,
         to end: Date,
+        startsInDaylight: Bool,
+        daylightAtEnd: Bool,
         calendar: Calendar
     ) -> [Date] {
         guard end > start else { return [] }
-        let hours = [TimeConstants.nightEndHour, TimeConstants.nightStartHour, TimeConstants.sleepHour]
+        // Noon changes nothing on a clock day; it is there so every replayed
+        // day has one step the clock calls day. A light the owner put on under
+        // a morning sky still dark is reset by it, and so goes out at dusk.
+        let hours = [TimeConstants.nightEndHour, 12, TimeConstants.nightStartHour, TimeConstants.sleepHour]
         var boundaries: [Date] = []
+        let upBeforeDawn = startsInDaylight && calendar.component(.hour, from: start) < TimeConstants.nightEndHour
+        if isBedtime(at: start, calendar: calendar), !upBeforeDawn {
+            let lightsOut = start.addingTimeInterval(TimeConstants.gameTickInterval)
+            boundaries += [lightsOut, lightsOut.addingTimeInterval(TimeConstants.sleepDelay)]
+        }
         var day = calendar.startOfDay(for: start)
 
         for _ in 0..<maxReplayDays {
@@ -67,7 +90,9 @@ public enum SleepSchedule {
             guard let next = calendar.date(byAdding: .day, value: 1, to: day), next < end else { break }
             day = next
         }
-        return boundaries.filter { $0 > start && $0 < end }.sorted()
+        let lightUntil = calendar.date(bySettingHour: TimeConstants.nightStartHour, minute: 0, second: 0, of: end)
+        let cutoff = daylightAtEnd ? lightUntil ?? end : end
+        return boundaries.filter { $0 > start && $0 < end && $0 < cutoff }.sorted()
     }
 
     /// Applies the resolved night signal: flips the light when the signal

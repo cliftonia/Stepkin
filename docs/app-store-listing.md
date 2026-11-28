@@ -40,7 +40,8 @@ scene, and real daylight decides when it is night.
 - Train in five-round sessions and take on opponents in battle.
 - Fourteen creatures across five evolution stages, chosen by how you care
   and how much you move.
-- Care reminders on the wrist, held until morning so nothing buzzes at 2am.
+- Care reminders on the wrist, quiet while your creature sleeps. Only an
+  untreated injury or a fading creature will wake you.
 - A watch-face complication that shows your creature at a glance.
 - A red battery-saver palette that follows Low Power Mode.
 - Nothing leaves your watch. No account, no ads, no tracking.

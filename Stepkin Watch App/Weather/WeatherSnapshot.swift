@@ -38,11 +38,10 @@ nonisolated struct WeatherSnapshot: Sendable, Equatable {
     let humidity: Double
 }
 
-/// Failures obtaining a weather reading: the location is unavailable, or the
-/// weather itself is unavailable.
+/// The failure obtaining a weather reading that the app raises itself: no
+/// location fix. WeatherKit's own errors pass through untouched.
 nonisolated enum WeatherError: Error, Sendable {
     case locationUnavailable
-    case weatherUnavailable
 }
 
 #if DEBUG

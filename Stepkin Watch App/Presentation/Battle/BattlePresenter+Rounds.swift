@@ -17,7 +17,9 @@ extension BattlePresenter {
             .randomElement() ?? .medium
         let outcome = BattleEngine.resolveRound(
             playerHeight: playerHeight,
-            opponentHeight: opponentHeight
+            opponentHeight: opponentHeight,
+            playerPower: BattleEngine.power(of: petState),
+            opponentPower: opponent?.power ?? 0
         )
         viewModel.lastRoundOutcome = outcome
 

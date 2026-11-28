@@ -192,4 +192,35 @@ struct GameEngineTests {
         let result = daytimeHunger(steps: .unavailable)
         #expect(result.engine == result.direct)
     }
+
+    /// A clock corrected backwards would otherwise leave every anchor in the
+    /// future and freeze the pet until the clock caught up.
+    @Test
+    func `a clock set back does not freeze the pet`() {
+        let noon = clock(hour: 12)
+        let state = makeTestState(hunger: 4, at: noon)
+        let earlier = noon.addingTimeInterval(-86_400)
+
+        var advanced = GameEngine.advance(state, to: earlier, isNight: false, steps: .unavailable, calendar: .current)
+        advanced = GameEngine.advance(
+            advanced, to: earlier.addingTimeInterval(TimeConstants.hungerDepletionInterval),
+            isNight: false, steps: .unavailable, calendar: .current
+        )
+
+        #expect(advanced.hungerHearts.value == 3)
+    }
+
+    /// A tick stamped a moment before the last one is a stale `now`, not a
+    /// clock change, and moves nothing.
+    @Test
+    func `a slightly stale tick leaves the anchors alone`() {
+        let noon = clock(hour: 12)
+        let state = makeTestState(hunger: 4, at: noon)
+
+        let advanced = GameEngine.advance(
+            state, to: noon.addingTimeInterval(-1), isNight: false, steps: .unavailable, calendar: .current
+        )
+
+        #expect(advanced.timestamps.lastHungerDecayAt == noon)
+    }
 }

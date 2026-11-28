@@ -8,22 +8,19 @@ public struct BattleOpponent: Sendable {
     /// The drawn species, chosen by `generate(matching:)` to differ from the player's when
     /// possible.
     public let species: PetSpecies
-    /// The species' `basePower` jittered by ±10, clamped to at least 1.
-    let power: Double
+    /// The species' `basePower` jittered by ±10, clamped to at least 1; set
+    /// against `BattleEngine.power(of:)` when a round's heights match.
+    public let power: Double
 
-    /// Generates an opponent matched to the player's current stage.
-    /// Prefers a different species of the same evolution stage, falling
-    /// back to any other species, and to the pet's own species as a last
-    /// resort.
+    /// Generates an opponent matched to the player's current stage: another
+    /// species of the same stage, or of the nearest stage when the pet's
+    /// species is alone in its own, so power stays a fair contest. The pet's
+    /// own species is the last resort.
     public static func generate(matching state: PetState) -> BattleOpponent {
-        let sameStage = PetSpecies.allCases.filter {
-            $0.stage == state.species.stage && $0 != state.species
-        }
-        let others = PetSpecies.allCases.filter {
-            $0 != state.species
-        }
-        let opponent = sameStage.randomElement()
-            ?? others.randomElement()
+        let stage = state.species.stage.rawValue
+        let others = PetSpecies.allCases.filter { $0 != state.species }
+        let nearest = others.map { abs($0.stage.rawValue - stage) }.min()
+        let opponent = others.filter { abs($0.stage.rawValue - stage) == nearest }.randomElement()
             ?? state.species
         let power = Double(opponent.basePower) + Double.random(in: -10...10)
         return BattleOpponent(

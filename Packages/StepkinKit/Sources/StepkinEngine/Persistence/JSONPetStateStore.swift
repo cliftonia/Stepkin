@@ -13,6 +13,10 @@ public enum JSONPetStateStore {
     /// The previous good save, kept so one torn or undecodable write cannot
     /// cost a months-old pet. Do not rename either key: both are on wrists.
     static let backupKey = "com.cliftonia.imon.petState.backup"
+    /// A save neither the current key nor the backup could decode, set aside
+    /// the first time it is met. No save or delete touches it, so the new egg
+    /// hatched in its place cannot overwrite the pet a later fix could restore.
+    static let unreadableKey = "com.cliftonia.imon.petState.unreadable"
 
     // MARK: - Live
 
@@ -42,9 +46,15 @@ public enum JSONPetStateStore {
                     return PetState(from: try JSONDecoder().decode(PetStateDTO.self, from: data))
                 } catch {
                     // The backup is one save behind; the engine's catch-up closes the gap.
-                    guard let backup = defaults.data(forKey: backupKey) else { throw error }
-                    Log.engine.error("Save undecodable; restoring backup: \(error, privacy: .public)")
-                    return PetState(from: try JSONDecoder().decode(PetStateDTO.self, from: backup))
+                    if let backup = defaults.data(forKey: backupKey),
+                       let dto = try? JSONDecoder().decode(PetStateDTO.self, from: backup) {
+                        Log.engine.error("Save undecodable; restoring backup: \(error, privacy: .public)")
+                        return PetState(from: dto)
+                    }
+                    if defaults.data(forKey: unreadableKey) == nil {
+                        defaults.set(data, forKey: unreadableKey)
+                    }
+                    throw error
                 }
             },
             delete: {

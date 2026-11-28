@@ -64,10 +64,12 @@ final class WeatherStore {
     /// Derives night from the reading's daylight flag, but only while the reading
     /// is still fresh. A stale reading (e.g. last night's, on reopening the next
     /// day) returns nil so day/night falls back to the clock instead of showing
-    /// the old night until a fetch completes.
+    /// the old night until a fetch completes. Fresh is two cache windows: the
+    /// refetch starts when the first ends, and the reading must keep speaking
+    /// until it lands, or the scene flips to the clock and back.
     func nightSignal(now: Date = .now) -> Bool? {
         guard let snapshot, let lastSuccess = throttle.lastSuccess,
-              now.timeIntervalSince(lastSuccess) < TimeConstants.weatherCacheInterval
+              now.timeIntervalSince(lastSuccess) < TimeConstants.weatherCacheInterval * 2
         else {
             return nil
         }

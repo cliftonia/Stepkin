@@ -64,14 +64,21 @@ public enum TimeConstants {
 
     // MARK: - Notifications
 
-    /// Local hour (24h) from which a low step count earns an exercise nudge.
+    /// Local hour (24h) of the day's one exercise nudge, sent to a wearer still under the target.
     package static let exerciseHour: Int = 15
 
-    /// Today's steps below this after `exerciseHour` earn an exercise nudge.
+    /// Today's steps below this earn the exercise nudge.
     package static let exerciseStepTarget: Int = 5_000
 
-    /// Small lead before the exercise nudge fires, so it's prompt but not instant.
+    /// How far past `exerciseHour` the exercise nudge fires.
     package static let exerciseNudgeLead: TimeInterval = 600
+
+    /// How long before an untreated injury kills that its last call fires, for an injury found
+    /// with its half-way reminder already behind it.
+    package static let injuryLastCallLead: TimeInterval = 3_600
+
+    /// How soon the injury call fires when even the last call is behind it.
+    package static let injuryCallDelay: TimeInterval = 60
 
     /// How long before a collapse death to warn that the pet is fading.
     package static let nearingDeathLead: TimeInterval = 21_600
@@ -115,6 +122,12 @@ public enum TimeConstants {
 
     /// Neglect this long (no training / no battling) drops one trained point.
     package static let conditioningDecayInterval: TimeInterval = 43_200
+
+    /// Battle power each trained POW point adds to the species' base.
+    package static let powerPerTrainedPoint: Double = 10
+
+    /// How many times stronger a side must be to win a round of matched heights.
+    package static let clashPowerMargin: Double = 1.2
 
     /// Activity factor at or above this grants the active HP bonus.
     package static let activeHPFactorThreshold: Double = 0.5

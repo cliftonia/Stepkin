@@ -8,13 +8,15 @@ extension PetState {
     /// charge the whole night in one go — a pet starved, weak and injured at
     /// every dawn. The time credit's anchor moves too, so a night slept with
     /// Steps off is never paid as waking time. Any partial interval carried
-    /// into sleep is forgiven.
+    /// into sleep is forgiven. Neglect restarts here too: a pet that went to
+    /// bed with an empty heart is billed from the wake, never for the night.
     mutating func wake(at now: Date) {
         if isSleeping {
             timestamps.lastHungerDecayAt = now
             timestamps.lastStrengthDecayAt = now
             timestamps.lastPoopAt = now
             timestamps.lastTimeCreditAt = now
+            timestamps.pendingCareMistakeAt = now
         }
         isSleeping = false
         timestamps.lightsOffAt = nil

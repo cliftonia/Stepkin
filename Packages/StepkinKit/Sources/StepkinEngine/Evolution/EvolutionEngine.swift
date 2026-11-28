@@ -39,6 +39,7 @@ public enum EvolutionEngine {
         state.timestamps.evolvedAt = now
         state.hungerHearts = StatHearts(species.maxHunger)
         state.strengthHearts = StatHearts(species.maxStrength)
+        state.settleRefilledHearts()
         state.careMistakes = 0
         state.battleWins = 0
         state.battleLosses = 0
@@ -47,7 +48,6 @@ public enum EvolutionEngine {
         state.evolutionGoalPenalty = 0
         // injuryCount must not carry over: kept across stages, training
         // injuries would kill the pet in ~40 days.
-        state.timestamps.collapsingAt = nil
         state.isInjured = false
         state.timestamps.injuredAt = nil
         state.injuryCount = 0

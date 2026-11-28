@@ -51,6 +51,7 @@ public enum FeedAction {
             state.weight.add(TimeConstants.vitaminWeightGain)
         }
 
+        state.settleRefilledHearts()
         state.timestamps.lastFedAt = now
         return state
     }

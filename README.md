@@ -80,12 +80,12 @@ and the pet catches up in one call — including anything that befell it.
 | Poop | a pile every 2 h; 4 piles risk injury |
 | Care call | 20 min to respond before it counts as a care mistake |
 | Sleep | from 21:00, 2 min after the lights go out; lights left on accrue mistakes |
-| Injury | untreated 6 h → death; 20 lifetime injuries → death |
+| Injury | untreated 6 h → death; 20 lifetime injuries → death; with 3 or more piles the mess must be cleaned before medicine works |
 | Collapse | hunger *and* strength empty for 48 h → death |
 | Evolution | lifetime steps: 10k → 50k → 300k → 1M across five stages |
 | Lazy day | under 2,000 steps adds a stage-scaled penalty (4k–10k) to the goal |
 | Training | 5 rounds, 3 wins to succeed; −2 g weight; builds conditioning (max +3) |
-| Battle | power = stats + trained POW ±20% variance; conditioning decays after 12 h idle |
+| Battle | high beats medium beats low beats high; matched heights go to a side over 20% stronger (species power + 10 per trained POW); conditioning decays after 12 h idle |
 | Feeding | meat +1 g, vitamin +2 g |
 | Time-fed growth | with Steps off, 500 step-equivalents per waking hour |
 

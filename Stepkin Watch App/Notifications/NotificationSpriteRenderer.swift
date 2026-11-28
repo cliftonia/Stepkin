@@ -68,13 +68,32 @@ nonisolated enum NotificationSpriteRenderer {
         guard let image = context.makeImage() else { return nil }
         // Unique file per render — the system moves attachments; a reused path strands later ones.
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("stepkin-\(UUID().uuidString).png")
+            .appendingPathComponent("\(filePrefix)\(UUID().uuidString).png")
         guard let destination = CGImageDestinationCreateWithURL(
             url as CFURL, UTType.png.identifier as CFString, 1, nil
         ) else { return nil }
         CGImageDestinationAddImage(destination, image, nil)
         guard CGImageDestinationFinalize(destination) else { return nil }
         return url
+    }
+
+    /// The name every render starts with, so `removeLeftovers` touches nothing else.
+    private static let filePrefix = "stepkin-"
+
+    /// How old an untaken render must be before `removeLeftovers` deletes it:
+    /// long enough that the system has moved every attachment it accepted.
+    static let leftoverAge: TimeInterval = 3_600
+
+    /// Deletes renders the system never took, older than `leftoverAge`.
+    static func removeLeftovers(now: Date = .now, in folder: URL = FileManager.default.temporaryDirectory) {
+        let files = FileManager.default
+        let renders = (try? files.contentsOfDirectory(at: folder, includingPropertiesForKeys: [.contentModificationDateKey])) ?? []
+        for url in renders where url.lastPathComponent.hasPrefix(filePrefix) {
+            let modified = (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+            if let modified, now.timeIntervalSince(modified) > leftoverAge {
+                try? files.removeItem(at: url)
+            }
+        }
     }
 
     // MARK: - Scene

@@ -43,6 +43,22 @@ struct JSONPetStateStoreTests {
         #expect(throws: (any Error).self) { try store.load() }
     }
 
+    /// A save no build can read is the owner's pet all the same; it is set
+    /// aside where the new egg's saves cannot reach, for a later fix to restore.
+    @Test
+    func `an unreadable save is kept aside and survives the saves that follow`() throws {
+        let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")
+        let store = JSONPetStateStore.live(defaults: defaults)
+        let unreadable = Data("not json".utf8)
+        defaults.set(unreadable, forKey: JSONPetStateStore.key)
+
+        #expect(throws: (any Error).self) { try store.load() }
+        try store.save(makeTestState())
+        try store.save(makeTestState())
+
+        #expect(defaults.data(forKey: JSONPetStateStore.unreadableKey) == unreadable)
+    }
+
     @Test
     func `delete clears the backup too`() throws {
         let defaults = try makeIsolatedDefaults("JSONPetStateStoreTests")

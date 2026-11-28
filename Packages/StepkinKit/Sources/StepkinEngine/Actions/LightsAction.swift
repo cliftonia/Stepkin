@@ -23,9 +23,9 @@ public enum LightsAction {
 
     // MARK: - Apply
 
-    /// Flips the light, waking the pet when it comes on and anchoring the
-    /// settle countdown when it goes out. A refused attempt returns the
-    /// state unchanged with `.blocked`.
+    /// Flips the light, waking the pet when it comes on; when it goes out,
+    /// anchoring the settle countdown and ending the lights-mistake clock. A
+    /// refused attempt returns the state unchanged with `.blocked`.
     @discardableResult
     public static func apply(
         to state: PetState,
@@ -44,6 +44,7 @@ public enum LightsAction {
             // Settle countdown anchor; the pet stays awake until
             // `SleepSchedule` turns it into sleep.
             state.timestamps.lightsOffAt = now
+            state.timestamps.pendingLightsMistakeAt = nil
         }
         return (state, .toggled)
     }

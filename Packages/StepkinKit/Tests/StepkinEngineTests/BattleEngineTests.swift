@@ -97,7 +97,8 @@ struct BattleEngineTests {
     func `resolveRound returns playerHit when player height wins`() {
         let outcome = BattleEngine.resolveRound(
             playerHeight: .high,
-            opponentHeight: .medium
+            opponentHeight: .medium,
+            playerPower: 50, opponentPower: 50
         )
         #expect(outcome == .playerHit)
     }
@@ -106,21 +107,47 @@ struct BattleEngineTests {
     func `resolveRound returns opponentHit when opponent height wins`() {
         let outcome = BattleEngine.resolveRound(
             playerHeight: .high,
-            opponentHeight: .low
+            opponentHeight: .low,
+            playerPower: 50, opponentPower: 50
         )
         #expect(outcome == .opponentHit)
     }
 
     @Test
-    func `resolveRound same height is always clash`() {
+    func `matched heights between even powers clash`() {
         let outcome = BattleEngine.resolveRound(
-            playerHeight: .medium,
-            opponentHeight: .medium
+            playerHeight: .medium, opponentHeight: .medium, playerPower: 50, opponentPower: 45
         )
         #expect(outcome == .clash)
     }
 
-    // MARK: - applyResult edge cases
+    /// Trained POW has to be worth something: on matched heights the side
+    /// stronger by more than the margin breaks through.
+    @Test
+    func `matched heights go to a side stronger by more than the margin`() {
+        let margin = TimeConstants.clashPowerMargin
+        #expect(BattleEngine.resolveRound(
+            playerHeight: .low, opponentHeight: .low, playerPower: 50 * margin + 1, opponentPower: 50
+        ) == .playerHit)
+        #expect(BattleEngine.resolveRound(
+            playerHeight: .low, opponentHeight: .low, playerPower: 50, opponentPower: 50 * margin + 1
+        ) == .opponentHit)
+    }
+
+    @Test
+    func `power never overturns the height triangle`() {
+        #expect(BattleEngine.resolveRound(
+            playerHeight: .high, opponentHeight: .medium, playerPower: 1, opponentPower: 1_000
+        ) == .playerHit)
+    }
+
+    @Test
+    func `each trained point adds to the species' power, and the fresh runt has none to add`() {
+        var state = makeTestState(species: .emberkin)
+        let base = BattleEngine.power(of: state)
+        state.trainedPower = 2
+        #expect(BattleEngine.power(of: state) == base + 2 * TimeConstants.powerPerTrainedPoint)
+    }
 
     @Test
     func `apply result draw does not change counts`() {
@@ -157,6 +184,17 @@ struct BattleEngineTests {
         let state = makeTestState(species: .rexkin)
         let opp = BattleOpponent.generate(matching: state)
         #expect(opp.species.stage == state.species.stage)
+    }
+
+    /// A stage with one species has no peer; its rival comes from the
+    /// stage next door, never from the far end of the tree.
+    @Test
+    func `a species alone in its stage meets a rival from the nearest stage`() {
+        for _ in 0..<50 {
+            #expect(BattleOpponent.generate(matching: makeTestState(species: .dotkin)).species == .hopkin)
+            #expect(BattleOpponent.generate(matching: makeTestState(species: .hopkin)).species.stage != .champion)
+            #expect(BattleOpponent.generate(matching: makeTestState(species: .hopkin)).species.stage != .ultimate)
+        }
     }
 
     @Test(arguments: PetSpecies.allCases)

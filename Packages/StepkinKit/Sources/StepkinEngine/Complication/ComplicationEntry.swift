@@ -20,8 +20,6 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
     public let hungerMax: Int
     /// Whether the pet has an outstanding care call.
     public let needsAttention: Bool
-    /// Whether the pet is injured.
-    public let isInjured: Bool
     /// Whether the pet has died.
     public let isDead: Bool
     /// Whether the pet is still an egg rather than a hatched species.
@@ -41,7 +39,6 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
         hungerValue: Int,
         hungerMax: Int,
         needsAttention: Bool,
-        isInjured: Bool,
         isDead: Bool,
         isEgg: Bool,
         statusText: String,
@@ -53,7 +50,6 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
         self.hungerValue = hungerValue
         self.hungerMax = hungerMax
         self.needsAttention = needsAttention
-        self.isInjured = isInjured
         self.isDead = isDead
         self.isEgg = isEgg
         self.statusText = statusText
@@ -72,7 +68,6 @@ public struct ComplicationEntry: Codable, Sendable, Equatable {
             hungerValue: status.hungerHearts.value,
             hungerMax: status.species.maxHunger,
             needsAttention: status.needsAttention,
-            isInjured: status.isInjured,
             isDead: status.isDead,
             isEgg: status.isEgg,
             statusText: mood.rawValue,

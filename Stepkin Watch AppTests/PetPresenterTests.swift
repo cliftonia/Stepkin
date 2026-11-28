@@ -50,6 +50,28 @@ struct PetPresenterTests {
         #expect(outcome == .refused(reason: FeedRefusal.busy))
     }
 
+    /// A suspended app's presenter holds the pet as it was when the timer
+    /// last fired; a routed feed must judge the pet as it is now.
+    @Test
+    func `a routed feed advances a stale pet before judging it`() async {
+        var stale = makeTestState(hunger: 1)
+        stale.isSleeping = true
+        let presenter = PetPresenter(
+            state: stale,
+            store: PetStateStore(save: { _ in }, load: { nil }, delete: {}),
+            currentNight: { false },
+            notificationScheduler: NotificationScheduler(
+                schedule: { _ in }, notify: { _, _, _ in }, cancelAll: {}, requestAuthorization: { true }
+            ),
+            complicationReloader: ComplicationReloader(reload: {})
+        )
+
+        let outcome = await presenter.perform(.feed(.meat))
+
+        #expect(outcome == .done)
+        #expect(presenter.state.hungerHearts.value == 2)
+    }
+
     @Test
     func `stopping the game loop mid-walk leaves no wander timer armed and resets the offset`() {
         let presenter = makePresenter(makeTestState(), SaveBox())
