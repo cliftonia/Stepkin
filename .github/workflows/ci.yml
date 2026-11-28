@@ -21,6 +21,7 @@ jobs:
       - name: Install SwiftLint 0.53.0
         run: |
           curl -fsSL -o swiftlint.zip https://github.com/realm/SwiftLint/releases/download/0.53.0/portable_swiftlint.zip
+          echo "872b2d2b391179088909ed31e73385518aada22adc8150d9139be58ee9b83b4d  swiftlint.zip" | shasum -a 256 -c
           mkdir -p "$HOME/bin" && unzip -q swiftlint.zip -d "$HOME/bin"
           test "$("$HOME/bin/swiftlint" version)" = "0.53.0"
           echo "$HOME/bin" >> "$GITHUB_PATH"
